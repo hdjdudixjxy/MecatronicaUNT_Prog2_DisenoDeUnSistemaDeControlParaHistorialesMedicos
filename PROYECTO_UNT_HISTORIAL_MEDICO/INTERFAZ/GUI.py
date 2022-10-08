@@ -471,9 +471,11 @@ class Frame(tk.Frame):
         pdf.text(x=130, y=200, txt = "Trujillo-PERÚ")
 
         pdf.image("ICONOS/UNT.png", x=250, y=15, w=40, h=35)
-        pdf.image("ICONOS/vigo.png", x=45, y=160, w=40, h=20)
-        pdf.image("ICONOS/jonathan.png", x=130, y=160, w=40, h=20)
-        pdf.image("ICONOS/victor.png", x=215, y=160, w=40, h=20)
+        pdf.image("ICONOS/vigo.png", x=45, y=138, w=40, h=20)
+        pdf.image("ICONOS/jonathan.png", x=130, y=138, w=40, h=20)
+        pdf.image("ICONOS/victor.png", x=215, y=138, w=40, h=20)
+        pdf.image("ICONOS/elias.png", x=175, y=163, w=40, h=20)
+        pdf.image("ICONOS/luis.png", x=87, y=163, w=40, h=20)
 
         pdf.set_font("Arial","B",20) 
         pdf.text(x=125, y=15, txt="CLÍNICA UNT")
@@ -497,14 +499,18 @@ class Frame(tk.Frame):
         pdf.text(x=80, y=125, txt=d)
 
         pdf.set_font("Arial","B",14)
-        pdf.text(x=35,y=180, txt="Vigo Villar Cristhian A.")
-        pdf.text(x=117,y=180, txt="Sanchez Rojas Jonathan A.") 
-        pdf.text(x=200,y=180, txt="Valdiviezo Jimenez Victor J.")
+        pdf.text(x=35,y=158, txt="Vigo Villar Cristhian A.")
+        pdf.text(x=117,y=158, txt="Sanchez Rojas Jonathan A.") 
+        pdf.text(x=200,y=158, txt="Valdiviezo Jimenez Victor J.")
+        pdf.text(x=82,y=183, txt="Valdez Julca Luis A.") 
+        pdf.text(x=165,y=183, txt="Ortiz Salvador Edinson E.")
 
         pdf.set_font("Arial","",14)
-        pdf.text(x=50, y=185, txt="Cirujano")
-        pdf.text(x=137, y=185, txt="Pediatra")
-        pdf.text(x=220, y=185, txt="Traumatólogo")
+        pdf.text(x=50, y=163, txt="Cirujano")
+        pdf.text(x=137, y=163, txt="Practicante")
+        pdf.text(x=220, y=163, txt="Traumatólogo")
+        pdf.text(x=97, y=188, txt="Conserje")
+        pdf.text(x=185, y=188, txt="Electricista")
 
         pdf.output(f"HISTORIALES_PDF/Historial_{id}_{n}.pdf")
       
