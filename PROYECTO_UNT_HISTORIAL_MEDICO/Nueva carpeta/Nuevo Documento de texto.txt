@@ -1,3 +1,0 @@
-Voy a crear una interfaz flotante donde haya un lisbox con todas las operaciones disponibles y un botón para enviar, estas estarán en 
-un diccionario, se va a referenciar y así se autocompleta cuando se selecciona una operación a realizar. Usare .select_includes(posicion)
-retorna un booleano y según eso se escribe con set a los entrys de operación y el nuevo de precio
