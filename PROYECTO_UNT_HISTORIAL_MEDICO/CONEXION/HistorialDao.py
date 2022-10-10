@@ -6,7 +6,7 @@ from tkinter import messagebox
 class HistoriaMedica:
     """Clase de la tabla HistoriaMedica"""
 
-    def __init__(self, idPersona, FechaHistoria, MotivoDeLaVisita, Operacion, Tratamiento, DetalleAdicional):
+    def __init__(self, idPersona, FechaHistoria, MotivoDeLaVisita, Operacion, Tratamiento, DetalleAdicional, Precio):
         """Constructor cuyos parámetros son los nombres de las columnas de la Tabla HistoriaMedica"""
 
         self.idHistorial = None
@@ -16,22 +16,23 @@ class HistoriaMedica:
         self.Operacion = Operacion
         self.Tratamiento = Tratamiento
         self.DetalleAdicional = DetalleAdicional
+        self.Precio=Precio
     
     def __str__(self):
         """Método que muestra los objetos"""
 
-        return f"HistoriaMedica[{self.idPersona},{self.FechaHistoria},{self.MotivoDeLaVisita}, {self.Operacion}, {self.Tratamiento}, {self.DetalleAdicional}]"
+        return f"HistoriaMedica[{self.idPersona},{self.FechaHistoria},{self.MotivoDeLaVisita}, {self.Operacion}, {self.Tratamiento}, {self.DetalleAdicional},{self.Precio}]"
 
 ##################### FUNCIONES QUE VINCULAN A SQLITE ########################################
 
 #:::::::::::::::::::::::::::::: GUARDAR HISTORIA ::::::::::::::::::::::::::::::::::::
 
-def guardarHistoria(idPersona, FechaHistoria, MotivoDeLaVisita, Operacion, Tratamiento, DetalleAdicional):
+def guardarHistoria(idPersona, FechaHistoria, MotivoDeLaVisita, Operacion, Tratamiento, DetalleAdicional, Precio):
     """Función que guarda los historiales en la clase HistoriaMedica"""
 
     conexion = ConexionDB()
-    sql = f"""INSERT INTO HistoriaMedica (idPersona, FechaHistoria, MotivoDeLaVisita, Operacion, Tratamiento, DetalleAdicional) VALUES
-            ({idPersona},"{FechaHistoria}","{MotivoDeLaVisita}","{Operacion}","{Tratamiento}","{DetalleAdicional}")"""
+    sql = f"""INSERT INTO HistoriaMedica (idPersona, FechaHistoria, MotivoDeLaVisita, Operacion, Tratamiento, DetalleAdicional, Precio) VALUES
+            ({idPersona},"{FechaHistoria}","{MotivoDeLaVisita}","{Operacion}","{Tratamiento}","{DetalleAdicional}","{Precio}")"""
     try:
         conexion.cursor.execute(sql)
         conexion.cerrarConexion()
@@ -64,11 +65,11 @@ def eliminarHistoria(idHistorial):
 
 #:::::::::::::::::::::::::::: EDITAR HISTORIA ::::::::::::::::::::::::::::::::::::
 
-def editarHistoria(fechaHistoria, MotivoDeLaVisita, Operacion, Tratamiento, DetalleAdicional, idHistorial):
+def editarHistoria(fechaHistoria, MotivoDeLaVisita, Operacion, Tratamiento, DetalleAdicional, idHistorial, Precio):
     """Función que edita los historiales en la clase HistoriaMedica"""
 
     conexion = ConexionDB()
-    sql = f"""UPDATE HistoriaMedica SET fechaHistoria = "{fechaHistoria}", MotivoDeLaVisita = "{MotivoDeLaVisita}", Operacion = "{Operacion}", Tratamiento = "{Tratamiento}", DetalleAdicional = "{DetalleAdicional}" WHERE idHistorial = {idHistorial}"""
+    sql = f"""UPDATE HistoriaMedica SET fechaHistoria = "{fechaHistoria}", MotivoDeLaVisita = "{MotivoDeLaVisita}", Operacion = "{Operacion}", Tratamiento = "{Tratamiento}", DetalleAdicional = "{DetalleAdicional}", Precio = "{Precio}" WHERE idHistorial = {idHistorial}"""
     try:
         conexion.cursor.execute(sql)
         conexion.cerrarConexion()
@@ -86,7 +87,7 @@ def listarHistoria(idPersona):
     conexion = ConexionDB()
     listaHistoria = []
     
-    sql = f"SELECT H.idHistorial, D.NombreCompleto || ' ' || D.ApellidosCompletos AS Paciente, H.FechaHistoria, H.MotivoDeLaVisita, H.Operacion, H.Tratamiento, H.DetalleAdicional FROM HistoriaMedica H INNER JOIN DatosPaciente D ON D.idPersona = H.idPersona WHERE D.idPersona = {idPersona}"
+    sql = f"SELECT H.idHistorial, D.NombreCompleto || ' ' || D.ApellidosCompletos AS Paciente, H.FechaHistoria, H.MotivoDeLaVisita, H.Operacion, H.Tratamiento, H.DetalleAdicional, H.Precio FROM HistoriaMedica H INNER JOIN DatosPaciente D ON D.idPersona = H.idPersona WHERE D.idPersona = {idPersona}"
     # Cuando se cumple el parámetro WHERE, se cumple el INNER JOIN
 
     try:

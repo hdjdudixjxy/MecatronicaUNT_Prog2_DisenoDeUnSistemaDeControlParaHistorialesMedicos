@@ -1,12 +1,14 @@
-import tkinter
+
 from CONEXION.PacienteDao import DatosPaciente, editarDatoPaciente, guardarDatoPaciente, listar, listarCondicion, eliminarPaciente
 from CONEXION.HistorialDao import guardarHistoria, editarHistoria, eliminarHistoria, listarHistoria
 import tkinter as tk
-from tkinter import W, TclError, ttk, messagebox, Toplevel
+from tkinter import W, ttk, messagebox, Toplevel
+
 import tkcalendar as tc
 import datetime
 from PIL import Image, ImageTk
 import fpdf
+import smtplib
 
 
 ################## VENTANA DE FONDO ##########################
@@ -20,7 +22,7 @@ class Frame(tk.Frame):
         super().__init__(aplicacion) # utilizamos super() para llevar a cabo herencias múltiples, de las subclases a la superclase
         self.aplicacion = aplicacion
         self.pack(fill=tk.BOTH, expand=True)
-        self.config(background="lightseagreen")
+        self.config(background="lightseagreen", relief=tk.GROOVE, border=5)
         self.idPersona = None
         self.idPersonaHistoria=None
         self.idHistoriaMedica=None
@@ -34,7 +36,7 @@ class Frame(tk.Frame):
     def camposPaciente(self):
         
         ##################### LABELS ##########################
-
+        
         self.lblNombre = tk.Label(self, text="NOMBRE COMPLETO: ")
         self.lblNombre.config(font=("verdana",15,"bold"), background="lightseagreen", anchor = "w")
         self.lblNombre.grid(column=0, row=0, pady=5)
@@ -241,7 +243,7 @@ class Frame(tk.Frame):
         self.tabla.heading("#6",text="Telefono")
         self.tabla.heading("#7",text="Correo")
 
-        self.tabla.column("#0", anchor=W, width=3)
+        self.tabla.column("#0", anchor=W, width=5)
         self.tabla.column("#1", anchor=W, width=120)
         self.tabla.column("#2", anchor=W, width=120)
         self.tabla.column("#3", anchor=W, width=20)
@@ -264,8 +266,12 @@ class Frame(tk.Frame):
         self.btnEliminarPaciente.grid(row=9, column=1, padx=10, pady=5)
 
         self.btnHistorialPaciente = tk.Button(self, text="Historial Paciente", command=self.historiaMedica)
-        self.btnHistorialPaciente.config(width=50,font=("verdana",12,"bold"), bg="cyan2", activebackground="cyan3", cursor="hand2")
-        self.btnHistorialPaciente.grid(row=9, column=2, columnspan=3, pady=5)
+        self.btnHistorialPaciente.config(width=30,font=("verdana",12,"bold"), bg="cyan2", activebackground="cyan3", cursor="hand2")
+        self.btnHistorialPaciente.grid(row=9, column=2, columnspan=2, pady=5)
+
+        self.btnEnviarHistorialPaciente = tk.Button(self, text="Enviar historial", command=self.EnviarPDF)
+        self.btnEnviarHistorialPaciente.config(width=20,font=("verdana",12,"bold"), bg="ivory2", activebackground="ivory4", cursor="hand2")
+        self.btnEnviarHistorialPaciente.grid(row=9, column=4, pady=5)
 
 ################# FUNCIONES DEL CALENDARIO ###################
 
@@ -293,7 +299,8 @@ class Frame(tk.Frame):
         self.svFecNacimiento.set(self.calendar.get_date()) # Mediante set mandamos la fecha al entry y con get_date la obtenemos de self.calendar 
 
         if len(self.calendar.get_date())>1: # Condición para referenciar la función CalcularEdad
-            self.CalcularEdad() 
+            self.CalcularEdad()
+            self.topCalendario.destroy() 
 
     def CalcularEdad(self): 
         """Función que inserta la edad en el entry Edad, restando el año obtenido con el modulo datetime y el ingresado por self.calendar"""
@@ -381,13 +388,13 @@ class Frame(tk.Frame):
                 idPersona = self.idPersona
 
             self.ListaHistoria = listarHistoria(idPersona)
-            self.tabla2 = ttk.Treeview(self.topHistoriaMedica, column=("Paciente", "FechaHistoria", "MotivoDeLaVisita", "Operacion", "Tratamiento", "DetalleAdicional"))
+            self.tabla2 = ttk.Treeview(self.topHistoriaMedica, column=("Paciente", "FechaHistoria", "MotivoDeLaVisita", "Operacion", "Tratamiento", "DetalleAdicional", "Precio"))
             self.tabla2.config(height=10)
             self.tabla2.tag_configure("evenrow", background="oldlace")
-            self.tabla2.grid(column=0, row=0, columnspan=7,sticky="nse")
+            self.tabla2.grid(column=0, row=0, columnspan=8,sticky="nse")
 
             self.scroll2=ttk.Scrollbar(self.topHistoriaMedica, orient="vertical", command=self.tabla2.yview)
-            self.scroll2.grid(row=0, column=7, sticky="nse")
+            self.scroll2.grid(row=0, column=8, sticky="nse")
 
             self.tabla2.configure(yscrollcommand=self.scroll2.set)
 
@@ -398,17 +405,19 @@ class Frame(tk.Frame):
             self.tabla2.heading("#4",text="Operacion")
             self.tabla2.heading("#5",text="Tratamiento")
             self.tabla2.heading("#6",text="Detalle adicional")
+            self.tabla2.heading("#7",text="Precio")
 
             self.tabla2.column("#0", anchor=W, width=40)
             self.tabla2.column("#1", anchor=W, width=200)
             self.tabla2.column("#2", anchor=W, width=150)
             self.tabla2.column("#3", anchor=W, width=200)
             self.tabla2.column("#4", anchor=W, width=150)
-            self.tabla2.column("#5", anchor=W, width=300)
-            self.tabla2.column("#6", anchor=W, width=450)
+            self.tabla2.column("#5", anchor=W, width=270)
+            self.tabla2.column("#6", anchor=W, width=420)
+            self.tabla2.column("#7", anchor=W, width=65)
 
             for p in self.ListaHistoria:
-                self.tabla2.insert("",0,text=p[0], values=(p[1],p[2],p[3],p[4],p[5],p[6]), tags=("evenrow",))
+                self.tabla2.insert("",0,text=p[0], values=(p[1],p[2],p[3],p[4],p[5],p[6],p[7]), tags=("evenrow",))
 
         except:
             
@@ -422,7 +431,7 @@ class Frame(tk.Frame):
 
         self.topHistoriaMedica = Toplevel()
         self.topHistoriaMedica.title("HISTORIAL MEDICO")
-        self.topHistoriaMedica.geometry("1515x280+5+50")
+        self.topHistoriaMedica.geometry("1515x280+5+10")
         self.topHistoriaMedica.resizable(width=False, height=False)
         self.topHistoriaMedica.iconbitmap("ICONOS/Historial.ico")
         self.topHistoriaMedica.config(background="azure")
@@ -451,7 +460,6 @@ class Frame(tk.Frame):
 
         self.idPersona = None
         
-
     def crearPDF(self):
         """función para crear el historial de cada paciente"""
         
@@ -466,6 +474,7 @@ class Frame(tk.Frame):
         c=self.tabla2.item(self.tabla2.selection())["values"][4]
         d=self.tabla2.item(self.tabla2.selection())["values"][5]
         g=str(self.tabla.item(self.tabla.selection())["values"][2])
+        pe=self.tabla2.item(self.tabla2.selection())["values"][6]
 
         pdf.set_font("Arial","",14)
         pdf.text(x=230,y=10, txt = "Generado el: "+str(datetime.date.today()))
@@ -495,7 +504,7 @@ class Frame(tk.Frame):
         pdf.text(x=30, y=50, txt=g)
         pdf.text(x=100, y=65, txt=a)
         pdf.text(x=90, y=80, txt=f)
-        pdf.text(x=70, y=95, txt=f"{b} y debe de pagar  soles") # VOY A CREAR PRECIO EN LA BASE DE DATOS Y NO LO VOY A MOSTRAR EN LA TABLA SOLO PDF
+        pdf.text(x=70, y=95, txt=f"{b} y debe de pagar {pe} soles") # VOY A CREAR PRECIO EN LA BASE DE DATOS Y NO LO VOY A MOSTRAR EN LA TABLA SOLO PDF
         pdf.text(x=120, y=110, txt=c)
         pdf.text(x=80, y=125, txt=d)
 
@@ -515,65 +524,69 @@ class Frame(tk.Frame):
 
         pdf.output(f"HISTORIALES_PDF/Historial_{id}_{n}.pdf")
       
+    def EnviarPDF(self):
+        #f"HISTORIALES_PDF/Historial_{id}_{n}.pdf"
+        pass
+
     def TopLevelOperaciones(self):
-        """Método que genera el list box xon las operaciones"""
+        """Método que genera el list box con las operaciones"""
 
-        root=tk.Toplevel()
+        self.root=tk.Toplevel()
 
-        root.title("OPERACIONES MÉDICAS")
-        root.geometry("480x790+1030+15") 
-        root.resizable(0,0)
-        root.iconbitmap("ICONOS/icon.ico")
-        root.configure(background="bisque2") 
+        self.root.title("OPERACIONES MÉDICAS")
+        self.root.geometry("480x790+1030+15") 
+        self.root.resizable(0,0)
+        self.root.iconbitmap("ICONOS/icon.ico")
+        self.root.configure(background="bisque2") 
 
         ################ CLASES FRAME ###############
 
-        ventana1=tk.Frame(root)
-        ventana1.configure(bg="bisque2",height=150)
+        self.ventana1=tk.Frame(self.root)
+        self.ventana1.configure(bg="bisque2",height=150)
 
-        ventana2=tk.LabelFrame(root)
-        ventana2.configure(text="Eliga la operación", font=("Verdana", 15, "bold"), border=5, bg="bisque4")
+        self.ventana2=tk.LabelFrame(self.root)
+        self.ventana2.configure(text="Eliga la operación", font=("Verdana", 15, "bold"), border=5, bg="bisque4")
 
-        subventana1=tk.Frame(ventana2, bg="bisque4")
-        subventana2=tk.Frame(ventana2, bg="bisque4")
+        self.subventana1=tk.Frame(self.ventana2, bg="bisque4")
+        self.subventana2=tk.Frame(self.ventana2, bg="bisque4")
 
         ########## CLASES ENTRYS ################
 
-        operacion=tk.StringVar()
+        self.operacion=tk.StringVar()
         
-        entry=tk.Entry(ventana1)
-        entry.configure(textvariable=operacion, font=("Verdana", 15), bg="bisque4", selectbackground="bisque3")
+        self.entry=tk.Entry(self.ventana1)
+        self.entry.configure(textvariable=self.operacion, font=("Verdana", 15), bg="bisque4", selectbackground="bisque3")
 
-        precio=tk.IntVar()
+        self.precio=tk.IntVar()
 
-        entry2=tk.Entry(ventana1)
-        entry2.configure(textvariable=precio, font=("Verdana", 15), bg="bisque4", selectbackground="bisque3")
+        self.entry2=tk.Entry(self.ventana1)
+        self.entry2.configure(textvariable=self.precio, font=("Verdana", 15), bg="bisque4", selectbackground="bisque3")
 
         ########## CLASES LABELS ############
 
-        etiqueta1=tk.Label(ventana1)
-        etiqueta1.configure(text="Operación a agregar", font=("Verdana", 15, "underline", "bold"),bg="bisque2")
+        self.etiqueta1=tk.Label(self.ventana1)
+        self.etiqueta1.configure(text="Operación a agregar", font=("Verdana", 15, "underline", "bold"),bg="bisque2")
 
-        etiqueta2=tk.Label(ventana1)
-        etiqueta2.configure(text="Monto a pagar", font=("Verdana", 15, "underline", "bold"),bg="bisque2")
+        self.etiqueta2=tk.Label(self.ventana1)
+        self.etiqueta2.configure(text="Monto a pagar", font=("Verdana", 15, "underline", "bold"),bg="bisque2")
 
         ################ CLASE LISTBOX #####################
 
-        lista=tk.Listbox(subventana1)
-        lista.configure(bg="bisque3", selectbackground="navajowhite3", selectforeground="black", width=28, height=15,
+        self.lista=tk.Listbox(self.subventana1)
+        self.lista.configure(bg="bisque3", selectbackground="navajowhite3", selectforeground="black", width=28, height=15,
                         font=("Verdana", 15), cursor="hand2", justify=tk.LEFT, selectborderwidth=4)
 
         diccionario_operaciones={"Reducción abierta de fractura con fijación interna":2000,"Laparotomía exploradora":3000, 
         "Herniorrafia umbilical abierta":3215,"Reparación unilateral de hernia":325,"Apendicectomía":3025,"Incisión de tejido subcutáneo":525,
         "Extirpación local":2325,"Sustitución de derivación ventricular":3225,"Reducción abierta de fractura":1325}
 
-        lista.insert(0,*diccionario_operaciones)
+        self.lista.insert(0,*diccionario_operaciones)
 
         def agregar_datos():
             """Función para agregar las operaciones y el precio tanto al diccionario como a el list box"""
 
-            Operacion=operacion.get()
-            Precio=precio.get()
+            Operacion=self.operacion.get()
+            Precio=self.precio.get()
             
             try:
                 if Operacion in diccionario_operaciones:
@@ -583,7 +596,7 @@ class Frame(tk.Frame):
                     messagebox.showinfo(titulo, mensaje)
                     self.topAHistoria.destroy()
                     self.topHistoriaMedica.destroy()
-                    root.destroy()
+                    self.root.destroy()
                     self.historiaMedica()
                     self.topAgregarHistoria()   # No es necesario colocar el self.TopLevelOperaciones() ya que en este método ya referenciamos esa función
                 
@@ -593,14 +606,14 @@ class Frame(tk.Frame):
                     messagebox.showinfo(titulo, mensaje)
                     self.topAHistoria.destroy()
                     self.topHistoriaMedica.destroy()
-                    root.destroy()
+                    self.root.destroy()
                     self.historiaMedica()
                     self.topAgregarHistoria()
                     
                 elif isinstance(Precio,int):
 
                     diccionario_operaciones[Operacion]=Precio
-                    lista.insert(tk.END,Operacion)   
+                    self.lista.insert(tk.END,Operacion)   
 
                 else:
                     pass         
@@ -611,18 +624,18 @@ class Frame(tk.Frame):
                 messagebox.showerror(titulo, mensaje)
                 self.topAHistoria.destroy()
                 self.topHistoriaMedica.destroy()
-                root.destroy()
+                self.root.destroy()
                 self.historiaMedica()
                 self.topAgregarHistoria()
                 
         def eliminar_datos():
             """Función para eliminar datos del diccionario operaciones"""
 
-            tupla=(lista.curselection())
+            tupla=(self.lista.curselection())
 
             try:
-                del(diccionario_operaciones[lista.get(tupla[0])])
-                lista.delete(tupla[0])
+                del(diccionario_operaciones[self.lista.get(tupla[0])])
+                self.lista.delete(tupla[0])
 
             except:
                 titulo = "Eliminar operación"
@@ -630,23 +643,23 @@ class Frame(tk.Frame):
                 messagebox.showerror(titulo, mensaje)
                 self.topAHistoria.destroy()
                 self.topHistoriaMedica.destroy()
-                root.destroy()
+                self.root.destroy()
                 self.historiaMedica()
                 self.topAgregarHistoria()
                 
         def insertar_datos():
             """Función para insertar las operaciones y el precio"""
 
-            tupla=(lista.curselection())
+            tupla=(self.lista.curselection())
             
-            value=lista.get(tupla[0])
+            value=self.lista.get(tupla[0])
 
             try:
-                root.destroy()
+                self.root.destroy()
 
                 self.svOperacion.set(value)
                 
-                # self.svPrecio.set(diccionario_operaciones[value])
+                self.svPrecio.set(diccionario_operaciones[value])
 
             except IndexError:
                 
@@ -656,98 +669,98 @@ class Frame(tk.Frame):
 
         ########## CLASES BUTTON #############
         
-        boton1=tk.Button(ventana1)
-        boton1.configure(text="AGREGAR", bg="orangered3", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="orangered4", command=agregar_datos)
+        self.boton1=tk.Button(self.ventana1)
+        self.boton1.configure(text="AGREGAR", bg="orangered3", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="orangered4", command=agregar_datos)
 
-        boton2=tk.Button(ventana1)
-        boton2.configure(text="ELIMINAR", bg="orangered3", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="orangered4", command=eliminar_datos)
+        self.boton2=tk.Button(self.ventana1)
+        self.boton2.configure(text="ELIMINAR", bg="orangered3", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="orangered4", command=eliminar_datos)
 
-        boton3=tk.Button(root)
-        boton3.configure(text="INSERTAR", bg="orangered3", cursor="hand2", font=("Verdana", 13, "bold"), activebackground="orangered4", width=28, command=insertar_datos)
+        self.boton3=tk.Button(self.root)
+        self.boton3.configure(text="INSERTAR", bg="orangered3", cursor="hand2", font=("Verdana", 13, "bold"), activebackground="orangered4", width=28, command=insertar_datos)
 
-        scrollbar1 = tk.Scrollbar(subventana2) 
-        scrollbar1.configure(orient="vertical", command = lista.yview) 
-        lista.configure(yscrollcommand = scrollbar1.set) 
+        self.scrollbar1 = tk.Scrollbar(self.subventana2) 
+        self.scrollbar1.configure(orient="vertical", command = self.lista.yview) 
+        self.lista.configure(yscrollcommand = self.scrollbar1.set) 
         
-        scrollbar2 = tk.Scrollbar(subventana1)
-        scrollbar2.configure(orient="horizontal", command = lista.xview) 
+        self.scrollbar2 = tk.Scrollbar(self.subventana1)
+        self.scrollbar2.configure(orient="horizontal", command = self.lista.xview) 
 
-        lista.config(xscrollcommand = scrollbar2.set) 
+        self.lista.config(xscrollcommand = self.scrollbar2.set) 
         
-        ventana1.pack(fill=tk.X)
-        ventana2.pack(padx=10,pady=10)
-        entry.place(x=40,y=36)
-        entry2.place(x=40,y=104)
-        boton1.place(x=325,y=34)
-        boton2.place(x=325,y=102)
-        etiqueta1.place(x=40,y=0)
-        etiqueta2.place(x=40,y=66)
-        boton3.pack(pady=6)
-        subventana1.pack(side = tk.LEFT, fill = tk.BOTH)
-        subventana2.pack(side = tk.RIGHT, fill = tk.BOTH)
-        lista.pack()
-        scrollbar1.pack(side = tk.RIGHT, fill = tk.BOTH)
-        scrollbar2.pack(side = tk.BOTTOM, fill = tk.BOTH)
+        self.ventana1.pack(fill=tk.X)
+        self.ventana2.pack(padx=10,pady=10)
+        self.entry.place(x=40,y=36)
+        self.entry2.place(x=40,y=104)
+        self.boton1.place(x=325,y=34)
+        self.boton2.place(x=325,y=102)
+        self.etiqueta1.place(x=40,y=0)
+        self.etiqueta2.place(x=40,y=66)
+        self.boton3.pack(pady=6)
+        self.subventana1.pack(side = tk.LEFT, fill = tk.BOTH)
+        self.subventana2.pack(side = tk.RIGHT, fill = tk.BOTH)
+        self.lista.pack()
+        self.scrollbar1.pack(side = tk.RIGHT, fill = tk.BOTH)
+        self.scrollbar2.pack(side = tk.BOTTOM, fill = tk.BOTH)
         
     def TopLevelOperacionesEditar(self):
-        """Método que genera el list box xon las operaciones"""
+        """Método que genera el list box con las operaciones"""
 
-        root=tk.Toplevel()
+        self.root=tk.Toplevel()
 
-        root.title("OPERACIONES MÉDICAS")
-        root.geometry("480x790+1030+15") 
-        root.resizable(0,0)
-        root.iconbitmap("ICONOS/icon.ico")
-        root.configure(background="bisque2") 
+        self.root.title("OPERACIONES MÉDICAS")
+        self.root.geometry("480x790+1030+15") 
+        self.root.resizable(0,0)
+        self.root.iconbitmap("ICONOS/icon.ico")
+        self.root.configure(background="bisque2") 
 
         ################ CLASES FRAME ###############
 
-        ventana1=tk.Frame(root)
-        ventana1.configure(bg="bisque2",height=150)
+        self.ventana1=tk.Frame(self.root)
+        self.ventana1.configure(bg="bisque2",height=150)
 
-        ventana2=tk.LabelFrame(root)
-        ventana2.configure(text="Eliga la operación", font=("Verdana", 15, "bold"), border=5, bg="bisque4")
+        self.ventana2=tk.LabelFrame(self.root)
+        self.ventana2.configure(text="Eliga la operación", font=("Verdana", 15, "bold"), border=5, bg="bisque4")
 
-        subventana1=tk.Frame(ventana2, bg="bisque4")
-        subventana2=tk.Frame(ventana2, bg="bisque4")
+        self.subventana1=tk.Frame(self.ventana2, bg="bisque4")
+        self.subventana2=tk.Frame(self.ventana2, bg="bisque4")
 
         ########## CLASES ENTRYS ################
 
-        operacion=tk.StringVar()
+        self.operacion=tk.StringVar()
         
-        entry=tk.Entry(ventana1)
-        entry.configure(textvariable=operacion, font=("Verdana", 15), bg="bisque4", selectbackground="bisque3")
+        self.entry=tk.Entry(self.ventana1)
+        self.entry.configure(textvariable=self.operacion, font=("Verdana", 15), bg="bisque4", selectbackground="bisque3")
 
-        precio=tk.IntVar()
+        self.precio=tk.IntVar()
 
-        entry2=tk.Entry(ventana1)
-        entry2.configure(textvariable=precio, font=("Verdana", 15), bg="bisque4", selectbackground="bisque3")
+        self.entry2=tk.Entry(self.ventana1)
+        self.entry2.configure(textvariable=self.precio, font=("Verdana", 15), bg="bisque4", selectbackground="bisque3")
 
         ########## CLASES LABELS ############
 
-        etiqueta1=tk.Label(ventana1)
-        etiqueta1.configure(text="Operación a agregar", font=("Verdana", 15, "underline", "bold"),bg="bisque2")
+        self.etiqueta1=tk.Label(self.ventana1)
+        self.etiqueta1.configure(text="Operación a agregar", font=("Verdana", 15, "underline", "bold"),bg="bisque2")
 
-        etiqueta2=tk.Label(ventana1)
-        etiqueta2.configure(text="Monto a pagar", font=("Verdana", 15, "underline", "bold"),bg="bisque2")
+        self.etiqueta2=tk.Label(self.ventana1)
+        self.etiqueta2.configure(text="Monto a pagar", font=("Verdana", 15, "underline", "bold"),bg="bisque2")
 
         ################ CLASE LISTBOX #####################
 
-        lista=tk.Listbox(subventana1)
-        lista.configure(bg="bisque3", selectbackground="navajowhite3", selectforeground="black", width=28, height=15,
+        self.lista=tk.Listbox(self.subventana1)
+        self.lista.configure(bg="bisque3", selectbackground="navajowhite3", selectforeground="black", width=28, height=15,
                         font=("Verdana", 15), cursor="hand2", justify=tk.LEFT, selectborderwidth=4)
 
         diccionario_operaciones={"Reducción abierta de fractura con fijación interna":2000,"Laparotomía exploradora":3000, 
         "Herniorrafia umbilical abierta":3215,"Reparación unilateral de hernia":325,"Apendicectomía":3025,"Incisión de tejido subcutáneo":525,
         "Extirpación local":2325,"Sustitución de derivación ventricular":3225,"Reducción abierta de fractura":1325}
 
-        lista.insert(0,*diccionario_operaciones)
+        self.lista.insert(0,*diccionario_operaciones)
 
         def agregar_datos():
             """Función para agregar las operaciones y el precio tanto al diccionario como a el list box"""
 
-            Operacion=operacion.get()
-            Precio=precio.get()
+            Operacion=self.operacion.get()
+            Precio=self.precio.get()
             
             try:
                 if Operacion in diccionario_operaciones:
@@ -757,7 +770,7 @@ class Frame(tk.Frame):
                     messagebox.showinfo(titulo, mensaje)
                     self.topEditarHistoria.destroy()
                     self.topHistoriaMedica.destroy()
-                    root.destroy()
+                    self.root.destroy()
                     self.historiaMedica()
                     self.topEditarHistorialMedico()   # No es necesario colocar el self.TopLevelOperaciones() ya que en este método ya referenciamos esa función
                 
@@ -767,14 +780,14 @@ class Frame(tk.Frame):
                     messagebox.showinfo(titulo, mensaje)
                     self.topEditarHistoria.destroy()
                     self.topHistoriaMedica.destroy()
-                    root.destroy()
+                    self.root.destroy()
                     self.historiaMedica()
                     self.topEditarHistorialMedico()
                     
                 elif isinstance(Precio,int):
 
                     diccionario_operaciones[Operacion]=Precio
-                    lista.insert(tk.END,Operacion)   
+                    self.lista.insert(tk.END,Operacion)   
 
                 else:
                     pass         
@@ -785,18 +798,18 @@ class Frame(tk.Frame):
                 messagebox.showerror(titulo, mensaje)
                 self.topEditarHistoria.destroy()
                 self.topHistoriaMedica.destroy()
-                root.destroy()
+                self.root.destroy()
                 self.historiaMedica()
                 self.topEditarHistorialMedico()
                 
         def eliminar_datos():
             """Función para eliminar datos del diccionario operaciones"""
 
-            tupla=(lista.curselection())
+            tupla=(self.lista.curselection())
 
             try:
-                del(diccionario_operaciones[lista.get(tupla[0])])
-                lista.delete(tupla[0])
+                del(diccionario_operaciones[self.lista.get(tupla[0])])
+                self.lista.delete(tupla[0])
 
             except:
                 titulo = "Eliminar operación"
@@ -804,23 +817,23 @@ class Frame(tk.Frame):
                 messagebox.showerror(titulo, mensaje)
                 self.topEditarHistoria.destroy()
                 self.topHistoriaMedica.destroy()
-                root.destroy()
+                self.root.destroy()
                 self.historiaMedica()
                 self.topEditarHistorialMedico()
                 
         def insertar_datos():
-            """Función para insertar las operaciones y el precio"""
+            """Función para insertar las operaciones y el precio, pero esta vez en el top level editar historial paciente"""
 
-            tupla=(lista.curselection())
+            tupla=(self.lista.curselection())
             
-            value=lista.get(tupla[0])
+            value=self.lista.get(tupla[0])
 
             try:
-                root.destroy()
+                self.root.destroy()
 
                 self.svOperacionEditar.set(value)
                 
-                # self.svPrecio.set(diccionario_operaciones[value])
+                self.svPrecioEditar.set(diccionario_operaciones[value])
 
             except IndexError:
                 
@@ -830,38 +843,38 @@ class Frame(tk.Frame):
 
         ########## CLASES BUTTON #############
         
-        boton1=tk.Button(ventana1)
-        boton1.configure(text="AGREGAR", bg="orangered3", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="orangered4", command=agregar_datos)
+        self.boton1=tk.Button(self.ventana1)
+        self.boton1.configure(text="AGREGAR", bg="orangered3", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="orangered4", command=agregar_datos)
 
-        boton2=tk.Button(ventana1)
-        boton2.configure(text="ELIMINAR", bg="orangered3", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="orangered4", command=eliminar_datos)
+        self.boton2=tk.Button(self.ventana1)
+        self.boton2.configure(text="ELIMINAR", bg="orangered3", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="orangered4", command=eliminar_datos)
 
-        boton3=tk.Button(root)
-        boton3.configure(text="INSERTAR", bg="orangered3", cursor="hand2", font=("Verdana", 13, "bold"), activebackground="orangered4", width=28, command=insertar_datos)
+        self.boton3=tk.Button(self.root)
+        self.boton3.configure(text="INSERTAR", bg="orangered3", cursor="hand2", font=("Verdana", 13, "bold"), activebackground="orangered4", width=28, command=insertar_datos)
 
-        scrollbar1 = tk.Scrollbar(subventana2) 
-        scrollbar1.configure(orient="vertical", command = lista.yview) 
-        lista.configure(yscrollcommand = scrollbar1.set) 
+        self.scrollbar1 = tk.Scrollbar(self.subventana2) 
+        self.scrollbar1.configure(orient="vertical", command = self.lista.yview) 
+        self.lista.configure(yscrollcommand = self.scrollbar1.set) 
         
-        scrollbar2 = tk.Scrollbar(subventana1)
-        scrollbar2.configure(orient="horizontal", command = lista.xview) 
+        self.scrollbar2 = tk.Scrollbar(self.subventana1)
+        self.scrollbar2.configure(orient="horizontal", command = self.lista.xview) 
 
-        lista.config(xscrollcommand = scrollbar2.set) 
+        self.lista.config(xscrollcommand = self.scrollbar2.set) 
         
-        ventana1.pack(fill=tk.X)
-        ventana2.pack(padx=10,pady=10)
-        entry.place(x=40,y=36)
-        entry2.place(x=40,y=104)
-        boton1.place(x=325,y=34)
-        boton2.place(x=325,y=102)
-        etiqueta1.place(x=40,y=0)
-        etiqueta2.place(x=40,y=66)
-        boton3.pack(pady=6)
-        subventana1.pack(side = tk.LEFT, fill = tk.BOTH)
-        subventana2.pack(side = tk.RIGHT, fill = tk.BOTH)
-        lista.pack()
-        scrollbar1.pack(side = tk.RIGHT, fill = tk.BOTH)
-        scrollbar2.pack(side = tk.BOTTOM, fill = tk.BOTH)
+        self.ventana1.pack(fill=tk.X)
+        self.ventana2.pack(padx=10,pady=10)
+        self.entry.place(x=40,y=36)
+        self.entry2.place(x=40,y=104)
+        self.boton1.place(x=325,y=34)
+        self.boton2.place(x=325,y=102)
+        self.etiqueta1.place(x=40,y=0)
+        self.etiqueta2.place(x=40,y=66)
+        self.boton3.pack(pady=6)
+        self.subventana1.pack(side = tk.LEFT, fill = tk.BOTH)
+        self.subventana2.pack(side = tk.RIGHT, fill = tk.BOTH)
+        self.lista.pack()
+        self.scrollbar1.pack(side = tk.RIGHT, fill = tk.BOTH)
+        self.scrollbar2.pack(side = tk.BOTTOM, fill = tk.BOTH)
 
     def topAgregarHistoria(self):
         """Función para generar el Top Level donde agregaremos los datos del historial"""
@@ -870,7 +883,7 @@ class Frame(tk.Frame):
 
         self.topAHistoria = tk.Toplevel()
         self.topAHistoria.title("AGREGAR HISTORIA")
-        self.topAHistoria.geometry("900x450+100+370")
+        self.topAHistoria.geometry("900x530+100+300")
         self.topAHistoria.resizable(width=False, height=False)
         self.topAHistoria.iconbitmap("ICONOS/ICONO.ico")
         self.topAHistoria.config(background="cornsilk2")
@@ -895,6 +908,9 @@ class Frame(tk.Frame):
         self.lblDetalle = tk.Label(self.frameDatosHistoria, text="Detalle adicional", width=30, font=("Verdana", 15,"bold"), background="cornsilk2")
         self.lblDetalle.grid(row=6, column=0, padx=5, pady=3)
 
+        self.lblPrecio = tk.Label(self.frameDatosHistoria, text="Precio", width=20, font=("Verdana", 15,"bold"), background="cornsilk2")
+        self.lblPrecio.grid(row=8, column=0, padx=5, pady=3)
+
             ##################### ENTRYS-F1 ##########################
 
         self.svMotivo = tk.StringVar()
@@ -916,6 +932,11 @@ class Frame(tk.Frame):
         self.Detalle = tk.Entry(self.frameDatosHistoria, textvariable=self.svDetalle)
         self.Detalle.config(width=64, font=("Verdana", 15))
         self.Detalle.grid(row=7, column=0, padx= 5, pady=3, columnspan=2)
+
+        self.svPrecio = tk.IntVar()
+        self.Precio = tk.Entry(self.frameDatosHistoria, textvariable=self.svPrecio)
+        self.Precio.config(width=64, font=("Verdana", 15))
+        self.Precio.grid(row=9, column=0, padx= 5, pady=3, columnspan=2)
 
         ##################### FRAME 2 ##########################
 
@@ -941,7 +962,6 @@ class Frame(tk.Frame):
         xHora=str(datetime.datetime.now().strftime("%I:%M %p"))
         self.svFechaHistoria.set(xFecha+xHora) 
 
-
             ##################### BUTTONS-F2 ##########################
 
         self.btnAgregarHistoria = tk.Button(self.frameFechaHistoria, text="Agregar", command=self.agregaHistorialMedico)
@@ -959,9 +979,10 @@ class Frame(tk.Frame):
 
         try:
             if self.idHistoriaMedica == None:
-                guardarHistoria(self.idPersonaHistoria, self.svFechaHistoria.get(),self.svMotivo.get(), self.svOperacion.get(), self.svTratamiento.get(),self.svDetalle.get())
+                guardarHistoria(self.idPersonaHistoria, self.svFechaHistoria.get(),self.svMotivo.get(), self.svOperacion.get(), self.svTratamiento.get(),self.svDetalle.get(),self.svPrecio.get())
             self.topAHistoria.destroy()
             self.topHistoriaMedica.destroy()
+            self.root.destroy()
             
             self.historiaMedica()
             self.idPersona = None
@@ -998,9 +1019,10 @@ class Frame(tk.Frame):
             self.operacionHistoriaEditar = self.tabla2.item(self.tabla2.selection())["values"][3]
             self.tratamientoHistoriaEditar = self.tabla2.item(self.tabla2.selection())["values"][4]
             self.detalleHistoriaEditar = self.tabla2.item(self.tabla2.selection())["values"][5]
+            self.precioEditar = self.tabla2.item(self.tabla2.selection())["values"][6]
 
             self.topEditarHistoria = tk.Toplevel()
-            self.topEditarHistoria.geometry("910x450+100+370")
+            self.topEditarHistoria.geometry("910x510+100+310")
             self.topEditarHistoria.title("EDITAR HISTORIA MEDICA")
             self.topEditarHistoria.resizable(width=False, height=False)
             self.topEditarHistoria.iconbitmap("ICONOS/ICONO.ico")
@@ -1025,6 +1047,9 @@ class Frame(tk.Frame):
             self.lblDetalleEditar = tk.Label(self.frameEditarHistoria, text="Detalle adicional", width=30, font=("Verdana", 15,"bold"), background="palegreen")
             self.lblDetalleEditar.grid(row=6, column=0, padx=5, pady=3)
 
+            self.lblPrecioeEditar = tk.Label(self.frameEditarHistoria, text="Precio", width=30, font=("Verdana", 15,"bold"), background="palegreen")
+            self.lblPrecioeEditar.grid(row=8, column=0, padx=5, pady=3)
+
             #ENTRYS EDITAR HISTORIA
 
             self.svMotivoEditar = tk.StringVar()
@@ -1046,6 +1071,11 @@ class Frame(tk.Frame):
             self.entryDetalleEditar = tk.Entry(self.frameEditarHistoria, textvariable=self.svDetalleEditar)
             self.entryDetalleEditar.config(width=65, font=("Verdana", 15))
             self.entryDetalleEditar.grid(row = 7, column=0, pady=3, padx=5, columnspan=2)
+
+            self.svPrecioEditar = tk.StringVar()
+            self.entryPrecioEditar = tk.Entry(self.frameEditarHistoria, textvariable=self.svPrecioEditar)
+            self.entryPrecioEditar.config(width=65, font=("Verdana", 15))
+            self.entryPrecioEditar.grid(row = 9, column=0, pady=3, padx=5, columnspan=2)
 
             #FRAME FECHA EDITAR
             self.frameFechaEditar = tk.LabelFrame(self.topEditarHistoria)
@@ -1069,6 +1099,7 @@ class Frame(tk.Frame):
             self.entryTratamientoEditar.insert(0, self.tratamientoHistoriaEditar)
             self.entryDetalleEditar.insert(0, self.detalleHistoriaEditar)
             self.entryFechaHistoriaEditar.insert(0, self.fechaHistoriaEditar)
+            self.entryPrecioEditar.insert(0, self.precioEditar)
 
             #BUTTON EDITAR HISTORIA
             self.btnEditarHistoriaMedica = tk.Button(self.frameFechaEditar, text="Editar Historia", command = self.historiaMedicaEditar)
@@ -1092,11 +1123,12 @@ class Frame(tk.Frame):
     def historiaMedicaEditar(self):
 
         try:
-            editarHistoria(self.svFechaHistoriaEditar.get(), self.svMotivoEditar.get(), self.svOperacionEditar.get(), self.svTratamientoEditar.get(), self.svDetalleEditar.get(), self.idHistoriaMedicaEditar)
+            editarHistoria(self.svFechaHistoriaEditar.get(), self.svMotivoEditar.get(), self.svOperacionEditar.get(), self.svTratamientoEditar.get(), self.svDetalleEditar.get(), self.svPrecioEditar.get(), self.idHistoriaMedicaEditar)
             self.idHistoriaMedicaEditar = None
             self.idHistoriaMedica = None
             self.topEditarHistoria.destroy()
             self.topHistoriaMedica.destroy()
+            self.root.destroy()
             self.historiaMedica()
             
         except:
