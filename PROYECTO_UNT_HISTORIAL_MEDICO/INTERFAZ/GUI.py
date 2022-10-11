@@ -8,8 +8,13 @@ import tkcalendar as tc
 import datetime
 from PIL import Image, ImageTk
 import fpdf
-import smtplib
 
+import smtplib, ssl
+import email
+from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 ################## VENTANA DE FONDO ##########################
 
@@ -266,12 +271,8 @@ class Frame(tk.Frame):
         self.btnEliminarPaciente.grid(row=9, column=1, padx=10, pady=5)
 
         self.btnHistorialPaciente = tk.Button(self, text="Historial Paciente", command=self.historiaMedica)
-        self.btnHistorialPaciente.config(width=30,font=("verdana",12,"bold"), bg="cyan2", activebackground="cyan3", cursor="hand2")
-        self.btnHistorialPaciente.grid(row=9, column=2, columnspan=2, pady=5)
-
-        self.btnEnviarHistorialPaciente = tk.Button(self, text="Enviar historial", command=self.EnviarPDF)
-        self.btnEnviarHistorialPaciente.config(width=20,font=("verdana",12,"bold"), bg="ivory2", activebackground="ivory4", cursor="hand2")
-        self.btnEnviarHistorialPaciente.grid(row=9, column=4, pady=5)
+        self.btnHistorialPaciente.config(width=50,font=("verdana",12,"bold"), bg="cyan2", activebackground="cyan3", cursor="hand2")
+        self.btnHistorialPaciente.grid(row=9, column=2, columnspan=3, pady=5)
 
 ################# FUNCIONES DEL CALENDARIO ###################
 
@@ -453,81 +454,77 @@ class Frame(tk.Frame):
                                         foreground="gray2", background="purple2", activebackground="purple4", cursor="hand2")
         self.btnEliminarHistoria.grid(column=2, row=1, padx=10, pady=10)
 
-        self.btnEnviar=tk.Button(self.topHistoriaMedica, text="Generar PDF",command=self.crearPDF)
-        self.btnEnviar.config(width=20,font=("Verdana", 12, "bold"), foreground="gray2",
+        self.btnPDF=tk.Button(self.topHistoriaMedica, text="Generar PDF",command=self.crearPDF)
+        self.btnPDF.config(width=20,font=("Verdana", 12, "bold"), foreground="gray2",
                                     background="tomato2", activebackground="tomato3", cursor="hand2")
-        self.btnEnviar.grid(column=3, row=1,padx=10,pady=10)
+        self.btnPDF.grid(column=3, row=1,padx=10,pady=10)
 
         self.idPersona = None
         
     def crearPDF(self):
         """función para crear el historial de cada paciente"""
         
-        pdf=fpdf.FPDF(orientation="L",unit="mm",format="A4")
-        pdf.add_page()
+        self.pdf=fpdf.FPDF(orientation="L",unit="mm",format="A4")
+        self.pdf.add_page()
         
-        id=self.tabla2.item(self.tabla2.selection())["text"]
-        n=self.tabla2.item(self.tabla2.selection())["values"][0]
-        f=self.tabla2.item(self.tabla2.selection())["values"][1]
-        a=self.tabla2.item(self.tabla2.selection())["values"][2]
-        b=self.tabla2.item(self.tabla2.selection())["values"][3]
-        c=self.tabla2.item(self.tabla2.selection())["values"][4]
-        d=self.tabla2.item(self.tabla2.selection())["values"][5]
-        g=str(self.tabla.item(self.tabla.selection())["values"][2])
-        pe=self.tabla2.item(self.tabla2.selection())["values"][6]
+        self.id=self.tabla2.item(self.tabla2.selection())["text"]
+        self.n=self.tabla2.item(self.tabla2.selection())["values"][0]
+        self.f=self.tabla2.item(self.tabla2.selection())["values"][1]
+        self.a=self.tabla2.item(self.tabla2.selection())["values"][2]
+        self.b=self.tabla2.item(self.tabla2.selection())["values"][3]
+        self.c=self.tabla2.item(self.tabla2.selection())["values"][4]
+        self.d=self.tabla2.item(self.tabla2.selection())["values"][5]
+        self.g=str(self.tabla.item(self.tabla.selection())["values"][2])
+        self.pe=self.tabla2.item(self.tabla2.selection())["values"][6]
 
-        pdf.set_font("Arial","",14)
-        pdf.text(x=230,y=10, txt = "Generado el: "+str(datetime.date.today()))
-        pdf.text(x=130, y=200, txt = "Trujillo-PERÚ")
+        self.pdf.set_font("Arial","",14)
+        self.pdf.text(x=230,y=10, txt = "Generado el: "+str(datetime.date.today()))
+        self.pdf.text(x=130, y=200, txt = "Trujillo-PERÚ")
 
-        pdf.image("ICONOS/UNT.png", x=250, y=15, w=40, h=35)
-        pdf.image("ICONOS/vigo.png", x=45, y=138, w=40, h=20)
-        pdf.image("ICONOS/jonathan.png", x=130, y=138, w=40, h=20)
-        pdf.image("ICONOS/victor.png", x=215, y=138, w=40, h=20)
-        pdf.image("ICONOS/elias.png", x=175, y=163, w=40, h=20)
-        pdf.image("ICONOS/luis.png", x=87, y=163, w=40, h=20)
+        self.pdf.image("ICONOS/UNT.png", x=250, y=15, w=40, h=35)
+        self.pdf.image("ICONOS/vigo.png", x=45, y=138, w=40, h=20)
+        self.pdf.image("ICONOS/jonathan.png", x=130, y=138, w=40, h=20)
+        self.pdf.image("ICONOS/victor.png", x=215, y=138, w=40, h=20)
+        self.pdf.image("ICONOS/elias.png", x=175, y=163, w=40, h=20)
+        self.pdf.image("ICONOS/luis.png", x=87, y=163, w=40, h=20)
 
-        pdf.set_font("Arial","B",20) 
-        pdf.text(x=125, y=15, txt="CLÍNICA UNT")
+        self.pdf.set_font("Arial","B",20) 
+        self.pdf.text(x=125, y=15, txt="CLÍNICA UNT")
 
-        pdf.set_font("Arial","B",16)
-        pdf.text(x=10, y=35, txt="Paciente:")
-        pdf.text(x=10, y=50, txt="DNI:")
-        pdf.text(x=10, y=65, txt="Motivo de la visita a la clínica:")
-        pdf.text(x=10, y=80, txt="Fecha y hora de la visita:")
-        pdf.text(x=10, y=95, txt="Su operación fue: ")
-        pdf.text(x=10, y=110, txt="Debe seguir el siguiente tratamiento:")
-        pdf.text(x=10, y=125, txt="Detalles adicionales:")
+        self.pdf.set_font("Arial","B",16)
+        self.pdf.text(x=10, y=35, txt="Paciente:")
+        self.pdf.text(x=10, y=50, txt="DNI:")
+        self.pdf.text(x=10, y=65, txt="Motivo de la visita a la clínica:")
+        self.pdf.text(x=10, y=80, txt="Fecha y hora de la visita:")
+        self.pdf.text(x=10, y=95, txt="Su operación fue: ")
+        self.pdf.text(x=10, y=110, txt="Debe seguir el siguiente tratamiento:")
+        self.pdf.text(x=10, y=125, txt="Detalles adicionales:")
 
-        pdf.set_font("Arial","",16)
-        pdf.text(x=40, y=35, txt=n)
-        pdf.text(x=30, y=50, txt=g)
-        pdf.text(x=100, y=65, txt=a)
-        pdf.text(x=90, y=80, txt=f)
-        pdf.text(x=70, y=95, txt=f"{b} y debe de pagar {pe} soles") # VOY A CREAR PRECIO EN LA BASE DE DATOS Y NO LO VOY A MOSTRAR EN LA TABLA SOLO PDF
-        pdf.text(x=120, y=110, txt=c)
-        pdf.text(x=80, y=125, txt=d)
+        self.pdf.set_font("Arial","",16)
+        self.pdf.text(x=40, y=35, txt=self.n)
+        self.pdf.text(x=30, y=50, txt=self.g)
+        self.pdf.text(x=100, y=65, txt=self.a)
+        self.pdf.text(x=90, y=80, txt=self.f)
+        self.pdf.text(x=70, y=95, txt=f"{self.b} y debe de pagar {self.pe} soles") # VOY A CREAR PRECIO EN LA BASE DE DATOS Y NO LO VOY A MOSTRAR EN LA TABLA SOLO PDF
+        self.pdf.text(x=120, y=110, txt=self.c)
+        self.pdf.text(x=80, y=125, txt=self.d)
 
-        pdf.set_font("Arial","B",14)
-        pdf.text(x=35,y=158, txt="Vigo Villar Cristhian A.")
-        pdf.text(x=117,y=158, txt="Sanchez Rojas Jonathan A.") 
-        pdf.text(x=200,y=158, txt="Valdiviezo Jimenez Victor J.")
-        pdf.text(x=82,y=183, txt="Valdez Julca Luis A.") 
-        pdf.text(x=165,y=183, txt="Ortiz Salvador Edinson E.")
+        self.pdf.set_font("Arial","B",14)
+        self.pdf.text(x=35,y=158, txt="Vigo Villar Cristhian A.")
+        self.pdf.text(x=117,y=158, txt="Sanchez Rojas Jonathan A.") 
+        self.pdf.text(x=200,y=158, txt="Valdiviezo Jimenez Victor J.")
+        self.pdf.text(x=82,y=183, txt="Valdez Julca Luis A.") 
+        self.pdf.text(x=165,y=183, txt="Ortiz Salvador Edinson E.")
 
-        pdf.set_font("Arial","",14)
-        pdf.text(x=50, y=163, txt="Cirujano")
-        pdf.text(x=137, y=163, txt="Practicante")
-        pdf.text(x=220, y=163, txt="Traumatólogo")
-        pdf.text(x=97, y=188, txt="Conserje")
-        pdf.text(x=185, y=188, txt="Electricista")
+        self.pdf.set_font("Arial","",14)
+        self.pdf.text(x=50, y=163, txt="Cirujano")
+        self.pdf.text(x=137, y=163, txt="Practicante")
+        self.pdf.text(x=220, y=163, txt="Traumatólogo")
+        self.pdf.text(x=97, y=188, txt="Conserje")
+        self.pdf.text(x=185, y=188, txt="Electricista")
 
-        pdf.output(f"HISTORIALES_PDF/Historial_{id}_{n}.pdf")
+        self.pdf.output(f"HISTORIALES_PDF/Historial_{self.id}_{self.n}.pdf")
       
-    def EnviarPDF(self):
-        #f"HISTORIALES_PDF/Historial_{id}_{n}.pdf"
-        pass
-
     def TopLevelOperaciones(self):
         """Método que genera el list box con las operaciones"""
 
