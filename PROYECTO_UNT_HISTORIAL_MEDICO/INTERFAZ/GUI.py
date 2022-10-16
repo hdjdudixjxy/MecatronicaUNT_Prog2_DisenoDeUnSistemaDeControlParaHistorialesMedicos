@@ -9,7 +9,9 @@ import datetime
 from PIL import Image, ImageTk
 import fpdf
 
-import smtplib, ssl
+from email import message
+import smtpd, ssl
+import smtplib
 import email
 from email import encoders
 from email.mime.base import MIMEBase
@@ -248,7 +250,7 @@ class Frame(tk.Frame):
         self.tabla.heading("#6",text="Telefono")
         self.tabla.heading("#7",text="Correo")
 
-        self.tabla.column("#0", anchor=W, width=5)
+        self.tabla.column("#0", anchor=W, width=1)
         self.tabla.column("#1", anchor=W, width=120)
         self.tabla.column("#2", anchor=W, width=120)
         self.tabla.column("#3", anchor=W, width=20)
@@ -459,6 +461,11 @@ class Frame(tk.Frame):
                                     background="tomato2", activebackground="tomato3", cursor="hand2")
         self.btnPDF.grid(column=3, row=1,padx=10,pady=10)
 
+        self.btnEnviarEmail=tk.Button(self.topHistoriaMedica, text="Enviar Historial",command=self.enviarEmail)
+        self.btnEnviarEmail.config(width=20,font=("Verdana", 12, "bold"), foreground="gray2",
+                                    background="royalblue2", activebackground="royalblue4", cursor="hand2")
+        self.btnEnviarEmail.grid(column=4, row=1,padx=10,pady=10)
+
         self.idPersona = None
         
     def crearPDF(self):
@@ -478,7 +485,7 @@ class Frame(tk.Frame):
         self.pe=self.tabla2.item(self.tabla2.selection())["values"][6]
 
         self.pdf.set_font("Arial","",14)
-        self.pdf.text(x=230,y=10, txt = "Generado el: "+str(datetime.date.today()))
+        self.pdf.text(x=230,y=10, txt = "Generado el: "+ str(datetime.date.today()))
         self.pdf.text(x=130, y=200, txt = "Trujillo-PERÚ")
 
         self.pdf.image("ICONOS/UNT.png", x=250, y=15, w=40, h=35)
@@ -493,21 +500,23 @@ class Frame(tk.Frame):
 
         self.pdf.set_font("Arial","B",16)
         self.pdf.text(x=10, y=35, txt="Paciente:")
-        self.pdf.text(x=10, y=50, txt="DNI:")
-        self.pdf.text(x=10, y=65, txt="Motivo de la visita a la clínica:")
-        self.pdf.text(x=10, y=80, txt="Fecha y hora de la visita:")
-        self.pdf.text(x=10, y=95, txt="Su operación fue: ")
-        self.pdf.text(x=10, y=110, txt="Debe seguir el siguiente tratamiento:")
-        self.pdf.text(x=10, y=125, txt="Detalles adicionales:")
+        self.pdf.text(x=10, y=48, txt="DNI:")
+        self.pdf.text(x=10, y=61, txt="Motivo de la visita a la clínica:")
+        self.pdf.text(x=10, y=74, txt="Fecha y hora de la visita:")
+        self.pdf.text(x=10, y=87, txt="Su operación fue: ")
+        self.pdf.text(x=10, y=101, txt="Monto a pagar: ")
+        self.pdf.text(x=10, y=114, txt="Debe seguir el siguiente tratamiento:")
+        self.pdf.text(x=10, y=127, txt="Detalles adicionales:")
 
         self.pdf.set_font("Arial","",16)
         self.pdf.text(x=40, y=35, txt=self.n)
-        self.pdf.text(x=30, y=50, txt=self.g)
-        self.pdf.text(x=100, y=65, txt=self.a)
-        self.pdf.text(x=90, y=80, txt=self.f)
-        self.pdf.text(x=70, y=95, txt=f"{self.b} y debe de pagar {self.pe} soles") # VOY A CREAR PRECIO EN LA BASE DE DATOS Y NO LO VOY A MOSTRAR EN LA TABLA SOLO PDF
-        self.pdf.text(x=120, y=110, txt=self.c)
-        self.pdf.text(x=80, y=125, txt=self.d)
+        self.pdf.text(x=30, y=48, txt=self.g)
+        self.pdf.text(x=100, y=61, txt=self.a)
+        self.pdf.text(x=90, y=74, txt=self.f)
+        self.pdf.text(x=70, y=87, txt=f"{self.b}")
+        self.pdf.text(x=65, y=101, txt=f"{self.pe} soles")
+        self.pdf.text(x=120, y=114, txt=self.c)
+        self.pdf.text(x=80, y=127, txt=self.d)
 
         self.pdf.set_font("Arial","B",14)
         self.pdf.text(x=35,y=158, txt="Vigo Villar Cristhian A.")
@@ -525,6 +534,55 @@ class Frame(tk.Frame):
 
         self.pdf.output(f"HISTORIALES_PDF/Historial_{self.id}_{self.n}.pdf")
       
+    def enviarEmail(self):
+
+        servidor = "smtp.gmail.com"
+        puerto = 465
+        remitente = "t1513600121@unitru.edu.pe"
+        password = "74855615"
+        ab=self.tabla.item(self.tabla2.selection())["values"][6]
+        receptor = str(ab)
+        contexto = ssl.create_default_context()
+        titulo = "ENVÍO DE HISTORIAL MÉDICO"
+        no=self.tabla.item(self.tabla2.selection())["values"][0]
+        cuerpo = f"""Hola {no}
+        Reciba los más cordiales saludos de parte del Centro Médico especializado Sánchez Jimenez.
+        El motivo de este mensaje es para comunicarle que le hacemos llegar su ficha médica correspondiente al día de hoy.
+        
+        Me despido, no sin antes recordarle que me encuentro a su disposición y, ante cualquier consulta adicional, comuníquese al 
+        WhatsApp +51 955 216 891 o al correo electrónico registros@gmail.com. 
+        Recalco nuestro compromiso asumido para contribuir en el desarrollo de su salud.
+        Sin otro particular, le reitero nuestros cordiales saludos.
+        Muy atentamente,
+
+        Asistente de Coordinación
+        Centro Médico especializado Sánchez Jimenez  
+        """
+
+        message = MIMEMultipart()
+        message["subject"] = titulo
+        message["From"] = remitente
+        message["To"] = receptor
+
+        message.attach(MIMEText(cuerpo, "plain"))
+        self.id2=self.tabla2.item(self.tabla2.selection())["text"]
+        self.nombre2=self.tabla2.item(self.tabla2.selection())["values"][0]
+        archivo = f"D:\\CRISTHIAN\\universidad\\ciclo 4\\Programación II\\MecatronicaUNT_Prog2_DisenoDeUnSistemaDeControlParaHistorialesMedicos\\PROYECTO_UNT_HISTORIAL_MEDICO\\HISTORIALES_PDF\\Historial_{self.id2}_{self.nombre2}.pdf"
+
+        with open(archivo, "rb") as adjunto:
+            part = MIMEBase("Aplication", "octet-stream")
+            part.set_payload(adjunto.read())
+
+        encoders.encode_base64(part)
+        part.add_header("Content-Disposition", f"attachment; filename={archivo}",)
+
+        message.attach(part)
+        texto = message.as_string()
+
+        with smtplib.SMTP_SSL(servidor, puerto, context=contexto) as s:
+            s.login(remitente, password)
+            s.sendmail(remitente, receptor, texto)
+
     def TopLevelOperaciones(self):
         """Método que genera el list box con las operaciones"""
 
@@ -575,7 +633,9 @@ class Frame(tk.Frame):
 
         diccionario_operaciones={"Reducción abierta de fractura con fijación interna":2000,"Laparotomía exploradora":3000, 
         "Herniorrafia umbilical abierta":3215,"Reparación unilateral de hernia":325,"Apendicectomía":3025,"Incisión de tejido subcutáneo":525,
-        "Extirpación local":2325,"Sustitución de derivación ventricular":3225,"Reducción abierta de fractura":1325}
+        "Extirpación local":2325,"Sustitución de derivación ventricular":3225,"Reducción abierta de fractura":1325, "Extirpación de tumor cerebral":25000,
+        "Corrección de anomalías en la columna vertebral":6000, "Corrección de problemas en el desarrollo fetal de pulmones":7800,"Adrenalectomía":40000,
+        "Transplante de corazón": 100000,"Esplenectomía":6000,"Neurocirugía":32000,"Exéresis de lesiones benignas":900,"Cirugía reconstructiva": 1200}
 
         self.lista.insert(0,*diccionario_operaciones)
 
@@ -749,7 +809,9 @@ class Frame(tk.Frame):
 
         diccionario_operaciones={"Reducción abierta de fractura con fijación interna":2000,"Laparotomía exploradora":3000, 
         "Herniorrafia umbilical abierta":3215,"Reparación unilateral de hernia":325,"Apendicectomía":3025,"Incisión de tejido subcutáneo":525,
-        "Extirpación local":2325,"Sustitución de derivación ventricular":3225,"Reducción abierta de fractura":1325}
+        "Extirpación local":2325,"Sustitución de derivación ventricular":3225,"Reducción abierta de fractura":1325, "Extirpación de tumor cerebral":25000,
+        "Corrección de anomalías en la columna vertebral":6000, "Corrección de problemas en el desarrollo fetal de pulmones":7800,"Adrenalectomía":40000,
+        "Transplante de corazón": 100000,"Esplenectomía":6000,"Neurocirugía":32000,"Exéresis de lesiones benignas":900,"Cirugía reconstructiva": 1200}
 
         self.lista.insert(0,*diccionario_operaciones)
 

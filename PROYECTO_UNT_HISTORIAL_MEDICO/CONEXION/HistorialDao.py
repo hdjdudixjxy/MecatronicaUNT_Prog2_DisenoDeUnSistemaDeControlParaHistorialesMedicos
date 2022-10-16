@@ -65,7 +65,7 @@ def eliminarHistoria(idHistorial):
 
 #:::::::::::::::::::::::::::: EDITAR HISTORIA ::::::::::::::::::::::::::::::::::::
 
-def editarHistoria(fechaHistoria, MotivoDeLaVisita, Operacion, Tratamiento, DetalleAdicional, idHistorial, Precio):
+def editarHistoria(fechaHistoria, MotivoDeLaVisita, Operacion, Tratamiento, DetalleAdicional, Precio, idHistorial):
     """Función que edita los historiales en la clase HistoriaMedica"""
 
     conexion = ConexionDB()
