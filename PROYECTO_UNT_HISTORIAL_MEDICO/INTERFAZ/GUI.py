@@ -18,6 +18,9 @@ from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+from tkinter import filedialog as FileDialog
+import subprocess
+
 ################## VENTANA DE FONDO ##########################
 
 class Frame(tk.Frame):
@@ -461,7 +464,7 @@ class Frame(tk.Frame):
                                     background="tomato2", activebackground="tomato3", cursor="hand2")
         self.btnPDF.grid(column=3, row=1,padx=10,pady=10)
 
-        self.btnEnviarEmail=tk.Button(self.topHistoriaMedica, text="Enviar Historial",command=self.enviarEmail)
+        self.btnEnviarEmail=tk.Button(self.topHistoriaMedica, text="Enviar Historial",command=self.verPDF)
         self.btnEnviarEmail.config(width=20,font=("Verdana", 12, "bold"), foreground="gray2",
                                     background="royalblue2", activebackground="royalblue4", cursor="hand2")
         self.btnEnviarEmail.grid(column=4, row=1,padx=10,pady=10)
@@ -534,6 +537,27 @@ class Frame(tk.Frame):
 
         self.pdf.output(f"HISTORIALES_PDF/Historial_{self.id}_{self.n}.pdf")
       
+    def verPDF(self):
+        
+        resultado=messagebox.askquestion("HISTORIALES.PDF", "¿Deseas ver toda la carpeta de historiales?")
+
+        if resultado == "yes":
+
+            self.fichero = FileDialog.askopenfilename(title="Abrir un historial") # Guarda la ruta que seleccionemos en el atributo fichero 
+            subprocess.Popen([self.fichero], shell=True) # Abre el fichero seleccionado
+
+        elif resultado == "no":
+
+            self.id2=self.tabla2.item(self.tabla2.selection())["text"]
+            self.n2=self.tabla2.item(self.tabla2.selection())["values"][0]
+
+            subprocess.Popen([f"HISTORIALES_PDF/Historial_{self.id2}_{self.n2}.pdf"], shell=True) # Abre el fichero seleccionado
+
+
+        
+
+        
+
     def enviarEmail(self):
 
         servidor = "smtp.gmail.com"

@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 from INTERFAZ.GUI import Frame, error
 
 def main():
@@ -13,14 +14,28 @@ def main():
     fondo = Frame(aplicacion) # ventana para dar color de fondo
     fondo.mainloop() # bucle generador
 
-try:
-    if __name__ == "__main__":
-        main()
+def recursivo(): 
+    """Fución que nos ayudará a realizar una recursividad cuando el usuario quiera reintentar abrir la aplicación"""
 
-except:
-    error()
+    try:
+        if __name__ == "__main__":
+            main()
 
-#### VARIABLE-LEYENDA #######
+    except:
+        error()
+
+        resultado=messagebox.askretrycancel("ERROR", "Reintente abrir la aplicación")
+
+        if resultado == True:
+            
+            recursivo()
+
+        elif resultado == False:
+            print("Programa ejecutado sin éxito")
+
+recursivo()
+
+#### ATRIBUTOS-LEYENDA #######
 # lbl"..." : significa Label
 # sv "..." : es la variable de los entrys
 # entry "..." : significa entry
