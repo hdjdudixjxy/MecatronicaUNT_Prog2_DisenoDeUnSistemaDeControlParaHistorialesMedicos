@@ -1,6 +1,7 @@
-
 from CONEXION.PacienteDao import DatosPaciente, editarDatoPaciente, guardarDatoPaciente, listar, listarCondicion, eliminarPaciente
 from CONEXION.HistorialDao import guardarHistoria, editarHistoria, eliminarHistoria, listarHistoria
+from CONEXION.OperacionesDao import guardarOperaciones, eliminarOperaciones, listarPrecio, listarOperacion
+
 import tkinter as tk
 from tkinter import W, ttk, messagebox, Toplevel
 
@@ -44,6 +45,7 @@ class Frame(tk.Frame):
 ################## WIDGETS DE LA VENTANA PRINCIPAL ######################
 
     def camposPaciente(self):
+        """Método que instancia todas las clases usadas de tkinter y poder colocarlas sobre el frame principal"""
         
         ##################### LABELS ##########################
         
@@ -162,7 +164,7 @@ class Frame(tk.Frame):
 ################ FUNCIONES PARA LA VENTANA PRINCIPAL  ###################
             
     def deshabilitar(self):
-        """Función que bloquea los entrys, para después habilitarlos con el botón NUEVO"""
+        """Método que bloquea los entrys, para después habilitarlos con el botón NUEVO"""
 
         self.idPersona = None
         self.svNombre.set("")
@@ -185,7 +187,7 @@ class Frame(tk.Frame):
         self.btnGuardar.config(state="disabled")
     
     def habilitar(self):
-        """Función para habilitar los entrys"""
+        """Método para habilitar los entrys"""
 
         self.svNombre.set("")
         self.svApellidos.set("")
@@ -207,7 +209,7 @@ class Frame(tk.Frame):
         self.btnGuardar.config(state="normal")        
 
     def buscarCondicion(self):
-        """Función para el entry buscar por DNI"""
+        """Método para el entry buscar por DNI"""
 
         if len(self.svBuscarDni.get()) > 0:
             where = "WHERE 1=1" # manda todos los valores de la base de datos
@@ -222,7 +224,7 @@ class Frame(tk.Frame):
                 self.tablaPaciente(where)
 
     def tablaPaciente(self, where = ""):
-        """Función que inserta la tabla treeView de ttk en la GUI de tkinter"""
+        """Método que inserta la tabla treeView de ttk en la GUI de tkinter"""
 
         if len(where) > 0:
             self.listaDatosPaciente = listarCondicion(where)
@@ -282,7 +284,7 @@ class Frame(tk.Frame):
 ################# FUNCIONES DEL CALENDARIO ###################
 
     def MostrarCalendario(self):
-        """Función que muestra el calendario en la interfaz"""
+        """Método que muestra el calendario en la interfaz"""
 
         self.topCalendario = Toplevel() #Creamos una ventana flotante
         self.topCalendario.title("FECHA DE NACIMIENTO")
@@ -300,7 +302,7 @@ class Frame(tk.Frame):
         self.btnCalendario2.pack(fill=tk.BOTH)
 
     def EnviarFecha(self):
-        """Función que envía la fecha de self.calendar al entry FecNacimiento y referencia a la función calcularEdad"""
+        """Método que envía la fecha de self.calendar al entry FecNacimiento y referencia a la función calcularEdad"""
 
         self.svFecNacimiento.set(self.calendar.get_date()) # Mediante set mandamos la fecha al entry y con get_date la obtenemos de self.calendar 
 
@@ -309,7 +311,7 @@ class Frame(tk.Frame):
             self.topCalendario.destroy() 
 
     def CalcularEdad(self): 
-        """Función que inserta la edad en el entry Edad, restando el año obtenido con el modulo datetime y el ingresado por self.calendar"""
+        """Método que inserta la edad en el entry Edad, restando el año obtenido con el modulo datetime y el ingresado por self.calendar"""
 
         self.fechaActual = datetime.date.today()
         self.date1 = self.calendar.get_date()
@@ -322,7 +324,7 @@ class Frame(tk.Frame):
 ############## FUNCIONES QUE VINCULAN LOS OBJETOS #############
 
     def guardarPaciente(self):
-        """Función para insertar los datos del paciente a la base de datos"""
+        """Método para insertar los datos del paciente a la base de datos"""
 
         persona = DatosPaciente(self.svNombre.get(), self.svApellidos.get(), self.svDni.get(), self.svFecNacimiento.get(), self.svEdad.get(),self.svTelefono.get(), self.svCorreo.get())
         # el metodo get lee lo que se inserta en los entrys
@@ -336,7 +338,7 @@ class Frame(tk.Frame):
         self.tablaPaciente() # para actualizar la tabla cuando se ingresan datos
     
     def editarPaciente(self):
-        """Función que cambia los datos, pero en la tabla de la GUI"""
+        """Método que cambia los datos, pero en la tabla de la GUI"""
 
         try:
             self.idPersona = self.tabla.item(self.tabla.selection())["text"] #Trae el ID
@@ -366,7 +368,7 @@ class Frame(tk.Frame):
             messagebox.showerror(title, mensaje)  
 
     def eliminarDatoPaciente(self):
-        """Función que elimina los pacientes de la tabla y no de la base de datos"""
+        """Método que elimina los pacientes de la tabla y no de la base de datos"""
 
         try:
             self.idPersona = self.tabla.item(self.tabla.selection())["text"]
@@ -383,7 +385,7 @@ class Frame(tk.Frame):
 ################ TOP LEVEL HISTORIA MÉDICA ################
 
     def tablaHistoria(self):
-        """función que muestra todos los historiales del paciente en un Treeview"""
+        """Método que muestra todos los historiales del paciente en un Treeview"""
         try:
             if self.idPersona == None:
                 self.idPersona = self.tabla.item(self.tabla.selection())["text"]
@@ -433,7 +435,7 @@ class Frame(tk.Frame):
             self.idPersona = None
 
     def historiaMedica(self):
-        """Función para generar el Top Level donde estará la tabla de los historiales del paciente"""
+        """Método para generar el Top Level donde estará la tabla de los historiales del paciente"""
 
         self.topHistoriaMedica = Toplevel()
         self.topHistoriaMedica.title("HISTORIAL MEDICO")
@@ -445,34 +447,39 @@ class Frame(tk.Frame):
         self.tablaHistoria() 
 
         self.btnGuardarHistoria=tk.Button(self.topHistoriaMedica, text="Agregar Historia", command=self.topAgregarHistoria)
-        self.btnGuardarHistoria.config(width=20, font=("Verdana", 12, "bold"),
+        self.btnGuardarHistoria.config(width=18, font=("Verdana", 12, "bold"),
                                         foreground="gray2", background="seagreen1", activebackground="seagreen3", cursor="hand2")
         self.btnGuardarHistoria.grid(column=0, row=1, padx=10, pady=10)
 
         self.btnEditarHistoria=tk.Button(self.topHistoriaMedica, text="Editar Historia",command=self.topEditarHistorialMedico)
-        self.btnEditarHistoria.config(width=20, font=("Verdana", 12, "bold"),
+        self.btnEditarHistoria.config(width=18, font=("Verdana", 12, "bold"),
                                         foreground="gray2", background="salmon2", activebackground="salmon4", cursor="hand2")
         self.btnEditarHistoria.grid(column=1, row=1, padx=10, pady=10)
 
         self.btnEliminarHistoria=tk.Button(self.topHistoriaMedica, text="Eliminar Historia", command=self.eliminarHistorialMedico)
-        self.btnEliminarHistoria.config(width=20, font=("Verdana", 12, "bold"),
+        self.btnEliminarHistoria.config(width=18, font=("Verdana", 12, "bold"),
                                         foreground="gray2", background="purple2", activebackground="purple4", cursor="hand2")
         self.btnEliminarHistoria.grid(column=2, row=1, padx=10, pady=10)
 
         self.btnPDF=tk.Button(self.topHistoriaMedica, text="Generar PDF",command=self.crearPDF)
-        self.btnPDF.config(width=20,font=("Verdana", 12, "bold"), foreground="gray2",
+        self.btnPDF.config(width=18,font=("Verdana", 12, "bold"), foreground="gray2",
                                     background="tomato2", activebackground="tomato3", cursor="hand2")
         self.btnPDF.grid(column=3, row=1,padx=10,pady=10)
 
-        self.btnEnviarEmail=tk.Button(self.topHistoriaMedica, text="Enviar Historial",command=self.verPDF)
-        self.btnEnviarEmail.config(width=20,font=("Verdana", 12, "bold"), foreground="gray2",
+        self.btnEnviarEmail=tk.Button(self.topHistoriaMedica, text="Enviar Historial",command=self.enviarEmail)
+        self.btnEnviarEmail.config(width=18,font=("Verdana", 12, "bold"), foreground="gray2",
                                     background="royalblue2", activebackground="royalblue4", cursor="hand2")
         self.btnEnviarEmail.grid(column=4, row=1,padx=10,pady=10)
+
+        self.btnVerPDF=tk.Button(self.topHistoriaMedica, text="Ver Historial",command=self.verPDF)
+        self.btnVerPDF.config(width=18,font=("Verdana", 12, "bold"), foreground="gray2",
+                                    background="brown3", activebackground="brown4", cursor="hand2")
+        self.btnVerPDF.grid(column=5, row=1,padx=10,pady=10)
 
         self.idPersona = None
         
     def crearPDF(self):
-        """función para crear el historial de cada paciente"""
+        """Método para crear el historial de cada paciente"""
         
         self.pdf=fpdf.FPDF(orientation="L",unit="mm",format="A4")
         self.pdf.add_page()
@@ -538,7 +545,8 @@ class Frame(tk.Frame):
         self.pdf.output(f"HISTORIALES_PDF/Historial_{self.id}_{self.n}.pdf")
       
     def verPDF(self):
-        
+        """Método para visualizar un historial"""
+
         resultado=messagebox.askquestion("HISTORIALES.PDF", "¿Deseas ver toda la carpeta de historiales?")
 
         if resultado == "yes":
@@ -553,12 +561,8 @@ class Frame(tk.Frame):
 
             subprocess.Popen([f"HISTORIALES_PDF/Historial_{self.id2}_{self.n2}.pdf"], shell=True) # Abre el fichero seleccionado
 
-
-        
-
-        
-
     def enviarEmail(self):
+        """Método para enviar los historiales a correos hotmail"""
 
         servidor = "smtp.gmail.com"
         puerto = 465
@@ -655,22 +659,34 @@ class Frame(tk.Frame):
         self.lista.configure(bg="bisque3", selectbackground="navajowhite3", selectforeground="black", width=28, height=15,
                         font=("Verdana", 15), cursor="hand2", justify=tk.LEFT, selectborderwidth=4)
 
-        diccionario_operaciones={"Reducción abierta de fractura con fijación interna":2000,"Laparotomía exploradora":3000, 
-        "Herniorrafia umbilical abierta":3215,"Reparación unilateral de hernia":325,"Apendicectomía":3025,"Incisión de tejido subcutáneo":525,
-        "Extirpación local":2325,"Sustitución de derivación ventricular":3225,"Reducción abierta de fractura":1325, "Extirpación de tumor cerebral":25000,
-        "Corrección de anomalías en la columna vertebral":6000, "Corrección de problemas en el desarrollo fetal de pulmones":7800,"Adrenalectomía":40000,
-        "Transplante de corazón": 100000,"Esplenectomía":6000,"Neurocirugía":32000,"Exéresis de lesiones benignas":900,"Cirugía reconstructiva": 1200}
+        self.ListaOperacion=listarOperacion() # Ejecutamos la funcion listarOperación para generar la lista y poder insertar los *args en el LISTBOX
+        self.ListaOperacionTRUE=[]            # Creamos esta lista vacía que será con la que trabajaremos ya que no queremos una lista con *args
+                                              # tuples, sino str
+        
+        for p in range(len(self.ListaOperacion)): # Aquí hacemos varias listas por que la lista que se retorna es una lista que contiene elementos como
+                                                  # tuplas y queremos elementos como string para que no surga error al mostrarlos en el listbox, ni
+                                                  # en los entrys de historial medico
+            self.ListaOperacion2=self.ListaOperacion[p]
+            self.lista.insert(tk.END,self.ListaOperacion2[0])
+            self.ListaOperacionTRUE.append(self.ListaOperacion2[0])
+        
+        self.ListaPrecio=listarPrecio()
+        self.ListaPrecioTRUE=[]
 
-        self.lista.insert(0,*diccionario_operaciones)
+        for p in range(len(self.ListaPrecio)): # Aquí hacemos varias listas por que la lista que se retorna es una lista que contiene elementos como
+                                                  # tuplas y queremos elementos como string para que no surga error al mostrarlos en el listbox, ni
+                                                  # en los entrys de historial medico
+            self.ListaPrecio2=self.ListaPrecio[p]
+            self.ListaPrecioTRUE.append(self.ListaPrecio2[0])
 
         def agregar_datos():
-            """Función para agregar las operaciones y el precio tanto al diccionario como a el list box"""
+            """Función para agregar las operaciones y el precio tanto a la lista como a el list box y a la base de datos"""
 
             Operacion=self.operacion.get()
             Precio=self.precio.get()
             
             try:
-                if Operacion in diccionario_operaciones:
+                if Operacion in self.ListaOperacionTRUE:
                     
                     titulo = "Agregar operación"
                     mensaje = "Esta operación ya se encuentra en la base de datos"
@@ -693,13 +709,26 @@ class Frame(tk.Frame):
                     
                 elif isinstance(Precio,int):
 
-                    diccionario_operaciones[Operacion]=Precio
-                    self.lista.insert(tk.END,Operacion)   
+                    self.ListaOperacionTRUE.append(Operacion)
+                    ultimaOperacion=self.ListaOperacionTRUE[-1]
+                    self.lista.insert(tk.END,ultimaOperacion) 
+
+                    self.ListaPrecioTRUE.append(Precio)
+                    ultimoPrecio=self.ListaPrecioTRUE[-1]
+                    guardarOperaciones(ultimaOperacion, ultimoPrecio)
+
+                    self.topAHistoria.destroy()
+                    self.topHistoriaMedica.destroy()
+                    
+                    self.historiaMedica()
+                    self.topAgregarHistoria()
+                    
 
                 else:
                     pass         
 
             except:
+                
                 titulo = "Agregar operación"
                 mensaje = "Error al agregar operación"
                 messagebox.showerror(titulo, mensaje)
@@ -710,15 +739,26 @@ class Frame(tk.Frame):
                 self.topAgregarHistoria()
                 
         def eliminar_datos():
-            """Función para eliminar datos del diccionario operaciones"""
+            """Función para eliminar datos tanto de la lista como del list box y de la base de datos"""
 
             tupla=(self.lista.curselection())
+            numeroParaLista=(tupla[0])
 
             try:
-                del(diccionario_operaciones[self.lista.get(tupla[0])])
-                self.lista.delete(tupla[0])
+                self.lista.delete(numeroParaLista)              # Lo borramos del ListBox
+                self.ListaOperacionTRUE.pop(numeroParaLista)    # Lo eliminamos de la lista
+                self.ListaPrecio.pop(numeroParaLista) 
+                eliminarOperaciones(numeroParaLista+1)          # Sumamos 1 porque SQL toma valores del ID desde 1 y python desde 0 y para borrar el 
+                                                                # elemento correcto, sumamos 1
+                
+                self.topAHistoria.destroy()
+                self.topHistoriaMedica.destroy()
+                self.root.destroy()
+                self.historiaMedica()
+                self.topAgregarHistoria()
 
             except:
+
                 titulo = "Eliminar operación"
                 mensaje = "Error al eliminar la operación"
                 messagebox.showerror(titulo, mensaje)
@@ -729,24 +769,30 @@ class Frame(tk.Frame):
                 self.topAgregarHistoria()
                 
         def insertar_datos():
-            """Función para insertar las operaciones y el precio"""
+            """Función para insertar las operaciones y el precio en el TopLevel"""
 
             tupla=(self.lista.curselection())
-            
-            value=self.lista.get(tupla[0])
+            numeroParaLista=(tupla[0])
 
             try:
                 self.root.destroy()
-
-                self.svOperacion.set(value)
-                
-                self.svPrecio.set(diccionario_operaciones[value])
+                self.topAHistoria.destroy()
+                self.topHistoriaMedica.destroy()
+                self.historiaMedica()
+                self.topAgregarHistoria()
+                self.root.destroy()                 # Damos doble destroy porque este se ejecuta cuando se ejecuta el método topAgregarHistoria
+                self.svOperacion.set(str(self.ListaOperacionTRUE[numeroParaLista]))
+                self.svPrecio.set(int(self.ListaPrecioTRUE[numeroParaLista]))
 
             except IndexError:
                 
                 titulo = "Insertar operación"
                 mensaje = "Error al insertar la operación"
                 messagebox.showerror(titulo, mensaje)
+                self.topAHistoria.destroy()
+                self.topHistoriaMedica.destroy()
+                self.historiaMedica()
+                self.topAgregarHistoria()
 
         ########## CLASES BUTTON #############
         
@@ -784,7 +830,7 @@ class Frame(tk.Frame):
         self.scrollbar2.pack(side = tk.BOTTOM, fill = tk.BOTH)
         
     def TopLevelOperacionesEditar(self):
-        """Método que genera el list box con las operaciones"""
+        """Método que genera el list box con las operaciones, pero para editar"""
 
         self.root=tk.Toplevel()
 
@@ -831,22 +877,31 @@ class Frame(tk.Frame):
         self.lista.configure(bg="bisque3", selectbackground="navajowhite3", selectforeground="black", width=28, height=15,
                         font=("Verdana", 15), cursor="hand2", justify=tk.LEFT, selectborderwidth=4)
 
-        diccionario_operaciones={"Reducción abierta de fractura con fijación interna":2000,"Laparotomía exploradora":3000, 
-        "Herniorrafia umbilical abierta":3215,"Reparación unilateral de hernia":325,"Apendicectomía":3025,"Incisión de tejido subcutáneo":525,
-        "Extirpación local":2325,"Sustitución de derivación ventricular":3225,"Reducción abierta de fractura":1325, "Extirpación de tumor cerebral":25000,
-        "Corrección de anomalías en la columna vertebral":6000, "Corrección de problemas en el desarrollo fetal de pulmones":7800,"Adrenalectomía":40000,
-        "Transplante de corazón": 100000,"Esplenectomía":6000,"Neurocirugía":32000,"Exéresis de lesiones benignas":900,"Cirugía reconstructiva": 1200}
+        self.ListaOperacion=listarOperacion()
+        self.ListaOperacionTRUE=[]            
+        
+        for p in range(len(self.ListaOperacion)): 
+                                                  
+            self.ListaOperacion2=self.ListaOperacion[p]
+            self.lista.insert(tk.END,self.ListaOperacion2[0])
+            self.ListaOperacionTRUE.append(self.ListaOperacion2[0])
+        
+        self.ListaPrecio=listarPrecio()
+        self.ListaPrecioTRUE=[]
 
-        self.lista.insert(0,*diccionario_operaciones)
+        for p in range(len(self.ListaPrecio)): 
+                                                  
+            self.ListaPrecio2=self.ListaPrecio[p]
+            self.ListaPrecioTRUE.append(self.ListaPrecio2[0])
 
-        def agregar_datos():
+        def agregar_datos_editar():
             """Función para agregar las operaciones y el precio tanto al diccionario como a el list box"""
 
             Operacion=self.operacion.get()
             Precio=self.precio.get()
             
             try:
-                if Operacion in diccionario_operaciones:
+                if Operacion in self.ListaOperacionTRUE:
                     
                     titulo = "Agregar operación"
                     mensaje = "Esta operación ya se encuentra en la base de datos"
@@ -855,7 +910,7 @@ class Frame(tk.Frame):
                     self.topHistoriaMedica.destroy()
                     self.root.destroy()
                     self.historiaMedica()
-                    self.topEditarHistorialMedico()   # No es necesario colocar el self.TopLevelOperaciones() ya que en este método ya referenciamos esa función
+                    self.topEditarHistorialMedico()  
                 
                 elif Operacion==None:
                     titulo = "Agregar operación"
@@ -869,13 +924,25 @@ class Frame(tk.Frame):
                     
                 elif isinstance(Precio,int):
 
-                    diccionario_operaciones[Operacion]=Precio
-                    self.lista.insert(tk.END,Operacion)   
+                    self.ListaOperacionTRUE.append(Operacion)
+                    ultimaOperacion=self.ListaOperacionTRUE[-1]
+                    self.lista.insert(tk.END,ultimaOperacion) 
 
+                    self.ListaPrecioTRUE.append(Precio)
+                    ultimoPrecio=self.ListaPrecioTRUE[-1]
+                    guardarOperaciones(ultimaOperacion, ultimoPrecio)
+
+                    self.topEditarHistoria.destroy()
+                    self.topHistoriaMedica.destroy()
+                    
+                    self.historiaMedica()
+                    self.topEditarHistorialMedico()
+                    
                 else:
                     pass         
 
             except:
+
                 titulo = "Agregar operación"
                 mensaje = "Error al agregar operación"
                 messagebox.showerror(titulo, mensaje)
@@ -885,16 +952,27 @@ class Frame(tk.Frame):
                 self.historiaMedica()
                 self.topEditarHistorialMedico()
                 
-        def eliminar_datos():
+        def eliminar_datos_editar():
             """Función para eliminar datos del diccionario operaciones"""
 
             tupla=(self.lista.curselection())
+            numeroParaLista=(tupla[0])
 
             try:
-                del(diccionario_operaciones[self.lista.get(tupla[0])])
-                self.lista.delete(tupla[0])
 
+                self.lista.delete(numeroParaLista)              
+                self.ListaOperacionTRUE.pop(numeroParaLista)    
+                self.ListaPrecio.pop(numeroParaLista) 
+                eliminarOperaciones(numeroParaLista+1)          
+
+                self.topEditarHistoria.destroy()
+                self.topHistoriaMedica.destroy()
+                self.root.destroy()
+                self.historiaMedica()
+                self.topEditarHistorialMedico()
+                
             except:
+
                 titulo = "Eliminar operación"
                 mensaje = "Error al eliminar la operación"
                 messagebox.showerror(titulo, mensaje)
@@ -904,36 +982,38 @@ class Frame(tk.Frame):
                 self.historiaMedica()
                 self.topEditarHistorialMedico()
                 
-        def insertar_datos():
+        def insertar_datos_editar():
             """Función para insertar las operaciones y el precio, pero esta vez en el top level editar historial paciente"""
 
             tupla=(self.lista.curselection())
-            
-            value=self.lista.get(tupla[0])
+            numeroParaLista=(tupla[0])
 
             try:
-                self.root.destroy()
-
-                self.svOperacionEditar.set(value)
-                
-                self.svPrecioEditar.set(diccionario_operaciones[value])
+             
+                self.svOperacionEditar.set(str(self.ListaOperacionTRUE[numeroParaLista]))
+                self.svPrecioEditar.set(int(self.ListaPrecioTRUE[numeroParaLista]))
+                self.root.destroy() 
 
             except IndexError:
                 
                 titulo = "Insertar operación"
                 mensaje = "Error al insertar la operación"
                 messagebox.showerror(titulo, mensaje)
+                self.topEditarHistoria.destroy()
+                self.topHistoriaMedica.destroy()
+                self.historiaMedica()
+                self.topEditarHistorialMedico()
 
         ########## CLASES BUTTON #############
         
         self.boton1=tk.Button(self.ventana1)
-        self.boton1.configure(text="AGREGAR", bg="orangered3", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="orangered4", command=agregar_datos)
+        self.boton1.configure(text="AGREGAR", bg="orangered3", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="orangered4", command=agregar_datos_editar)
 
         self.boton2=tk.Button(self.ventana1)
-        self.boton2.configure(text="ELIMINAR", bg="orangered3", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="orangered4", command=eliminar_datos)
+        self.boton2.configure(text="ELIMINAR", bg="orangered3", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="orangered4", command=eliminar_datos_editar)
 
         self.boton3=tk.Button(self.root)
-        self.boton3.configure(text="INSERTAR", bg="orangered3", cursor="hand2", font=("Verdana", 13, "bold"), activebackground="orangered4", width=28, command=insertar_datos)
+        self.boton3.configure(text="INSERTAR", bg="orangered3", cursor="hand2", font=("Verdana", 13, "bold"), activebackground="orangered4", width=28, command=insertar_datos_editar)
 
         self.scrollbar1 = tk.Scrollbar(self.subventana2) 
         self.scrollbar1.configure(orient="vertical", command = self.lista.yview) 
@@ -960,7 +1040,7 @@ class Frame(tk.Frame):
         self.scrollbar2.pack(side = tk.BOTTOM, fill = tk.BOTH)
 
     def topAgregarHistoria(self):
-        """Función para generar el Top Level donde agregaremos los datos del historial"""
+        """Método para generar el Top Level donde agregaremos los datos del historial"""
 
         self.TopLevelOperaciones()
 
@@ -1058,7 +1138,7 @@ class Frame(tk.Frame):
         self.idPersona = None
 
     def agregaHistorialMedico(self):
-        """Función que agrega los historiales"""
+        """Método que agrega los historiales"""
 
         try:
             if self.idHistoriaMedica == None:
@@ -1076,7 +1156,7 @@ class Frame(tk.Frame):
             messagebox.showerror(titulo, mensaje)
 
     def eliminarHistorialMedico(self):
-        """función que elimina los historiales, de forma definitiva"""
+        """Método que elimina los historiales, de forma definitiva"""
 
         try:
             self.idHistoriaMedica = self.tabla2.item(self.tabla2.selection())['text']
@@ -1091,7 +1171,7 @@ class Frame(tk.Frame):
             messagebox.showerror(titulo, mensaje)
 
     def topEditarHistorialMedico(self):
-        
+        """Método para generar el Top Level donde editaremos los datos del historial """
         try:
 
             self.TopLevelOperacionesEditar()
@@ -1204,6 +1284,7 @@ class Frame(tk.Frame):
             messagebox.showerror(titulo, mensaje)
 
     def historiaMedicaEditar(self):
+        """Método que edita los historiales"""
 
         try:
             editarHistoria(self.svFechaHistoriaEditar.get(), self.svMotivoEditar.get(), self.svOperacionEditar.get(), self.svTratamientoEditar.get(), self.svDetalleEditar.get(), self.svPrecioEditar.get(), self.idHistoriaMedicaEditar)
