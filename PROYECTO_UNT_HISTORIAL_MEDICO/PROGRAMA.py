@@ -10,7 +10,7 @@ def main():
     aplicacion.resizable(width=False, height=False) # expansión a pantalla completa
     aplicacion.geometry("1420x720+48+40") # tamaño por defecto y posición
     aplicacion.minsize(width=1280, height=720) # tamaño mínimo al minimizar
-    aplicacion.iconbitmap("ICONOS/ICONO.ico") # icono de la interfaz
+    aplicacion.iconbitmap("ICONOS/ICONO.ico")
     fondo = Frame(aplicacion) # ventana para dar color de fondo
     fondo.mainloop() # bucle generador
 
@@ -39,4 +39,4 @@ recursivo()
 # lbl"..." : significa Label
 # sv "..." : es la variable de los entrys
 # entry "..." : significa entry
-# btn "..." : significa button
+# btn "..." : significa buttoncd
