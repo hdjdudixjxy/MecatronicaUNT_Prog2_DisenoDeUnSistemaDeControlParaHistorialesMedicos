@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from INTERFAZ.GUI import Frame, error
 
+
 def main():
     """Interfaz principal"""
 
@@ -19,6 +20,7 @@ def recursivo():
 
     try:
         if __name__ == "__main__":
+            
             main()
 
     except:
