@@ -1,5 +1,4 @@
 import sqlite3
-
 class ConexionDB:
     def __init__(self):
         self.baseDatos = "BaseDeDatos/DbHistorial.db" # insertamos la ruta

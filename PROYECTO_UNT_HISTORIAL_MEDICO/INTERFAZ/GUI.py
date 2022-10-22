@@ -1,6 +1,7 @@
-from CONEXION.PacienteDao import DatosPaciente, editarDatoPaciente, guardarDatoPaciente, listar, listarCondicion, eliminarPaciente
-from CONEXION.HistorialDao import guardarHistoria, editarHistoria, eliminarHistoria, listarHistoria
-from CONEXION.OperacionesDao import guardarOperaciones, eliminarOperaciones, listarPrecio, listarOperacion
+from Conexion.PacienteDao import DatosPaciente, editarDatoPaciente, guardarDatoPaciente, listar, listarCondicion, eliminarPaciente
+from Conexion.HistorialDao import guardarHistoria, editarHistoria, eliminarHistoria, listarHistoria
+from Conexion.OperacionesDao import guardarOperaciones, eliminarOperaciones, listarPrecio, listarOperacion
+from Conexion.LoginDao import listarLogin, guardarLogin, listarCondicionLogin, listarCondicionLogin2
 
 import tkinter as tk
 from tkinter import W, ttk, messagebox, Toplevel
@@ -21,6 +22,7 @@ from email.mime.multipart import MIMEMultipart
 
 from tkinter import filedialog as FileDialog
 import subprocess
+import webbrowser
 
 ################## VENTANA DE FONDO ##########################
 
@@ -39,8 +41,8 @@ class Frame(tk.Frame):
         self.idHistoriaMedica=None
         self.idHistoriaMedicaEditar=None
         self.camposPaciente()
-        self.deshabilitar()
         self.tablaPaciente()
+        self.deshabilitar()
 
 ################## WIDGETS DE LA VENTANA PRINCIPAL ######################
 
@@ -128,7 +130,7 @@ class Frame(tk.Frame):
 
         self.btnCancelar = tk.Button(self, text="CANCELAR")
         self.btnCancelar.config(width=20, font=("verdana",12,"bold"), 
-                                background="khaki1", cursor="hand2",activebackground="khaki3")
+                                background="khaki1", cursor="hand2",activebackground="khaki3", command=self.deshabilitar)
         self.btnCancelar.grid(column=2,row=7, padx=10, pady=5)
 
         self.btnCalendario = tk.Button(self, text="BUSCAR")
@@ -154,8 +156,8 @@ class Frame(tk.Frame):
 
         ####################### IMAGEN ####################
 
-        self.imagen=Image.open("ICONOS/UNT.png")
-        self.imagen=self.imagen.resize((220,180), Image.ANTIALIAS)
+        self.imagen=Image.open("ICONOS/medico.png")
+        self.imagen=self.imagen.resize((200,180), Image.ANTIALIAS)
         self.img=ImageTk.PhotoImage(self.imagen)
         self.LblImagen=tk.Label(self,image=self.img)
         self.LblImagen.config(bg="lightseagreen")
@@ -1301,6 +1303,411 @@ class Frame(tk.Frame):
             messagebox.showerror(titulo, mensaje)
             self.topEditarHistoria.destroy()
 
+################# LOGIN #########################
+
+class Frame2(tk.Frame):
+    """Clase ventana"""
+
+    def __init__(self, login): 
+        """Constructor de instancias"""
+        super().__init__(login) 
+        self.login = login
+        self.intentos=3
+        self.pack(fill=tk.BOTH, expand=True)
+        self.config(background="#0E4C75")
+        self.widgets()
+    
+    def widgets(self):
+        """Método que instancia todas las clases usadas de tkinter y poder colocarlas sobre el frame principal"""
+
+        ########## Frame que contiene todo ################
+
+        self.frame=tk.Frame(self)
+        self.frame.configure(bg="#3282B5",width=770,height=500)
+        self.frame.place(rely=0.18, relx=0.07)
+        self.frame.pack_propagate(False)
+
+        self.Hyper=tk.Label(self)
+        self.Hyper.configure(text="Visita nuestra página web", bg="#0E4C75", font=("Bahnschrift", 11, "underline", "bold"), fg="#BDE2FF", cursor="hand2")
+        self.Hyper.place(x=510,y=645)
+        self.Hyper.bind("<Button-1>",lambda x: webbrowser.open_new("https://google.com"))
+
+        ######### Subdivisión 1 (Parte derecha) ###############
+
+        self.frame1=tk.Frame(self.frame)
+        self.frame1.configure(bg="#3282B5",width=450,height=500)
+        self.frame1.pack(side=tk.RIGHT)
+        self.frame1.pack_propagate(False)
+
+        ######### Subdivisión 2 (Parte izquierda) ###############
+
+        self.frame2=tk.Frame(self.frame)
+        self.frame2.configure(bg="#2A6C96",width=320,height=500)
+        self.frame2.pack(side=tk.LEFT)
+        self.frame2.pack_propagate(False)
+        
+        ######### Subdivisión 1_1 (Parte derecha de subdivisión 1) ###############
+
+        self.frame1_1=tk.Frame(self.frame1)
+        self.frame1_1.configure(bg="#2A6C96",width=30,height=500)
+        self.frame1_1.pack(side=tk.RIGHT)
+
+        ######### Subdivisión 1_2 (Parte izquierda de subdivisión 1) #############
+
+        self.frame1_2=tk.Frame(self.frame1)
+        self.frame1_2.configure(bg="#3282B5",width=420,height=500)
+        self.frame1_2.pack(side=tk.LEFT, padx=10)
+
+        ######### Imagen de incógnito en subdivisión 2 #########
+
+        self.imagenIncognito=Image.open("ICONOS/incognito.png")
+        self.imagenIncognito=self.imagenIncognito.resize((280,250), Image.ANTIALIAS)
+        self.imgIncognito=ImageTk.PhotoImage(self.imagenIncognito)
+        self.LblImagenIncognito=tk.Label(self.frame2,image=self.imgIncognito)
+        self.LblImagenIncognito.config(bg="#2A6C96")
+        self.LblImagenIncognito.place(x=20,y=120) 
+        
+        self.LabelBienvenido=tk.Label(self.frame1_2)
+        self.LabelBienvenido.configure(text="Bienvenido", font=("Bahnschrift", 50), bg="#3282B5", fg="#BDE2FF",anchor="c")
+        self.LabelBienvenido.pack(pady=10)
+
+        self.frame1_2_1=tk.Frame(self.frame1_2)
+        self.frame1_2_1.configure(bg="#3282B5",width=420,height=500)
+        self.frame1_2_1.pack()
+
+        self.frame1_2_2=tk.Frame(self.frame1_2)
+        self.frame1_2_2.configure(bg="#3282B5",width=420,height=500)
+        self.frame1_2_2.pack()
+
+        self.imagenUsername=Image.open("ICONOS/username.png")
+        self.imagenUsername=self.imagenUsername.resize((70,70), Image.ANTIALIAS)
+        self.imgUsername=ImageTk.PhotoImage(self.imagenUsername)
+        self.LblImagenUsername=tk.Label(self.frame1_2_1,image=self.imgUsername)
+        self.LblImagenUsername.config(bg="#2A6C96", width=50, height=45)
+        self.LblImagenUsername.pack(side=tk.LEFT, pady=20) 
+        self.LblImagenUsername.pack_propagate(False)
+
+        self.svUsuario_Existente=tk.StringVar()
+        self.EntryUsuario_Existente=tk.Entry(self.frame1_2_1)
+        self.EntryUsuario_Existente.configure(bg="#FFFFFF", font=("Bahnschrift", 30), width=17, textvariable=self.svUsuario_Existente)
+        self.EntryUsuario_Existente.pack(side=tk.RIGHT, pady=10)
+        self.EntryUsuario_Existente.bind("<Button-1>",self.evento)
+
+        self.imagenPassword=Image.open("ICONOS/password.png")
+        self.imagenPassword=self.imagenPassword.resize((60,60), Image.ANTIALIAS)
+        self.imgPassword=ImageTk.PhotoImage(self.imagenPassword)
+        self.LblImagenPassword=tk.Label(self.frame1_2_2,image=self.imgPassword)
+        self.LblImagenPassword.config(bg="#2A6C96", width=50, height=45)
+        self.LblImagenPassword.pack(side=tk.LEFT, pady=20) 
+        self.LblImagenPassword.pack_propagate(False)
+
+        self.svContraseña_Existente=tk.StringVar()
+        self.EntryContraseña_Existente=tk.Entry(self.frame1_2_2)
+        self.EntryContraseña_Existente.configure(bg="#FFFFFF", font=("Bahnschrift", 30), show="*", width=17, textvariable=self.svContraseña_Existente)
+        self.EntryContraseña_Existente.pack(side=tk.RIGHT, pady=20)
+
+        self.frame1_2_3=tk.Frame(self.frame1_2)
+        self.frame1_2_3.configure(bg="#3282B5")
+        self.frame1_2_3.pack(fill=tk.BOTH, expand=True)
+
+        self.svCheck=tk.BooleanVar()
+        self.Check=tk.Checkbutton(self.frame1_2_3)
+        self.Check.configure(text="Mostrar contraseña", font=("Bahnschrift",11),bg="#3282B5", activebackground="#3282B5", 
+                            cursor="hand2",selectcolor="#2A6C96", variable=self.svCheck, command=self.mostrarContraseña)
+        self.Check.pack(sid=tk.LEFT)
+
+        self.frame1_2_4=tk.Frame(self.frame1_2)
+        self.frame1_2_4.configure(bg="#3282B5",width=420,height=500)
+        self.frame1_2_4.pack(padx=10, pady=10)
+
+        self.Boton=tk.Button(self.frame1_2_4)
+        self.Boton.configure(text="Login",font=("Bahnschrift", 20),bg="#BBE1F8",width=7, cursor="hand2", border=0, activebackground="#A3C5D9", command=self.ejecutarApp)
+        self.Boton.pack(side=tk.LEFT)
+
+        self.imagenLogin=Image.open("ICONOS/login.ico")
+        self.imagenLogin=self.imagenLogin.resize((40,40), Image.ANTIALIAS)
+        self.imgLogin=ImageTk.PhotoImage(self.imagenLogin)
+        self.LblImagenLogin=tk.Label(self.frame1_2_4,image=self.imgLogin)
+        self.LblImagenLogin.config(bg="#BBE1F8", width=50, height=50)
+        self.LblImagenLogin.pack(side=tk.RIGHT) 
+        self.LblImagenLogin.pack_propagate(False)
+
+        self.Label2=tk.Label(self.frame1_2)
+        self.Label2.configure(text="¿Olvidaste la contraseña?", font=("Bahnschrift", 11), bg="#3282B5", fg="#BDE2FF",anchor="c")
+        self.Label2.pack(pady=10)
+        self.Label2.bind("<Button-1>",self.Login1)
+
+        self.Label3=tk.Label(self.frame1_2)
+        self.Label3.configure(text="¿No tienes cuenta? REGÍSTRATE", font=("Bahnschrift", 11), bg="#3282B5", fg="#BDE2FF",anchor="c")
+        self.Label3.pack()
+        self.Label3.bind("<Button-1>",self.Login2)
+
+    def evento(self,event):
+        """Indicaciones para el ususario"""
+
+        messagebox.showinfo("USERNAME", "Ingresa tu nombre de usuario, no tu nombre real")
+
+    def mostrarContraseña(self):
+        """Método para mostrar * si el checkbutton está deshabilitado, si se habilita muestra el string ingresado"""
+
+        if self.svCheck.get() == True:
+            self.EntryContraseña_Existente.configure(bg="#FFFFFF", font=("Bahnschrift", 30), show="", width=17, textvariable=self.svContraseña_Existente)
+        else:
+            self.EntryContraseña_Existente.configure(bg="#FFFFFF", font=("Bahnschrift", 30), show="*", width=17, textvariable=self.svContraseña_Existente)
+
+    def ejecutarApp(self):
+        """Método para abrir la aplicación si es correcto el usuario y contraseña"""
+        
+        self.listaCondicionContraseña = listarCondicionLogin()
+        self.listaCondicionContraseñaTRUE=[]            
+        
+        for p in range(len(self.listaCondicionContraseña)): 
+
+            self.listaCondicionContraseña2=self.listaCondicionContraseña[p]
+            self.listaCondicionContraseñaTRUE.append(self.listaCondicionContraseña2[0])
+
+        self.listaCondicionUsuario = listarCondicionLogin2()
+        self.listaCondicionUsuarioTRUE=[]            
+        
+        for p in range(len(self.listaCondicionUsuario)): 
+
+            self.listaCondicionUsuario2=self.listaCondicionUsuario[p]
+            self.listaCondicionUsuarioTRUE.append(self.listaCondicionUsuario2[0])    
+        
+        if self.svUsuario_Existente.get() in self.listaCondicionUsuarioTRUE:
+            
+            if self.svContraseña_Existente.get() in self.listaCondicionContraseñaTRUE:
+                
+                self.login.destroy()
+                aplicacion = tk.Tk() 
+                aplicacion.title("HISTORIAS CLINICAS") # nombre de la interfaz
+                aplicacion.resizable(width=False, height=False) # expansión a pantalla completa
+                aplicacion.geometry("1420x720+48+40") # tamaño por defecto y posición
+                aplicacion.minsize(width=1280, height=720) # tamaño mínimo al minimizar
+                aplicacion.iconbitmap("ICONOS/ICONO.ico")
+                fondo = Frame(aplicacion) # ventana para dar color de fondo
+                fondo.mainloop() # bucle generador
+            
+            else:
+
+                messagebox.showerror("ERROR", "Contraseña incorrecta")
+
+        else:
+            messagebox.showerror("ERROR", "Este usuario no existe, porfavor registrese")
+
+    ######### OLVIDAR CONTRASEÑA ##########
+
+    def TablaLogin(self):
+        """Método que muestra todos los Trabajadores, sus usuarios y contraseñas en un Treeview"""
+
+        try:
+
+            self.ListaLogin = listarLogin()
+            self.ListaLogin.reverse()
+            self.tablaLogin = ttk.Treeview(self.topLogin1, column=("Trabajador", "Usuario", "Contraseña"))
+            self.tablaLogin.config(height=10)
+            self.tablaLogin.tag_configure("evenrow", background="oldlace")
+            self.tablaLogin.grid(column=0, row=0, columnspan=3,sticky="nse")
+
+            self.scroll=ttk.Scrollbar(self.topLogin1, orient="vertical", command=self.tablaLogin.yview)
+            self.scroll.grid(row=0, column=3, sticky="nse")
+
+            self.tablaLogin.configure(yscrollcommand=self.scroll.set)
+
+            self.tablaLogin.heading("#0",text="ID")
+            self.tablaLogin.heading("#1",text="Trabajador")
+            self.tablaLogin.heading("#2",text="Usuario")
+            self.tablaLogin.heading("#3",text="Contraseña")
+
+            self.tablaLogin.column("#0", anchor=W, width=50)
+            self.tablaLogin.column("#1", anchor=W, width=250)
+            self.tablaLogin.column("#2", anchor=W, width=125)
+            self.tablaLogin.column("#3", anchor=W, width=125)
+
+
+            for p in self.ListaLogin:
+                self.tablaLogin.insert("",0,text=p[0], values=(p[1],p[2],p[3]), tags=("evenrow",))
+
+        except:
+            
+            titulo = "Usuarios"
+            mensaje = "Error al mostrar los usuarios"
+            messagebox.showerror(titulo, mensaje)
+
+    def Login1(self, event):
+        """Evento para generar el Top Level donde se ingresará la clave al darle olvide mi contraseña"""
+
+        self.topCorroborar1=Toplevel()
+        self.topCorroborar1.title("CLAVE SECRETA")
+        self.topCorroborar1.geometry("630x120+160+260")
+        self.topCorroborar1.resizable(width=False, height=False)
+        self.topCorroborar1.iconbitmap("ICONOS/incognito2.ico")
+        self.topCorroborar1.configure(bg="#0E4C75")
+
+        self.LabelClave1=tk.Label(self.topCorroborar1)
+        self.LabelClave1.configure(text="Ingresa la clave para ver los usuarios", font=("Bahnschrift", 20), bg="#0E4C75", fg="#BDE2FF")
+        self.LabelClave1.pack(pady=10)
+
+        self.svclave1=tk.StringVar()
+        self.entryClave1=tk.Entry(self.topCorroborar1)
+        self.entryClave1.configure(textvariable=self.svclave1, font=("Bahnschrift", 20))
+        self.entryClave1.pack()
+        self.entryClave1.bind("<Return>",self.LoginVerUsuarios) # Dando ENTER ejecutamos LoginVerUsuarios
+
+    def LoginVerUsuarios(self,event):
+        """Evento que muestra el top que contiene la tabla de usuarios si se cumple el if de la clave"""
+
+        if self.svclave1.get() == "Edwin":
+
+            self.topCorroborar1.destroy()
+            self.topLogin1 = Toplevel()
+            self.topLogin1.title("USUARIOS")
+            self.topLogin1.geometry("570x227+160+260")
+            self.topLogin1.resizable(width=False, height=False)
+            self.topLogin1.iconbitmap("ICONOS/incognito2.ico")
+            
+            self.TablaLogin() 
+        
+        else:
+            self.intentos-=1
+
+            if self.intentos>0:
+
+                messagebox.showerror("ERROR",f"""Clave incorrecta, vuelve a intentarlo.
+Te quedan {self.intentos} intentos""")
+            
+            else:
+
+                self.topCorroborar1.destroy()
+                messagebox.showwarning("JA","no me puedes jaquear xd")
+
+    ########## REGÍSTRATE ##########
+
+    def Login2(self, event):
+        """Evento para generar el Top Level donde se ingresará la clave al darle Registrate"""
+
+        self.topCorroborar2=Toplevel()
+        self.topCorroborar2.title("CLAVE SECRETA")
+        self.topCorroborar2.geometry("630x120+160+260")
+        self.topCorroborar2.resizable(width=False, height=False)
+        self.topCorroborar2.iconbitmap("ICONOS/incognito2.ico")
+        self.topCorroborar2.configure(bg="#0E4C75")
+
+        self.LabelClave2=tk.Label(self.topCorroborar2)
+        self.LabelClave2.configure(text="Ingresa la clave para ver los usuarios", font=("Bahnschrift", 20), bg="#0E4C75", fg="#BDE2FF")
+        self.LabelClave2.pack(pady=10)
+
+        self.svclave2=tk.StringVar()
+        self.entryClave2=tk.Entry(self.topCorroborar2)
+        self.entryClave2.configure(textvariable=self.svclave2, font=("Bahnschrift", 20))
+        self.entryClave2.pack()
+        self.entryClave2.bind("<Return>",self.LoginRegistrate) # Dando ENTER ejecutamos LoginVerUsuarios
+
+    def LoginRegistrate(self,event):
+        """Evento que muestra el top para agregar un usuario si es correcta la clave"""
+
+        if self.svclave2.get() == "Edwin":
+
+            self.topCorroborar2.destroy()
+
+            self.topLogin2 = Toplevel()
+            self.topLogin2.title("USUARIOS")
+            self.topLogin2.geometry("570x200+160+260")
+            self.topLogin2.resizable(width=False, height=False)
+            self.topLogin2.iconbitmap("ICONOS/incognito2.ico")
+            self.topLogin2.configure(bg="#0E4C75")
+            
+            self.ventana1=tk.Frame(self.topLogin2)
+            self.ventana1.configure(bg="#0E4C75",width=570, height=30)
+            self.ventana1.pack(pady=10)
+            self.ventana1.pack_propagate(False)
+
+            self.ventana2=tk.Frame(self.topLogin2)
+            self.ventana2.configure(bg="#0E4C75",width=570, height=30)
+            self.ventana2.pack(pady=10)
+            self.ventana2.pack_propagate(False)
+
+            self.ventana3=tk.Frame(self.topLogin2)
+            self.ventana3.configure(bg="#0E4C75",width=570, height=30)
+            self.ventana3.pack(pady=10)
+            self.ventana3.pack_propagate(False)
+
+            self.ventana4=tk.Frame(self.topLogin2)
+            self.ventana4.configure(bg="#0E4C75")
+            self.ventana4.pack(pady=10)
+
+            ########## CLASES ENTRYS ################
+
+            self.svTrabajador=tk.StringVar()
+            self.entry=tk.Entry(self.ventana1)
+            self.entry.configure(textvariable=self.svTrabajador, font=("Bahnschrift", 15), width=22)
+            self.entry.pack(side=tk.RIGHT, padx=6)
+
+            self.svUsuario_Agregar=tk.StringVar()
+            self.entry2=tk.Entry(self.ventana2)
+            self.entry2.configure(textvariable=self.svUsuario_Agregar, font=("Bahnschrift", 15), width=22)
+            self.entry2.pack(side=tk.RIGHT, padx=6)
+
+            self.svContraseña_Agregar=tk.StringVar()
+            self.entry3=tk.Entry(self.ventana3)
+            self.entry3.configure(textvariable=self.svContraseña_Agregar, font=("Bahnschrift", 15), width=22)
+            self.entry3.pack(side=tk.RIGHT, padx=6)
+
+            ########## CLASES LABELS ############
+
+            self.LabelTrabajador=tk.Label(self.ventana1)
+            self.LabelTrabajador.configure(text="Ingrese sus nombres y apellidos", font=("Bahnschrift", 15),bg="#0E4C75", justify=tk.LEFT, fg="#BDE2FF")
+            self.LabelTrabajador.pack(side=tk.LEFT, padx=2)
+
+            self.LabelUsuario=tk.Label(self.ventana2)
+            self.LabelUsuario.configure(text="Ingrese un nombre de usuario", font=("Bahnschrift", 15),bg="#0E4C75", justify=tk.LEFT, fg="#BDE2FF")
+            self.LabelUsuario.pack(side=tk.LEFT, padx=2)
+
+            self.LabelContraseña=tk.Label(self.ventana3)
+            self.LabelContraseña.configure(text="Ingrese una contraseña", font=("Bahnschrift", 15),bg="#0E4C75", justify=tk.LEFT, fg="#BDE2FF")
+            self.LabelContraseña.pack(side=tk.LEFT, padx=2)
+
+            ######## CLASE BUTTON #############
+      
+            self.Boton2=tk.Button(self.ventana4)
+            self.Boton2.configure(text="AGREGAR", bg="#BBE1F8",font=("Bahnschrift", 12), width=8, cursor="hand2", border=0, activebackground="#A3C5D9", command=self.Registrar)
+            self.Boton2.pack()
+
+        else:
+            self.intentos-=1
+
+            if self.intentos>0:
+
+                messagebox.showerror("ERROR",f"""Clave incorrecta, vuelve a intentarlo.
+Te quedan {self.intentos} intentos""")
+            
+            else:
+
+                self.topCorroborar2.destroy()
+                messagebox.showwarning("JA","no me puedes jaquear xd")
+
+    def Registrar(self):
+        """Método que guarda en la clase Login"""
+
+        self.listaCondicionUsuario_Registrar = listarCondicionLogin2()
+        self.listaCondicionUsuario_RegistrarTRUE=[]            
+        
+        for p in range(len(self.listaCondicionUsuario_Registrar)): 
+
+            self.listaCondicionUsuario_Registrar2=self.listaCondicionUsuario_Registrar[p]
+            self.listaCondicionUsuario_RegistrarTRUE.append(self.listaCondicionUsuario_Registrar2[0])
+        
+        if  self.svUsuario_Agregar.get() in self.listaCondicionUsuario_RegistrarTRUE:
+
+            messagebox.showinfo("ADVERTENCIA", "Este nombre de usuario ya existe")
+            self.topLogin2.destroy()
+            self.LoginRegistrate(self)
+
+        else:
+
+            guardarLogin(self.svTrabajador.get(), self.svUsuario_Agregar.get(), self.svContraseña_Agregar.get())
+            self.topLogin2.destroy()
+        
 #################### ERROR INTERFAZ ##########################
 
 def error():

@@ -1,4 +1,4 @@
-from CONEXION.conexion import ConexionDB
+from Conexion.conexion import ConexionDB
 from tkinter import messagebox
 
 class Login:
@@ -53,7 +53,45 @@ def listarLogin():
         conexion.cerrarConexion()
     except:
         titulo = "LISTAR"
-        mensaje = "Error al listar historia medica"
+        mensaje = "Error al listar Login"
         messagebox.showerror(titulo, mensaje)
 
     return listaLogin
+
+def listarCondicionLogin():
+    """Función que crea una lista y hace que se genere una lista que contenga las contraseñas"""
+
+    conexion = ConexionDB()
+    listaCondicionLogin = []
+    
+    sql = f"""SELECT Contrasena FROM Login WHERE TRUE"""
+    
+    try:
+        conexion.cursor.execute(sql)
+        listaCondicionLogin = conexion.cursor.fetchall()
+        conexion.cerrarConexion()
+    except:
+        titulo = "LISTAR"
+        mensaje = "Error al listar Login Condicion"
+        messagebox.showerror(titulo, mensaje)
+
+    return listaCondicionLogin
+
+def listarCondicionLogin2():
+    """Función que crea una lista y hace que se genere una lista que contenga las contraseñas"""
+
+    conexion = ConexionDB()
+    listaCondicionLogin2 = []
+    
+    sql = f"""SELECT Usuario FROM Login WHERE TRUE"""
+    
+    try:
+        conexion.cursor.execute(sql)
+        listaCondicionLogin2 = conexion.cursor.fetchall()
+        conexion.cerrarConexion()
+    except:
+        titulo = "LISTAR"
+        mensaje = "Error al listar Login Condicion"
+        messagebox.showerror(titulo, mensaje)
+
+    return listaCondicionLogin2

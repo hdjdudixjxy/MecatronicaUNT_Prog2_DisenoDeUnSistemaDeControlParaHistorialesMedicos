@@ -1,21 +1,18 @@
 import tkinter as tk
 from tkinter import messagebox
-from INTERFAZ.GUI import Frame, error
-
+from INTERFAZ.GUI import Frame, Frame2, error
 
 def main():
-    """Interfaz principal"""
 
-    aplicacion = tk.Tk() 
-    aplicacion.title("HISTORIAS CLINICAS") # nombre de la interfaz
-    aplicacion.resizable(width=False, height=False) # expansión a pantalla completa
-    aplicacion.geometry("1420x720+48+40") # tamaño por defecto y posición
-    aplicacion.minsize(width=1280, height=720) # tamaño mínimo al minimizar
-    aplicacion.iconbitmap("ICONOS/ICONO.ico")
-    fondo = Frame(aplicacion) # ventana para dar color de fondo
-    fondo.mainloop() # bucle generador
+    login = tk.Tk() 
+    login.title("LOGIN") 
+    login.resizable(width=True, height=True) 
+    login.geometry("900x760+350+20")
+    login.iconbitmap("ICONOS/login.ico")
+    fondo2 = Frame2(login)
+    fondo2.mainloop()
 
-def recursivo(): 
+def recursivo():
     """Fución que nos ayudará a realizar una recursividad cuando el usuario quiera reintentar abrir la aplicación"""
 
     try:

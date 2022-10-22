@@ -1,4 +1,4 @@
-from CONEXION.conexion import ConexionDB
+from Conexion.conexion import ConexionDB
 from tkinter import messagebox
 
 ################### CLASE HistoriaMedica ################################
