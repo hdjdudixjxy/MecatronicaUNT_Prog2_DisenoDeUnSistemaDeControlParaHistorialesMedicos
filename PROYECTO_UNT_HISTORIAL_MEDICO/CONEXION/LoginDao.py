@@ -18,6 +18,27 @@ class Login:
 
 ##################### FUNCIONES QUE VINCULAN A SQLITE ########################################
 
+#:::::::::::::::::::::::::::::: GUARDAR HISTORIA ::::::::::::::::::::::::::::::::::::
+
+def guardarLogin(Trabajador, Usuario, Contrasena):
+    """Función que guarda los datos en la clase Login"""
+
+    conexion = ConexionDB()
+    sql = f"""INSERT INTO Login (Trabajador, Usuario, Contrasena) VALUES
+            ("{Trabajador}","{Usuario}",{Contrasena})"""
+
+    try:
+        conexion.cursor.execute(sql)
+        conexion.cerrarConexion()
+        titulo = "Registro Operación"
+        mensaje = "Operación registrada exitosamente"
+        messagebox.showinfo(titulo, mensaje)
+
+    except:
+        titulo = "Registro Operación"
+        mensaje = "Error al registrar operación"
+        messagebox.showerror(titulo, mensaje)
+
 #::::::::::::::::::::::::: TREEVIEW EN LA GUI LOGIN :::::::::::::::::::::::::::::::::::::
 
 def listarLogin():

@@ -1,4 +1,4 @@
-from CONEXION.LoginDao import Login, listarLogin
+from CONEXION.LoginDao import listarLogin, guardarLogin
 
 import tkinter as tk
 from tkinter import messagebox, ttk, Toplevel, W
@@ -137,7 +137,6 @@ class Frame2(tk.Frame):
     def printb(self,event):
         messagebox.showinfo("USERNAME", "Ingresa el nombre del profesor de programación")
 
-
     def contrsa(self, event):
         pass
 
@@ -183,10 +182,9 @@ class Frame2(tk.Frame):
 
         except:
             
-            titulo = "Historia Medica"
-            mensaje = "Error al mostrar historial"
+            titulo = "Usuarios"
+            mensaje = "Error al mostrar los usuarios"
             messagebox.showerror(titulo, mensaje)
-            self.idPersona = None
 
     def Login(self, event):
         """Método para generar el Top Level donde estará la tabla de los historiales del paciente"""
@@ -199,6 +197,7 @@ class Frame2(tk.Frame):
         self.topLogin.config(background="azure")
         
         self.TablaLogin() 
+
 
 login = tk.Tk() 
 login.title("LOGIN") 
