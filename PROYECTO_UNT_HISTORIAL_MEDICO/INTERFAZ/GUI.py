@@ -35,7 +35,7 @@ class Frame(tk.Frame):
         super().__init__(aplicacion) # utilizamos super() para llevar a cabo herencias múltiples, de las subclases a la superclase
         self.aplicacion = aplicacion
         self.pack(fill=tk.BOTH, expand=True)
-        self.config(background="lightseagreen", relief=tk.GROOVE, border=5)
+        self.config(background="#777067", relief=tk.GROOVE, border=5)
         self.idPersona = None
         self.idPersonaHistoria=None
         self.idHistoriaMedica=None
@@ -52,96 +52,96 @@ class Frame(tk.Frame):
         ##################### LABELS ##########################
         
         self.lblNombre = tk.Label(self, text="NOMBRE COMPLETO: ")
-        self.lblNombre.config(font=("verdana",15,"bold"), background="lightseagreen", anchor = "w")
+        self.lblNombre.config(font=("verdana",15,"bold"), background="#777067", anchor = "w",fg="#D1D2CD")
         self.lblNombre.grid(column=0, row=0, pady=5)
 
         self.lblApellidos = tk.Label(self, text="APELLIDOS COMPLETOS: ")
-        self.lblApellidos.config(font=("verdana",15,"bold"), background="lightseagreen", anchor = "w")
+        self.lblApellidos.config(font=("verdana",15,"bold"), background="#777067", anchor = "w",fg="#D1D2CD")
         self.lblApellidos.grid(column=0,row=1, pady=5)
 
         self.lblDni = tk.Label(self, text="DNI: ")
-        self.lblDni.config(font=("verdana",15,"bold"), background="lightseagreen", anchor = "w")
+        self.lblDni.config(font=("verdana",15,"bold"), background="#777067", anchor = "w",fg="#D1D2CD")
         self.lblDni.grid(column=0,row=2, padx=10, pady=5)
 
         self.lblFechNacimiento = tk.Label(self, text="FECHA DE NACIMIENTO: ")
-        self.lblFechNacimiento.config(font=("verdana",15,"bold"), background="lightseagreen", anchor = "w")
+        self.lblFechNacimiento.config(font=("verdana",15,"bold"), background="#777067", anchor = "w",fg="#D1D2CD")
         self.lblFechNacimiento.grid(column=0,row=3, pady=5)
 
         self.lblEdad = tk.Label(self, text="EDAD: ")
-        self.lblEdad.config(font=("verdana",15,"bold"), background="lightseagreen", anchor = "w")
+        self.lblEdad.config(font=("verdana",15,"bold"), background="#777067", anchor = "w",fg="#D1D2CD")
         self.lblEdad.grid(column=0,row=4, pady=5)
 
         self.lblTelefono = tk.Label(self, text="TELÉFONO: ")
-        self.lblTelefono.config(font=("verdana",15,"bold"), background="lightseagreen", anchor = "w")
+        self.lblTelefono.config(font=("verdana",15,"bold"), background="#777067", anchor = "w",fg="#D1D2CD")
         self.lblTelefono.grid(column=0,row=5, pady=5) 
 
         self.lblCorreo = tk.Label(self, text="CORREO ELECTRÓNICO: ")
-        self.lblCorreo.config(font=("verdana",15,"bold"), background="lightseagreen", anchor = "w")
+        self.lblCorreo.config(font=("verdana",15,"bold"), background="#777067", anchor = "w",fg="#D1D2CD")
         self.lblCorreo.grid(column=0,row=6, pady=5)
 
         ######################### ENTRYS ###############################
 
         self.svNombre = tk.StringVar()
         self.entryNombre = tk.Entry(self, textvariable=self.svNombre)
-        self.entryNombre.config(width=50, font=("verdana",15))
+        self.entryNombre.config(width=50, font=("verdana",15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
         self.entryNombre.grid(column=1, row=0, padx=10, pady=5, columnspan=2)
 
         self.svApellidos = tk.StringVar()
         self.entryApellidos = tk.Entry(self, textvariable=self.svApellidos)
-        self.entryApellidos.config(width=50, font=("verdana",15))
+        self.entryApellidos.config(width=50, font=("verdana",15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
         self.entryApellidos.grid(column=1, row=1, padx=10, pady=5, columnspan=2)
 
         self.svDni = tk.StringVar()
         self.entryDni = tk.Entry(self, textvariable=self.svDni)
-        self.entryDni.config(width=50, font=("verdana",15))
+        self.entryDni.config(width=50, font=("verdana",15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
         self.entryDni.grid(column=1, row=2, padx=10, pady=5, columnspan=2)
 
         self.svFecNacimiento = tk.StringVar()
         self.entryFecNacimiento = tk.Entry(self, textvariable=self.svFecNacimiento)
-        self.entryFecNacimiento.config(width=50, font=("verdana",15))
+        self.entryFecNacimiento.config(width=50, font=("verdana",15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
         self.entryFecNacimiento.grid(column=1, row=3, padx=10, pady=5, columnspan=2)
 
         self.svEdad = tk.StringVar()
         self.entryEdad = tk.Entry(self, textvariable=self.svEdad)
-        self.entryEdad.config(width=50, font=("verdana",15))
+        self.entryEdad.config(width=50, font=("verdana",15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
         self.entryEdad.grid(column=1, row=4, padx=10, pady=5, columnspan=2)
 
         self.svTelefono = tk.StringVar()
         self.entryTelefono = tk.Entry(self, textvariable=self.svTelefono)
-        self.entryTelefono.config(width=50, font=("verdana",15))
+        self.entryTelefono.config(width=50, font=("verdana",15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
         self.entryTelefono.grid(column=1, row=5, padx=10, pady=5, columnspan=2)
 
         self.svCorreo = tk.StringVar()
         self.entryCorreo = tk.Entry(self, textvariable=self.svCorreo)
-        self.entryCorreo.config(width=50, font=("verdana",15))
+        self.entryCorreo.config(width=50, font=("verdana",15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
         self.entryCorreo.grid(column=1, row=6, padx=10, pady=5, columnspan=2)
 
         ######################### BUTTONS ####################################
 
         self.btnNuevo = tk.Button(self, text="NUEVO", command=self.habilitar)
         self.btnNuevo.config(width=20, font=("verdana",12,"bold"), 
-                                background="firebrick1", cursor="hand2",activebackground="firebrick3")
+                                background="#B2B4AC", cursor="hand2",activebackground="#D1D2CD")
         self.btnNuevo.grid(column=0,row=7, padx=10, pady=5)
 
         self.btnGuardar = tk.Button(self, text="GUARDAR", command=self.guardarPaciente)
         self.btnGuardar.config(width=20, font=("verdana",12,"bold"), 
-                                background="sienna1", cursor="hand2",activebackground="sienna3")
+                                background="#B2B4AC", cursor="hand2",activebackground="#D1D2CD")
         self.btnGuardar.grid(column=1,row=7, padx=10, pady=5)
 
         self.btnCancelar = tk.Button(self, text="CANCELAR")
         self.btnCancelar.config(width=20, font=("verdana",12,"bold"), 
-                                background="khaki1", cursor="hand2",activebackground="khaki3", command=self.deshabilitar)
+                                background="#B2B4AC", cursor="hand2",activebackground="#D1D2CD", command=self.deshabilitar)
         self.btnCancelar.grid(column=2,row=7, padx=10, pady=5)
 
         self.btnCalendario = tk.Button(self, text="BUSCAR")
         self.btnCalendario.config(width=13, font=("verdana",12,"bold"), command=self.MostrarCalendario,
-                                background="darkolivegreen1", cursor="hand2",activebackground="darkolivegreen3")
+                                background="#B2B4AC", cursor="hand2",activebackground="#D1D2CD")
         self.btnCalendario.grid(column=3,row=3,padx=10,pady=5)
 
         #################### WDGETS DEL BUSCADOR ########################
         
         self.lblBuscarDni = tk.Label(self, text="Buscar DNI: ")
-        self.lblBuscarDni.config(font=("verdana",15,"bold"), bg="lightseagreen")
+        self.lblBuscarDni.config(font=("verdana",15,"bold"), bg="#777067",fg="#D1D2CD")
         self.lblBuscarDni.grid(column=3, row=0, padx=2, pady=5)
 
         self.svBuscarDni = tk.StringVar()
@@ -151,16 +151,16 @@ class Frame(tk.Frame):
 
         self.btnBuscarCondicion = tk.Button(self, text="BUSCAR", command=self.buscarCondicion)
         self.btnBuscarCondicion.config(width=10, font=("verdana",12,"bold"), 
-                                bg="purple1", cursor="hand2",activebackground="purple3")
+                                bg="#B2B4AC", cursor="hand2",activebackground="#D1D2CD")
         self.btnBuscarCondicion.grid(column=4,row=1, padx=2, pady=5)
 
         ####################### IMAGEN ####################
 
         self.imagen=Image.open("ICONOS/medico.png")
-        self.imagen=self.imagen.resize((200,180), Image.ANTIALIAS)
+        self.imagen=self.imagen.resize((200,190), Image.ANTIALIAS)
         self.img=ImageTk.PhotoImage(self.imagen)
         self.LblImagen=tk.Label(self,image=self.img)
-        self.LblImagen.config(bg="lightseagreen")
+        self.LblImagen.config(bg="#777067")
         self.LblImagen.grid(column=4,row=2,rowspan=5, columnspan=2)
 
 ################ FUNCIONES PARA LA VENTANA PRINCIPAL  ###################
@@ -244,7 +244,7 @@ class Frame(tk.Frame):
 
         self.tabla.configure(yscrollcommand=self.scroll.set)
 
-        self.tabla.tag_configure("evenrow", background="antiquewhite1") # damos color a las filas
+        self.tabla.tag_configure("evenrow", background="#D1D2CD") # damos color a las filas
 
         #definimos los títulos de cada columna
 
@@ -272,15 +272,15 @@ class Frame(tk.Frame):
         # Creamos los nuevos botones debajo de la tabla
 
         self.btnEditarPaciente = tk.Button(self, text="Editar Paciente", command=self.editarPaciente)
-        self.btnEditarPaciente.config(width=20,font=("verdana",12,"bold"), bg="orange", activebackground="darkorange", cursor="hand2")
+        self.btnEditarPaciente.config(width=20,font=("verdana",12,"bold"), bg="#B2B4AC", activebackground="#D1D2CD", cursor="hand2")
         self.btnEditarPaciente.grid(row=9, column=0, padx=10, pady=5)
 
         self.btnEliminarPaciente = tk.Button(self, text="Eliminar Paciente", command=self.eliminarDatoPaciente)
-        self.btnEliminarPaciente.config(width=20,font=("verdana",12,"bold"), bg="cornflowerblue", activebackground="royalblue2", cursor="hand2")
+        self.btnEliminarPaciente.config(width=20,font=("verdana",12,"bold"), bg="#B2B4AC", activebackground="#D1D2CD", cursor="hand2")
         self.btnEliminarPaciente.grid(row=9, column=1, padx=10, pady=5)
 
         self.btnHistorialPaciente = tk.Button(self, text="Historial Paciente", command=self.historiaMedica)
-        self.btnHistorialPaciente.config(width=50,font=("verdana",12,"bold"), bg="cyan2", activebackground="cyan3", cursor="hand2")
+        self.btnHistorialPaciente.config(width=50,font=("verdana",12,"bold"), bg="#B2B4AC", activebackground="#D1D2CD", cursor="hand2")
         self.btnHistorialPaciente.grid(row=9, column=2, columnspan=3, pady=5)
 
 ################# FUNCIONES DEL CALENDARIO ###################
@@ -400,7 +400,7 @@ class Frame(tk.Frame):
             self.ListaHistoria = listarHistoria(idPersona)
             self.tabla2 = ttk.Treeview(self.topHistoriaMedica, column=("Paciente", "FechaHistoria", "MotivoDeLaVisita", "Operacion", "Tratamiento", "DetalleAdicional", "Precio"))
             self.tabla2.config(height=10)
-            self.tabla2.tag_configure("evenrow", background="oldlace")
+            self.tabla2.tag_configure("evenrow", background="#D1D2CD")
             self.tabla2.grid(column=0, row=0, columnspan=8,sticky="nse")
 
             self.scroll2=ttk.Scrollbar(self.topHistoriaMedica, orient="vertical", command=self.tabla2.yview)
@@ -444,38 +444,38 @@ class Frame(tk.Frame):
         self.topHistoriaMedica.geometry("1515x280+5+10")
         self.topHistoriaMedica.resizable(width=False, height=False)
         self.topHistoriaMedica.iconbitmap("ICONOS/Historial.ico")
-        self.topHistoriaMedica.config(background="azure")
+        self.topHistoriaMedica.config(background="#777067")
         
         self.tablaHistoria() 
 
         self.btnGuardarHistoria=tk.Button(self.topHistoriaMedica, text="Agregar Historia", command=self.topAgregarHistoria)
         self.btnGuardarHistoria.config(width=18, font=("Verdana", 12, "bold"),
-                                        foreground="gray2", background="seagreen1", activebackground="seagreen3", cursor="hand2")
+                                        foreground="gray2", background="#B2B4AC", activebackground="#D1D2CD", cursor="hand2")
         self.btnGuardarHistoria.grid(column=0, row=1, padx=10, pady=10)
 
         self.btnEditarHistoria=tk.Button(self.topHistoriaMedica, text="Editar Historia",command=self.topEditarHistorialMedico)
         self.btnEditarHistoria.config(width=18, font=("Verdana", 12, "bold"),
-                                        foreground="gray2", background="salmon2", activebackground="salmon4", cursor="hand2")
+                                        foreground="gray2", background="#B2B4AC", activebackground="#D1D2CD", cursor="hand2")
         self.btnEditarHistoria.grid(column=1, row=1, padx=10, pady=10)
 
         self.btnEliminarHistoria=tk.Button(self.topHistoriaMedica, text="Eliminar Historia", command=self.eliminarHistorialMedico)
         self.btnEliminarHistoria.config(width=18, font=("Verdana", 12, "bold"),
-                                        foreground="gray2", background="purple2", activebackground="purple4", cursor="hand2")
+                                        foreground="gray2", background="#B2B4AC", activebackground="#D1D2CD", cursor="hand2")
         self.btnEliminarHistoria.grid(column=2, row=1, padx=10, pady=10)
 
         self.btnPDF=tk.Button(self.topHistoriaMedica, text="Generar PDF",command=self.crearPDF)
         self.btnPDF.config(width=18,font=("Verdana", 12, "bold"), foreground="gray2",
-                                    background="tomato2", activebackground="tomato3", cursor="hand2")
+                                    background="#B2B4AC", activebackground="#D1D2CD", cursor="hand2")
         self.btnPDF.grid(column=3, row=1,padx=10,pady=10)
 
         self.btnEnviarEmail=tk.Button(self.topHistoriaMedica, text="Enviar Historial",command=self.enviarEmail)
         self.btnEnviarEmail.config(width=18,font=("Verdana", 12, "bold"), foreground="gray2",
-                                    background="royalblue2", activebackground="royalblue4", cursor="hand2")
+                                    background="#B2B4AC", activebackground="#D1D2CD", cursor="hand2")
         self.btnEnviarEmail.grid(column=4, row=1,padx=10,pady=10)
 
         self.btnVerPDF=tk.Button(self.topHistoriaMedica, text="Ver Historial",command=self.verPDF)
         self.btnVerPDF.config(width=18,font=("Verdana", 12, "bold"), foreground="gray2",
-                                    background="brown3", activebackground="brown4", cursor="hand2")
+                                    background="#B2B4AC", activebackground="#D1D2CD", cursor="hand2")
         self.btnVerPDF.grid(column=5, row=1,padx=10,pady=10)
 
         self.idPersona = None
@@ -500,7 +500,7 @@ class Frame(tk.Frame):
         self.pdf.text(x=230,y=10, txt = "Generado el: "+ str(datetime.date.today()))
         self.pdf.text(x=130, y=200, txt = "Trujillo-PERÚ")
 
-        self.pdf.image("ICONOS/UNT.png", x=250, y=15, w=40, h=35)
+        self.pdf.image("ICONOS/medico.png", x=245, y=20, w=45, h=45)
         self.pdf.image("ICONOS/vigo.png", x=45, y=138, w=40, h=20)
         self.pdf.image("ICONOS/jonathan.png", x=130, y=138, w=40, h=20)
         self.pdf.image("ICONOS/victor.png", x=215, y=138, w=40, h=20)
@@ -508,7 +508,7 @@ class Frame(tk.Frame):
         self.pdf.image("ICONOS/luis.png", x=87, y=163, w=40, h=20)
 
         self.pdf.set_font("Arial","B",20) 
-        self.pdf.text(x=125, y=15, txt="CLÍNICA UNT")
+        self.pdf.text(x=100, y=15, txt="CLÍNICA SÁNCHEZ JIMENEZ")
 
         self.pdf.set_font("Arial","B",16)
         self.pdf.text(x=10, y=35, txt="Paciente:")
@@ -622,43 +622,43 @@ class Frame(tk.Frame):
         self.root.geometry("480x790+1030+15") 
         self.root.resizable(0,0)
         self.root.iconbitmap("ICONOS/icon.ico")
-        self.root.configure(background="bisque2") 
+        self.root.configure(background="#777067") 
 
         ################ CLASES FRAME ###############
 
         self.ventana1=tk.Frame(self.root)
-        self.ventana1.configure(bg="bisque2",height=150)
+        self.ventana1.configure(bg="#777067",height=150)
 
         self.ventana2=tk.LabelFrame(self.root)
-        self.ventana2.configure(text="Eliga la operación", font=("Verdana", 15, "bold"), border=5, bg="bisque4")
+        self.ventana2.configure(text="Eliga la operación", font=("Verdana", 15, "bold"), border=5, bg="#777067")
 
-        self.subventana1=tk.Frame(self.ventana2, bg="bisque4")
-        self.subventana2=tk.Frame(self.ventana2, bg="bisque4")
+        self.subventana1=tk.Frame(self.ventana2, bg="#777067")
+        self.subventana2=tk.Frame(self.ventana2, bg="#777067")
 
         ########## CLASES ENTRYS ################
 
         self.operacion=tk.StringVar()
         
         self.entry=tk.Entry(self.ventana1)
-        self.entry.configure(textvariable=self.operacion, font=("Verdana", 15), bg="bisque4", selectbackground="bisque3")
+        self.entry.configure(textvariable=self.operacion, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
 
         self.precio=tk.IntVar()
 
         self.entry2=tk.Entry(self.ventana1)
-        self.entry2.configure(textvariable=self.precio, font=("Verdana", 15), bg="bisque4", selectbackground="bisque3")
+        self.entry2.configure(textvariable=self.precio, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
 
         ########## CLASES LABELS ############
 
         self.etiqueta1=tk.Label(self.ventana1)
-        self.etiqueta1.configure(text="Operación a agregar", font=("Verdana", 15, "underline", "bold"),bg="bisque2")
+        self.etiqueta1.configure(text="Operación a agregar", font=("Verdana", 15, "underline", "bold"),bg="#777067")
 
         self.etiqueta2=tk.Label(self.ventana1)
-        self.etiqueta2.configure(text="Monto a pagar", font=("Verdana", 15, "underline", "bold"),bg="bisque2")
+        self.etiqueta2.configure(text="Monto a pagar", font=("Verdana", 15, "underline", "bold"),bg="#777067")
 
         ################ CLASE LISTBOX #####################
 
         self.lista=tk.Listbox(self.subventana1)
-        self.lista.configure(bg="bisque3", selectbackground="navajowhite3", selectforeground="black", width=28, height=15,
+        self.lista.configure(bg="#D1D2CD", selectbackground="#B2B4AC", selectforeground="black", width=28, height=15,
                         font=("Verdana", 15), cursor="hand2", justify=tk.LEFT, selectborderwidth=4)
 
         self.ListaOperacion=listarOperacion() # Ejecutamos la funcion listarOperación para generar la lista y poder insertar los *args en el LISTBOX
@@ -799,13 +799,13 @@ class Frame(tk.Frame):
         ########## CLASES BUTTON #############
         
         self.boton1=tk.Button(self.ventana1)
-        self.boton1.configure(text="AGREGAR", bg="orangered3", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="orangered4", command=agregar_datos)
+        self.boton1.configure(text="AGREGAR", bg="#B2B4AC", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="#D1D2CD", command=agregar_datos)
 
         self.boton2=tk.Button(self.ventana1)
-        self.boton2.configure(text="ELIMINAR", bg="orangered3", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="orangered4", command=eliminar_datos)
+        self.boton2.configure(text="ELIMINAR", bg="#B2B4AC", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="#D1D2CD", command=eliminar_datos)
 
         self.boton3=tk.Button(self.root)
-        self.boton3.configure(text="INSERTAR", bg="orangered3", cursor="hand2", font=("Verdana", 13, "bold"), activebackground="orangered4", width=28, command=insertar_datos)
+        self.boton3.configure(text="INSERTAR", bg="#B2B4AC", cursor="hand2", font=("Verdana", 13, "bold"), activebackground="#D1D2CD", width=28, command=insertar_datos)
 
         self.scrollbar1 = tk.Scrollbar(self.subventana2) 
         self.scrollbar1.configure(orient="vertical", command = self.lista.yview) 
@@ -840,43 +840,43 @@ class Frame(tk.Frame):
         self.root.geometry("480x790+1030+15") 
         self.root.resizable(0,0)
         self.root.iconbitmap("ICONOS/icon.ico")
-        self.root.configure(background="bisque2") 
+        self.root.configure(background="#777067") 
 
         ################ CLASES FRAME ###############
 
         self.ventana1=tk.Frame(self.root)
-        self.ventana1.configure(bg="bisque2",height=150)
+        self.ventana1.configure(bg="#777067",height=150)
 
         self.ventana2=tk.LabelFrame(self.root)
-        self.ventana2.configure(text="Eliga la operación", font=("Verdana", 15, "bold"), border=5, bg="bisque4")
+        self.ventana2.configure(text="Eliga la operación", font=("Verdana", 15, "bold"), border=5, bg="#777067")
 
-        self.subventana1=tk.Frame(self.ventana2, bg="bisque4")
-        self.subventana2=tk.Frame(self.ventana2, bg="bisque4")
+        self.subventana1=tk.Frame(self.ventana2, bg="#777067")
+        self.subventana2=tk.Frame(self.ventana2, bg="#777067")
 
         ########## CLASES ENTRYS ################
 
         self.operacion=tk.StringVar()
         
         self.entry=tk.Entry(self.ventana1)
-        self.entry.configure(textvariable=self.operacion, font=("Verdana", 15), bg="bisque4", selectbackground="bisque3")
+        self.entry.configure(textvariable=self.operacion, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
 
         self.precio=tk.IntVar()
 
         self.entry2=tk.Entry(self.ventana1)
-        self.entry2.configure(textvariable=self.precio, font=("Verdana", 15), bg="bisque4", selectbackground="bisque3")
+        self.entry2.configure(textvariable=self.precio, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
 
         ########## CLASES LABELS ############
 
         self.etiqueta1=tk.Label(self.ventana1)
-        self.etiqueta1.configure(text="Operación a agregar", font=("Verdana", 15, "underline", "bold"),bg="bisque2")
+        self.etiqueta1.configure(text="Operación a agregar", font=("Verdana", 15, "underline", "bold"),bg="#777067")
 
         self.etiqueta2=tk.Label(self.ventana1)
-        self.etiqueta2.configure(text="Monto a pagar", font=("Verdana", 15, "underline", "bold"),bg="bisque2")
+        self.etiqueta2.configure(text="Monto a pagar", font=("Verdana", 15, "underline", "bold"),bg="#777067")
 
         ################ CLASE LISTBOX #####################
 
         self.lista=tk.Listbox(self.subventana1)
-        self.lista.configure(bg="bisque3", selectbackground="navajowhite3", selectforeground="black", width=28, height=15,
+        self.lista.configure(bg="#D1D2CD", selectbackground="#B2B4AC", selectforeground="black", width=28, height=15,
                         font=("Verdana", 15), cursor="hand2", justify=tk.LEFT, selectborderwidth=4)
 
         self.ListaOperacion=listarOperacion()
@@ -1009,13 +1009,13 @@ class Frame(tk.Frame):
         ########## CLASES BUTTON #############
         
         self.boton1=tk.Button(self.ventana1)
-        self.boton1.configure(text="AGREGAR", bg="orangered3", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="orangered4", command=agregar_datos_editar)
+        self.boton1.configure(text="AGREGAR", bg="#B2B4AC", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="#D1D2CD", command=agregar_datos_editar)
 
         self.boton2=tk.Button(self.ventana1)
-        self.boton2.configure(text="ELIMINAR", bg="orangered3", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="orangered4", command=eliminar_datos_editar)
+        self.boton2.configure(text="ELIMINAR", bg="#B2B4AC", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="#D1D2CD", command=eliminar_datos_editar)
 
         self.boton3=tk.Button(self.root)
-        self.boton3.configure(text="INSERTAR", bg="orangered3", cursor="hand2", font=("Verdana", 13, "bold"), activebackground="orangered4", width=28, command=insertar_datos_editar)
+        self.boton3.configure(text="INSERTAR", bg="#B2B4AC", cursor="hand2", font=("Verdana", 13, "bold"), activebackground="#D1D2CD", width=28, command=insertar_datos_editar)
 
         self.scrollbar1 = tk.Scrollbar(self.subventana2) 
         self.scrollbar1.configure(orient="vertical", command = self.lista.yview) 
@@ -1051,74 +1051,74 @@ class Frame(tk.Frame):
         self.topAHistoria.geometry("900x530+100+300")
         self.topAHistoria.resizable(width=False, height=False)
         self.topAHistoria.iconbitmap("ICONOS/ICONO.ico")
-        self.topAHistoria.config(background="cornsilk2")
+        self.topAHistoria.config(background="#777067")
 
         ##################### FRAME 1 ##########################
 
         self.frameDatosHistoria = tk.LabelFrame(self.topAHistoria)
-        self.frameDatosHistoria.config(background="cornsilk2")
+        self.frameDatosHistoria.config(background="#777067")
         self.frameDatosHistoria.pack(fill=tk.BOTH, expand=True, pady=10, padx=20)
 
             ##################### LABELS-F1 ##########################
 
-        self.lblMotivo = tk.Label(self.frameDatosHistoria, text="Motivo de la visita", width=30, font=("Verdana", 15,"bold"), background="cornsilk2")
+        self.lblMotivo = tk.Label(self.frameDatosHistoria, text="Motivo de la visita", width=30, font=("Verdana", 15,"bold"), background="#777067")
         self.lblMotivo.grid(row=0, column=0, padx=5, pady=3)
 
-        self.lblOperacion = tk.Label(self.frameDatosHistoria, text="Operación", width=20, font=("Verdana", 15,"bold"), background="cornsilk2")
+        self.lblOperacion = tk.Label(self.frameDatosHistoria, text="Operación", width=20, font=("Verdana", 15,"bold"), background="#777067")
         self.lblOperacion.grid(row=2, column=0, padx=5, pady=3)
         
-        self.lblTratamiento = tk.Label(self.frameDatosHistoria, text="Tratamiento", width=20, font=("Verdana", 15,"bold"), background="cornsilk2")
+        self.lblTratamiento = tk.Label(self.frameDatosHistoria, text="Tratamiento", width=20, font=("Verdana", 15,"bold"), background="#777067")
         self.lblTratamiento.grid(row=4, column=0, padx=5, pady=3)
 
-        self.lblDetalle = tk.Label(self.frameDatosHistoria, text="Detalle adicional", width=30, font=("Verdana", 15,"bold"), background="cornsilk2")
+        self.lblDetalle = tk.Label(self.frameDatosHistoria, text="Detalle adicional", width=30, font=("Verdana", 15,"bold"), background="#777067")
         self.lblDetalle.grid(row=6, column=0, padx=5, pady=3)
 
-        self.lblPrecio = tk.Label(self.frameDatosHistoria, text="Precio", width=20, font=("Verdana", 15,"bold"), background="cornsilk2")
+        self.lblPrecio = tk.Label(self.frameDatosHistoria, text="Precio", width=20, font=("Verdana", 15,"bold"), background="#777067")
         self.lblPrecio.grid(row=8, column=0, padx=5, pady=3)
 
             ##################### ENTRYS-F1 ##########################
 
         self.svMotivo = tk.StringVar()
         self.Motivo = tk.Entry(self.frameDatosHistoria, textvariable=self.svMotivo)
-        self.Motivo.config(width=64, font=("Verdana", 15))
+        self.Motivo.config(width=64, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
         self.Motivo.grid(row=1, column=0, padx= 5, pady=3, columnspan=2)
 
         self.svOperacion = tk.StringVar()
         self.Operacion = tk.Entry(self.frameDatosHistoria, textvariable=self.svOperacion)
-        self.Operacion.config(width=64, font=("Verdana", 15))
+        self.Operacion.config(width=64, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
         self.Operacion.grid(row=3, column=0, padx= 5, pady=3, columnspan=2)
 
         self.svTratamiento = tk.StringVar()
         self.Tratamiento = tk.Entry(self.frameDatosHistoria, textvariable=self.svTratamiento)
-        self.Tratamiento.config(width=64, font=("Verdana", 15))
+        self.Tratamiento.config(width=64, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
         self.Tratamiento.grid(row=5, column=0, padx= 5, pady=3, columnspan=2)
 
         self.svDetalle = tk.StringVar()
         self.Detalle = tk.Entry(self.frameDatosHistoria, textvariable=self.svDetalle)
-        self.Detalle.config(width=64, font=("Verdana", 15))
+        self.Detalle.config(width=64, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
         self.Detalle.grid(row=7, column=0, padx= 5, pady=3, columnspan=2)
 
         self.svPrecio = tk.IntVar()
         self.Precio = tk.Entry(self.frameDatosHistoria, textvariable=self.svPrecio)
-        self.Precio.config(width=64, font=("Verdana", 15))
+        self.Precio.config(width=64, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
         self.Precio.grid(row=9, column=0, padx= 5, pady=3, columnspan=2)
 
         ##################### FRAME 2 ##########################
 
         self.frameFechaHistoria = tk.LabelFrame(self.topAHistoria)
-        self.frameFechaHistoria.config(bg="cornsilk2")
+        self.frameFechaHistoria.config(bg="#777067")
         self.frameFechaHistoria.pack(fill=tk.BOTH, expand=True, padx=20,pady=10)
 
             ##################### LABELS-F2 ##########################
 
-        self.lblFechaHistoria = tk.Label(self.frameFechaHistoria, text="Fecha y Hora", width=20, font=("Verdana", 15,"bold"), background="cornsilk3")
+        self.lblFechaHistoria = tk.Label(self.frameFechaHistoria, text="Fecha y Hora", width=20, font=("Verdana", 15,"bold"), background="#777067")
         self.lblFechaHistoria.grid(row=1, column=0, padx=5, pady=3)
         
             ##################### ENTRYS-F2 ##########################
 
         self.svFechaHistoria = tk.StringVar()
         self.entryFechaHistoria = tk.Entry(self.frameFechaHistoria, textvariable=self.svFechaHistoria)
-        self.entryFechaHistoria.config(width=20, font=("Verdana", 15))
+        self.entryFechaHistoria.config(width=20, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
         self.entryFechaHistoria.grid(row=1, column=1, padx=5, pady=3)
         
             ##################### FECHA Y HORA-F2 ####################
@@ -1130,11 +1130,11 @@ class Frame(tk.Frame):
             ##################### BUTTONS-F2 ##########################
 
         self.btnAgregarHistoria = tk.Button(self.frameFechaHistoria, text="Agregar", command=self.agregaHistorialMedico)
-        self.btnAgregarHistoria.config(width=20, font=("Verdana", 12,"bold"), foreground="ghostwhite", background="lightsalmon", cursor="hand2", activebackground="salmon")
+        self.btnAgregarHistoria.config(width=20, font=("Verdana", 12,"bold"), background="#B2B4AC", cursor="hand2", activebackground="#D1D2CD")
         self.btnAgregarHistoria.grid(row=2, column=0, padx=10, pady=5)
 
         self.btnSalirAgregarHistoria = tk.Button(self.frameFechaHistoria, text="Salir",command=self.topAHistoria.destroy)
-        self.btnSalirAgregarHistoria.config(width=20, font=("Verdana", 12,"bold"), foreground="ghostwhite", background="gray6", cursor="hand2", activebackground="gray2")
+        self.btnSalirAgregarHistoria.config(width=20, font=("Verdana", 12,"bold"), background="#B2B4AC", cursor="hand2", activebackground="#D1D2CD")
         self.btnSalirAgregarHistoria.grid(row=2, column=3, padx=10, pady=5)
 
         self.idPersona = None
@@ -1191,70 +1191,70 @@ class Frame(tk.Frame):
             self.topEditarHistoria.title("EDITAR HISTORIA MEDICA")
             self.topEditarHistoria.resizable(width=False, height=False)
             self.topEditarHistoria.iconbitmap("ICONOS/ICONO.ico")
-            self.topEditarHistoria.config(background="palegreen")
+            self.topEditarHistoria.config(background="#777067")
 
             #FRAME EDITAR DATOS HISTORIA
             self.frameEditarHistoria = tk.LabelFrame(self.topEditarHistoria)
-            self.frameEditarHistoria.config(background="palegreen")
+            self.frameEditarHistoria.config(background="#777067")
             self.frameEditarHistoria.pack(fill=tk.BOTH, expand=True, padx=20,pady=10)
 
             #LABEL EDITAR HISTORIA
 
-            self.lblMotivoEditar = tk.Label(self.frameEditarHistoria, text="Motivo de la visita", width=30, font=("Verdana", 15,"bold"), background="palegreen")
+            self.lblMotivoEditar = tk.Label(self.frameEditarHistoria, text="Motivo de la visita", width=30, font=("Verdana", 15,"bold"), background="#777067")
             self.lblMotivoEditar.grid(row=0, column=0, padx=5, pady=3)
 
-            self.lblOperacionEditar = tk.Label(self.frameEditarHistoria, text="Operación", width=30, font=("Verdana", 15,"bold"), background="palegreen")
+            self.lblOperacionEditar = tk.Label(self.frameEditarHistoria, text="Operación", width=30, font=("Verdana", 15,"bold"), background="#777067")
             self.lblOperacionEditar.grid(row=2, column=0, padx=5, pady=3)
 
-            self.lblTratamientoEditar = tk.Label(self.frameEditarHistoria, text="Tratamiento", width=30, font=("Verdana", 15,"bold"), background="palegreen")
+            self.lblTratamientoEditar = tk.Label(self.frameEditarHistoria, text="Tratamiento", width=30, font=("Verdana", 15,"bold"), background="#777067")
             self.lblTratamientoEditar.grid(row=4, column=0, padx=5, pady=3)
 
-            self.lblDetalleEditar = tk.Label(self.frameEditarHistoria, text="Detalle adicional", width=30, font=("Verdana", 15,"bold"), background="palegreen")
+            self.lblDetalleEditar = tk.Label(self.frameEditarHistoria, text="Detalle adicional", width=30, font=("Verdana", 15,"bold"), background="#777067")
             self.lblDetalleEditar.grid(row=6, column=0, padx=5, pady=3)
 
-            self.lblPrecioeEditar = tk.Label(self.frameEditarHistoria, text="Precio", width=30, font=("Verdana", 15,"bold"), background="palegreen")
+            self.lblPrecioeEditar = tk.Label(self.frameEditarHistoria, text="Precio", width=30, font=("Verdana", 15,"bold"), background="#777067")
             self.lblPrecioeEditar.grid(row=8, column=0, padx=5, pady=3)
 
             #ENTRYS EDITAR HISTORIA
 
             self.svMotivoEditar = tk.StringVar()
             self.entryMotivoEditar = tk.Entry(self.frameEditarHistoria, textvariable=self.svMotivoEditar)
-            self.entryMotivoEditar.config(width=65, font=("Verdana", 15))
+            self.entryMotivoEditar.config(width=65, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
             self.entryMotivoEditar.grid(row = 1, column=0, pady=3, padx=5, columnspan=2)
 
             self.svOperacionEditar = tk.StringVar()
             self.entryOperacionEditar = tk.Entry(self.frameEditarHistoria, textvariable=self.svOperacionEditar)
-            self.entryOperacionEditar.config(width=65, font=("Verdana", 15))
+            self.entryOperacionEditar.config(width=65, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
             self.entryOperacionEditar.grid(row = 3, column=0, pady=3, padx=5, columnspan=2)
 
             self.svTratamientoEditar = tk.StringVar()
             self.entryTratamientoEditar = tk.Entry(self.frameEditarHistoria, textvariable=self.svTratamientoEditar)
-            self.entryTratamientoEditar.config(width=65, font=("Verdana", 15))
+            self.entryTratamientoEditar.config(width=65, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
             self.entryTratamientoEditar.grid(row = 5, column=0, pady=3, padx=5, columnspan=2)
 
             self.svDetalleEditar = tk.StringVar()
             self.entryDetalleEditar = tk.Entry(self.frameEditarHistoria, textvariable=self.svDetalleEditar)
-            self.entryDetalleEditar.config(width=65, font=("Verdana", 15))
+            self.entryDetalleEditar.config(width=65, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
             self.entryDetalleEditar.grid(row = 7, column=0, pady=3, padx=5, columnspan=2)
 
             self.svPrecioEditar = tk.StringVar()
             self.entryPrecioEditar = tk.Entry(self.frameEditarHistoria, textvariable=self.svPrecioEditar)
-            self.entryPrecioEditar.config(width=65, font=("Verdana", 15))
+            self.entryPrecioEditar.config(width=65, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
             self.entryPrecioEditar.grid(row = 9, column=0, pady=3, padx=5, columnspan=2)
 
             #FRAME FECHA EDITAR
             self.frameFechaEditar = tk.LabelFrame(self.topEditarHistoria)
-            self.frameFechaEditar.config(background="palegreen")
+            self.frameFechaEditar.config(background="#777067")
             self.frameFechaEditar.pack(fill=tk.BOTH, expand=True, padx=20, pady=10)
                 
             #LABEL FECHA EDITAR
-            self.lblFechaHistoriaEditar = tk.Label(self.frameFechaEditar, text="Fecha y Hora", width=30, font=("Verdana", 15,"bold"), background="palegreen")
+            self.lblFechaHistoriaEditar = tk.Label(self.frameFechaEditar, text="Fecha y Hora", width=30, font=("Verdana", 15,"bold"), background="#777067")
             self.lblFechaHistoriaEditar.grid(row=0, column=0, padx=5, pady=3)
 
             #  ENTRY FECHA EDITAR
             self.svFechaHistoriaEditar = tk.StringVar()
             self.entryFechaHistoriaEditar = tk.Entry(self.frameFechaEditar, textvariable=self.svFechaHistoriaEditar)
-            self.entryFechaHistoriaEditar.config(width=20, font=("Verdana", 15))
+            self.entryFechaHistoriaEditar.config(width=20, font=("Verdana", 15), bg="#B2B4AC",selectbackground="#D1D2CD", selectforeground="black")
             self.entryFechaHistoriaEditar.grid(row = 0, column=1, pady=3, padx=5)
 
             #INSERTAR LOS VALORES A LOS ENTRYS
@@ -1268,11 +1268,11 @@ class Frame(tk.Frame):
 
             #BUTTON EDITAR HISTORIA
             self.btnEditarHistoriaMedica = tk.Button(self.frameFechaEditar, text="Editar Historia", command = self.historiaMedicaEditar)
-            self.btnEditarHistoriaMedica.config(width=20, font=("Verdana", 12,"bold"), foreground="snow", background="royalblue2", cursor="hand2", activebackground="royalblue4")
+            self.btnEditarHistoriaMedica.config(width=20, font=("Verdana", 12,"bold"), background="#B2B4AC", cursor="hand2", activebackground="#D1D2CD")
             self.btnEditarHistoriaMedica.grid(row=1, column=0, padx=10, pady=5)
 
             self.btnSalirEditarHistoriaMedica = tk.Button(self.frameFechaEditar, text="Salir", command=self.topEditarHistoria.destroy)
-            self.btnSalirEditarHistoriaMedica.config(width=20, font=("Verdana", 12,"bold"), foreground="gray99", background="gray25", cursor="hand2", activebackground="gray2")
+            self.btnSalirEditarHistoriaMedica.config(width=20, font=("Verdana", 12,"bold"), background="#B2B4AC", cursor="hand2", activebackground="#D1D2CD")
             self.btnSalirEditarHistoriaMedica.grid(row=1, column=1, padx=10, pady=5)
 
             if self.idHistoriaMedicaEditar == None:
@@ -1391,7 +1391,6 @@ class Frame2(tk.Frame):
         self.EntryUsuario_Existente=tk.Entry(self.frame1_2_1)
         self.EntryUsuario_Existente.configure(bg="#FFFFFF", font=("Bahnschrift", 30), width=17, textvariable=self.svUsuario_Existente)
         self.EntryUsuario_Existente.pack(side=tk.RIGHT, pady=10)
-        self.EntryUsuario_Existente.bind("<Button-1>",self.evento)
 
         self.imagenPassword=Image.open("ICONOS/password.png")
         self.imagenPassword=self.imagenPassword.resize((60,60), Image.ANTIALIAS)
@@ -1433,19 +1432,14 @@ class Frame2(tk.Frame):
         self.LblImagenLogin.pack_propagate(False)
 
         self.Label2=tk.Label(self.frame1_2)
-        self.Label2.configure(text="¿Olvidaste la contraseña?", font=("Bahnschrift", 11), bg="#3282B5", fg="#BDE2FF",anchor="c")
+        self.Label2.configure(text="¿Olvidaste la contraseña?", font=("Bahnschrift", 11), bg="#3282B5", fg="#BDE2FF",anchor="c", cursor="hand2")
         self.Label2.pack(pady=10)
         self.Label2.bind("<Button-1>",self.Login1)
 
         self.Label3=tk.Label(self.frame1_2)
-        self.Label3.configure(text="¿No tienes cuenta? REGÍSTRATE", font=("Bahnschrift", 11), bg="#3282B5", fg="#BDE2FF",anchor="c")
+        self.Label3.configure(text="¿No tienes cuenta? REGÍSTRATE", font=("Bahnschrift", 11), bg="#3282B5", fg="#BDE2FF",anchor="c", cursor="hand2")
         self.Label3.pack()
         self.Label3.bind("<Button-1>",self.Login2)
-
-    def evento(self,event):
-        """Indicaciones para el ususario"""
-
-        messagebox.showinfo("USERNAME", "Ingresa tu nombre de usuario, no tu nombre real")
 
     def mostrarContraseña(self):
         """Método para mostrar * si el checkbutton está deshabilitado, si se habilita muestra el string ingresado"""
