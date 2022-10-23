@@ -1569,11 +1569,13 @@ class Frame2(tk.Frame):
 
                 messagebox.showerror("ERROR",f"""Clave incorrecta, vuelve a intentarlo.
 Te quedan {self.intentos} intentos""")
-            
+
+                self.topCorroborar1.iconify()
+                self.topCorroborar1.deiconify()
             else:
 
                 self.topCorroborar1.destroy()
-                messagebox.showwarning("JA","no me puedes jaquear xd")
+                messagebox.showwarning("ADVERTENCIA","Pónganse en contacto con el administrador, no reintente buscar su contraseña")
 
     ########## REGÍSTRATE ##########
 
@@ -1674,11 +1676,14 @@ Te quedan {self.intentos} intentos""")
 
                 messagebox.showerror("ERROR",f"""Clave incorrecta, vuelve a intentarlo.
 Te quedan {self.intentos} intentos""")
+
+                self.topCorroborar2.iconify()
+                self.topCorroborar2.deiconify()
             
             else:
 
                 self.topCorroborar2.destroy()
-                messagebox.showwarning("JA","no me puedes jaquear xd")
+                messagebox.showwarning("ADVERTENCIA","Pónganse en contacto con el administrador, no reintente registrarse otra vez")
 
     def Registrar(self):
         """Método que guarda en la clase Login"""
