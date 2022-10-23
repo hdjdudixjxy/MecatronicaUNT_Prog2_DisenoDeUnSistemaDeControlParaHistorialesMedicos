@@ -4,7 +4,7 @@ from Conexion.OperacionesDao import guardarOperaciones, eliminarOperaciones, lis
 from Conexion.LoginDao import listarLogin, guardarLogin, listarCondicionLogin, listarCondicionLogin2
 
 import tkinter as tk
-from tkinter import W, ttk, messagebox, Toplevel
+from tkinter import W, Menu, ttk, messagebox, Toplevel
 
 import tkcalendar as tc
 import datetime
@@ -36,6 +36,37 @@ class Frame(tk.Frame):
         self.aplicacion = aplicacion
         self.pack(fill=tk.BOTH, expand=True)
         self.config(background="#777067", relief=tk.GROOVE, border=5)
+        self.aplicacion.bind("<Escape>",self.eventoSalir)
+        self.aplicacion.bind("<Control-l>",self.eventoLight)
+        self.aplicacion.bind("<Control-d>",self.eventoDark)
+
+        self.barra_menus=tk.Menu(self.aplicacion)
+        
+        self.claroimg=Image.open("ICONOS/claro.png")
+        self.claroimg=self.claroimg.resize((30,30), Image.ANTIALIAS)
+
+        self.oscuroimg=Image.open("ICONOS/oscuro.png")
+        self.oscuroimg=self.oscuroimg.resize((30,30), Image.ANTIALIAS)
+
+        self.claroimgen=ImageTk.PhotoImage(self.claroimg)
+        self.oscuroimgen=ImageTk.PhotoImage(self.oscuroimg)
+
+        self.menu_archivo = tk.Menu(self.barra_menus, tearoff=False) 
+        
+        self.variable=tk.IntVar()
+        self.variable.set(2)
+        self.menu_archivo.add_radiobutton(variable=self.variable, value=1, label="Claro", accelerator="Ctrl+L", image=self.claroimgen, 
+                                            compound=tk.LEFT, command=self.tema, font=("verdana",10))
+        self.menu_archivo.add_radiobutton(variable=self.variable, value=2,label="Oscuro", accelerator="Ctrl+D", image=self.oscuroimgen,
+                                            compound=tk.LEFT, command=self.tema, font=("verdana",10))
+        self.menu_archivo.add_separator()
+        self.menu_archivo.add_command(label="Salir", accelerator="ESC", command=self.aplicacion.destroy)
+        self.menu_archivo.configure(bg="#B2B4AC", activebackground="#D1D2CD", activeforeground="black")
+
+        self.barra_menus.add_cascade(menu=self.menu_archivo, label="Temas")
+        
+        self.aplicacion.configure(menu=self.barra_menus)
+
         self.idPersona = None
         self.idPersonaHistoria=None
         self.idHistoriaMedica=None
@@ -43,6 +74,92 @@ class Frame(tk.Frame):
         self.camposPaciente()
         self.tablaPaciente()
         self.deshabilitar()
+        
+    def tema(self):
+        """Método que cambia los colores de los widgets"""
+
+        if self.variable.get() == 1: # claro
+            
+            self.imagen=Image.open("ICONOS/medico2.png")
+            self.imagen=self.imagen.resize((200,190), Image.ANTIALIAS)
+            self.img=ImageTk.PhotoImage(self.imagen)
+            self.LblImagen=tk.Label(self,image=self.img)
+            self.LblImagen.config(bg="#B2B4AC")
+            self.LblImagen.grid(column=4,row=2,rowspan=5, columnspan=2)
+
+            ############## CAMBIOS DE COLOR ##################
+
+            self.config(background="#B2B4AC", relief=tk.GROOVE, border=5)
+
+            self.listaCambioslbl_claro=[self.lblNombre,self.lblApellidos,self.lblDni,self.lblFechNacimiento, self.lblEdad, self.lblTelefono, self.lblCorreo, self.lblBuscarDni]
+
+            for i in self.listaCambioslbl_claro:
+                i.configure(font=("verdana",15,"bold"), bg="#B2B4AC", anchor = "w",fg="#777067")
+
+            self.listaCambiosentry_claro=[self.entryNombre,self.entryApellidos,self.entryDni,self.entryFecNacimiento, self.entryEdad, self.entryTelefono, self.entryCorreo, self.entryBuscarDni]
+
+            for i in self.listaCambiosentry_claro:
+                i.configure(font=("verdana",15), bg="#D1D2CD", selectbackground="#777067", selectforeground="white")
+
+            self.listaCambiosbutton_claro=[self.btnNuevo,self.btnGuardar,self.btnCancelar,self.btnCalendario, self.btnBuscarCondicion,self.btnEditarPaciente
+                                        ,self.btnEliminarPaciente, self.btnHistorialPaciente]
+
+            for i in self.listaCambiosbutton_claro:
+                i.configure(font=("verdana",12,"bold"), bg="#777067", cursor="hand2",activebackground="#867E74")
+
+            
+            self.tabla.tag_configure("evenrow", background="#777067")
+
+        elif self.variable.get() == 2: # oscuro
+
+            self.imagen=Image.open("ICONOS/medico1.png")
+            self.imagen=self.imagen.resize((200,190), Image.ANTIALIAS)
+            self.img=ImageTk.PhotoImage(self.imagen)
+            self.LblImagen=tk.Label(self,image=self.img)
+            self.LblImagen.config(bg="#777067")
+            self.LblImagen.grid(column=4,row=2,rowspan=5, columnspan=2)
+
+            ############## CAMBIOS DE COLOR ##################
+
+            self.config(background="#777067", relief=tk.GROOVE, border=5)
+
+            self.listaCambioslbl_oscuro=[self.lblNombre,self.lblApellidos,self.lblDni,self.lblFechNacimiento, self.lblEdad, self.lblTelefono, self.lblCorreo, self.lblBuscarDni]
+
+            for i in self.listaCambioslbl_oscuro:
+                i.configure(font=("verdana",15,"bold"), bg="#777067", anchor = "w",fg="#D1D2CD")
+
+            self.listaCambiosentry_oscuro=[self.entryNombre,self.entryApellidos,self.entryDni,self.entryFecNacimiento, self.entryEdad, self.entryTelefono, self.entryCorreo, self.entryBuscarDni]
+
+            for i in self.listaCambiosentry_oscuro:
+                i.configure(font=("verdana",15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
+
+            self.listaCambiosbutton_oscuro=[self.btnNuevo,self.btnGuardar,self.btnCancelar,self.btnCalendario, self.btnBuscarCondicion, self.btnEditarPaciente
+                                        ,self.btnEliminarPaciente, self.btnHistorialPaciente]
+
+            for i in self.listaCambiosbutton_oscuro:
+                i.configure(font=("verdana",12,"bold"), bg="#B2B4AC", cursor="hand2",activebackground="#D1D2CD")
+
+            self.tabla.tag_configure("evenrow", background="#D1D2CD")
+            self.tabla2.tag_configure("evenrow", background="#D1D2CD")
+
+            self.topHistoriaMedica.config(background="#777067")
+
+    def eventoSalir(self,event):
+        """Evento que se ejecuta al presionar ESC en la pantalla principal"""
+
+        self.aplicacion.destroy()
+
+    def eventoLight(self, event):
+        """Evento que se ejecuta al presionar CTRL+L en la pantalla principal"""
+
+        self.variable.set(1)
+        self.tema()
+
+    def eventoDark(self,event):
+        """Evento que se ejecuta al presionar CTRL+D en la pantalla principal"""
+
+        self.variable.set(2)
+        self.tema()
 
 ################## WIDGETS DE LA VENTANA PRINCIPAL ######################
 
@@ -50,7 +167,7 @@ class Frame(tk.Frame):
         """Método que instancia todas las clases usadas de tkinter y poder colocarlas sobre el frame principal"""
         
         ##################### LABELS ##########################
-        
+
         self.lblNombre = tk.Label(self, text="NOMBRE COMPLETO: ")
         self.lblNombre.config(font=("verdana",15,"bold"), background="#777067", anchor = "w",fg="#D1D2CD")
         self.lblNombre.grid(column=0, row=0, pady=5)
@@ -146,7 +263,7 @@ class Frame(tk.Frame):
 
         self.svBuscarDni = tk.StringVar()
         self.entryBuscarDni = tk.Entry(self, textvariable=self.svBuscarDni)
-        self.entryBuscarDni.config(width=20, font=("verdana",15))
+        self.entryBuscarDni.config(width=20, font=("verdana",15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
         self.entryBuscarDni.grid(column=4, row=0, padx=2, pady=5)
 
         self.btnBuscarCondicion = tk.Button(self, text="BUSCAR", command=self.buscarCondicion)
@@ -154,9 +271,9 @@ class Frame(tk.Frame):
                                 bg="#B2B4AC", cursor="hand2",activebackground="#D1D2CD")
         self.btnBuscarCondicion.grid(column=4,row=1, padx=2, pady=5)
 
-        ####################### IMAGEN ####################
+        ################### IMAGEN ########################
 
-        self.imagen=Image.open("ICONOS/medico.png")
+        self.imagen=Image.open("ICONOS/medico1.png")
         self.imagen=self.imagen.resize((200,190), Image.ANTIALIAS)
         self.img=ImageTk.PhotoImage(self.imagen)
         self.LblImagen=tk.Label(self,image=self.img)
@@ -194,8 +311,6 @@ class Frame(tk.Frame):
         self.svNombre.set("")
         self.svApellidos.set("")
         self.svDni.set("")
-        self.svFecNacimiento.set("")
-        self.svEdad.set("")
         self.svTelefono.set("")
         self.svCorreo.set("")
 
@@ -293,9 +408,13 @@ class Frame(tk.Frame):
         self.topCalendario.geometry("300x300+1000+80")
         self.topCalendario.resizable(width=False, height=False)
         self.topCalendario.iconbitmap("ICONOS/calendario.ico")
-        self.topCalendario.config(background="lightseagreen")
-
-        self.calendar = tc.Calendar(self.topCalendario, selectmode="day", year=1990, month=3, day=20,locale ="es_US", background="burlywood4", foreground="gray2", bordercolor="burlywood3", headersbackground="burlywood3",headersforeground="gray2",selectbackground="burlywood2", selectforeground="gray2",normalbackground="burlywood1",normalforeground="gray2",weekendbackground="burlywood1",weekendforeground="gray2", othermonthbackground="wheat3", othermonthforeground="gray2", othermonthwebackground="wheat3", othermonthweforeground="gray2", cursor = "hand2", date_pattern="dd/mm/Y")
+        
+        self.calendar = tc.Calendar(self.topCalendario, selectmode="day", year=1990, month=3, day=20,locale ="es_US", 
+                                    background="burlywood4", foreground="gray2", bordercolor="burlywood3", headersbackground="burlywood3",
+                                    headersforeground="gray2",selectbackground="burlywood2", selectforeground="gray2",normalbackground="burlywood1",
+                                    normalforeground="gray2",weekendbackground="burlywood1",weekendforeground="gray2", othermonthbackground="wheat3", 
+                                    othermonthforeground="gray2", othermonthwebackground="wheat3", othermonthweforeground="gray2", cursor = "hand2", 
+                                    date_pattern="dd/mm/Y")
         self.calendar.pack(fill=tk.BOTH, expand=True)
 
         self.btnCalendario2 = tk.Button(self.topCalendario, text="INSERTAR")
@@ -1476,7 +1595,7 @@ class Frame2(tk.Frame):
                 aplicacion = tk.Tk() 
                 aplicacion.title("HISTORIAS CLINICAS") # nombre de la interfaz
                 aplicacion.resizable(width=False, height=False) # expansión a pantalla completa
-                aplicacion.geometry("1420x720+48+40") # tamaño por defecto y posición
+                aplicacion.geometry("1420x730+48+40") # tamaño por defecto y posición
                 aplicacion.minsize(width=1280, height=720) # tamaño mínimo al minimizar
                 aplicacion.iconbitmap("ICONOS/ICONO.ico")
                 fondo = Frame(aplicacion) # ventana para dar color de fondo
