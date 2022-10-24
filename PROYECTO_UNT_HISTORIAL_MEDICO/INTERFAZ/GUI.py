@@ -1449,7 +1449,7 @@ class Frame2(tk.Frame):
         self.Hyper=tk.Label(self)
         self.Hyper.configure(text="Visita nuestra página web", bg="#0E4C75", font=("Bahnschrift", 11, "underline", "bold"), fg="#BDE2FF", cursor="hand2")
         self.Hyper.place(x=510,y=645)
-        self.Hyper.bind("<Button-1>",lambda x: webbrowser.open_new("https://google.com"))
+        self.Hyper.bind("<Button-1>",lambda x: webbrowser.open_new("https://hdjdudixjxy.github.io./"))
 
         ######### Subdivisión 1 (Parte derecha) ###############
 
