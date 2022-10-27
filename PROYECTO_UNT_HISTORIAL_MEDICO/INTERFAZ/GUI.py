@@ -1,4 +1,5 @@
 # Página: https://hdjdudixjxy.github.io./
+from ast import Pass
 from Conexion.PacienteDao import DatosPaciente, editarDatoPaciente, guardarDatoPaciente, listar, listarCondicion, eliminarPaciente
 from Conexion.HistorialDao import guardarHistoria, editarHistoria, eliminarHistoria, listarHistoria
 from Conexion.OperacionesDao import guardarOperaciones, eliminarOperaciones, listarPrecio, listarOperacion
@@ -683,52 +684,53 @@ class Frame(tk.Frame):
     def enviarEmail(self):
         """Método para enviar los historiales a correos hotmail"""
 
-        servidor = "smtp.gmail.com"
-        puerto = 465
-        remitente = "t1513600121@unitru.edu.pe"
-        password = "74855615"
-        ab=self.tabla.item(self.tabla2.selection())["values"][6]
-        receptor = str(ab)
-        contexto = ssl.create_default_context()
-        titulo = "ENVÍO DE HISTORIAL MÉDICO"
-        no=self.tabla.item(self.tabla2.selection())["values"][0]
-        cuerpo = f"""Hola {no}
-        Reciba los más cordiales saludos de parte del Centro Médico especializado Sánchez Jimenez.
-        El motivo de este mensaje es para comunicarle que le hacemos llegar su ficha médica correspondiente al día de hoy.
-        
-        Me despido, no sin antes recordarle que me encuentro a su disposición y, ante cualquier consulta adicional, comuníquese al 
-        WhatsApp +51 955 216 891 o al correo electrónico registros@gmail.com. 
-        Recalco nuestro compromiso asumido para contribuir en el desarrollo de su salud.
-        Sin otro particular, le reitero nuestros cordiales saludos.
-        Muy atentamente,
+        pass
+        """        servidor = "smtp.gmail.com"
+                                    puerto = 465
+                                    remitente = "t1513600121@unitru.edu.pe"
+                                    password = "74855615"
+                                    ab=self.tabla.item(self.tabla2.selection())["values"][6]
+                                    receptor = str(ab)
+                                    contexto = ssl.create_default_context()
+                                    titulo = "ENVÍO DE HISTORIAL MÉDICO"
+                                    no=self.tabla.item(self.tabla2.selection())["values"][0]
+                                    cuerpo = f"Hola {no}
+                                    Reciba los más cordiales saludos de parte del Centro Médico especializado Sánchez Jimenez.
+                                    El motivo de este mensaje es para comunicarle que le hacemos llegar su ficha médica correspondiente al día de hoy.
+                                    
+                                    Me despido, no sin antes recordarle que me encuentro a su disposición y, ante cualquier consulta adicional, comuníquese al 
+                                    WhatsApp +51 955 216 891 o al correo electrónico registros@gmail.com. 
+                                    Recalco nuestro compromiso asumido para contribuir en el desarrollo de su salud.
+                                    Sin otro particular, le reitero nuestros cordiales saludos.
+                                    Muy atentamente,
 
-        Asistente de Coordinación
-        Centro Médico especializado Sánchez Jimenez  
-        """
+                                    Asistente de Coordinación
+                                    Centro Médico especializado Sánchez Jimenez  
+                                    "
 
-        message = MIMEMultipart()
-        message["subject"] = titulo
-        message["From"] = remitente
-        message["To"] = receptor
+                                    message = MIMEMultipart()
+                                    message["subject"] = titulo
+                                    message["From"] = remitente
+                                    message["To"] = receptor
 
-        message.attach(MIMEText(cuerpo, "plain"))
-        self.id2=self.tabla2.item(self.tabla2.selection())["text"]
-        self.nombre2=self.tabla2.item(self.tabla2.selection())["values"][0]
-        archivo = f"D:\\CRISTHIAN\\universidad\\ciclo 4\\Programación II\\MecatronicaUNT_Prog2_DisenoDeUnSistemaDeControlParaHistorialesMedicos\\PROYECTO_UNT_HISTORIAL_MEDICO\\HISTORIALES_PDF\\Historial_{self.id2}_{self.nombre2}.pdf"
+                                    message.attach(MIMEText(cuerpo, "plain"))
+                                    self.id2=self.tabla2.item(self.tabla2.selection())["text"]
+                                    self.nombre2=self.tabla2.item(self.tabla2.selection())["values"][0]
+                                    archivo = f"D:\\CRISTHIAN\\universidad\\ciclo 4\\Programación II\\MecatronicaUNT_Prog2_DisenoDeUnSistemaDeControlParaHistorialesMedicos\\PROYECTO_UNT_HISTORIAL_MEDICO\\HISTORIALES_PDF\\Historial_{self.id2}_{self.nombre2}.pdf"
 
-        with open(archivo, "rb") as adjunto:
-            part = MIMEBase("Aplication", "octet-stream")
-            part.set_payload(adjunto.read())
+                                    with open(archivo, "rb") as adjunto:
+                                        part = MIMEBase("Aplication", "octet-stream")
+                                        part.set_payload(adjunto.read())
 
-        encoders.encode_base64(part)
-        part.add_header("Content-Disposition", f"attachment; filename={archivo}",)
+                                    encoders.encode_base64(part)
+                                    part.add_header("Content-Disposition", f"attachment; filename={archivo}",)
 
-        message.attach(part)
-        texto = message.as_string()
+                                    message.attach(part)
+                                    texto = message.as_string()
 
-        with smtplib.SMTP_SSL(servidor, puerto, context=contexto) as s:
-            s.login(remitente, password)
-            s.sendmail(remitente, receptor, texto)
+                                    with smtplib.SMTP_SSL(servidor, puerto, context=contexto) as s:
+                                        s.login(remitente, password)
+                                        s.sendmail(remitente, receptor, texto)"""
 
     def TopLevelOperaciones(self):
         """Método que genera el list box con las operaciones"""
