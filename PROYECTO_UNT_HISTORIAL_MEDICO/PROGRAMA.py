@@ -38,4 +38,4 @@ recursivo()
 # lbl"..." : significa Label
 # sv "..." : es la variable de los entrys
 # entry "..." : significa entry
-# btn "..." : significa buttoncd
+# btn "..." : significa button

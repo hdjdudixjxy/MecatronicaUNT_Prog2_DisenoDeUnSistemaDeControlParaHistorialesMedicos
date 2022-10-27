@@ -1,3 +1,4 @@
+# Página: https://hdjdudixjxy.github.io./
 from Conexion.PacienteDao import DatosPaciente, editarDatoPaciente, guardarDatoPaciente, listar, listarCondicion, eliminarPaciente
 from Conexion.HistorialDao import guardarHistoria, editarHistoria, eliminarHistoria, listarHistoria
 from Conexion.OperacionesDao import guardarOperaciones, eliminarOperaciones, listarPrecio, listarOperacion
@@ -140,9 +141,6 @@ class Frame(tk.Frame):
                 i.configure(font=("verdana",12,"bold"), bg="#B2B4AC", cursor="hand2",activebackground="#D1D2CD")
 
             self.tabla.tag_configure("evenrow", background="#D1D2CD")
-            self.tabla2.tag_configure("evenrow", background="#D1D2CD")
-
-            self.topHistoriaMedica.config(background="#777067")
 
     def eventoSalir(self,event):
         """Evento que se ejecuta al presionar ESC en la pantalla principal"""
