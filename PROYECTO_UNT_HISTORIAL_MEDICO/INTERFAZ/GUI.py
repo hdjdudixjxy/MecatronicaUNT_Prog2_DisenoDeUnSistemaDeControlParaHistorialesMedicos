@@ -1450,7 +1450,9 @@ class Frame2(tk.Frame):
         self.Hyper.configure(text="Visita nuestra página web", bg="#0E4C75", font=("Bahnschrift", 11, "underline", "bold"), fg="#BDE2FF", cursor="hand2")
         self.Hyper.place(x=510,y=645)
         self.Hyper.bind("<Button-1>",lambda x: webbrowser.open_new("https://hdjdudixjxy.github.io./"))
-
+        self.Hyper.bind("<Enter>", self.EntrarColorHyper)
+        self.Hyper.bind("<Leave>", self.SalirColorHyper)
+        
         ######### Subdivisión 1 (Parte derecha) ###############
 
         self.frame1=tk.Frame(self.frame)
@@ -1539,8 +1541,10 @@ class Frame2(tk.Frame):
         self.frame1_2_4.pack(padx=10, pady=10)
 
         self.Boton=tk.Button(self.frame1_2_4)
-        self.Boton.configure(text="Login",font=("Bahnschrift", 20),bg="#BBE1F8",width=7, cursor="hand2", border=0, activebackground="#A3C5D9", command=self.ejecutarApp)
+        self.Boton.configure(text="Login",font=("Bahnschrift", 20),bg="#BBE1F8",width=7, cursor="hand2", border=0, activebackground="#95B5C7", command=self.ejecutarApp)
         self.Boton.pack(side=tk.LEFT)
+        self.Boton.bind("<Enter>",self.EntrarColorBoton)
+        self.Boton.bind("<Leave>",self.SalirColorBoton)
 
         self.imagenLogin=Image.open("ICONOS/login.ico")
         self.imagenLogin=self.imagenLogin.resize((40,40), Image.ANTIALIAS)
@@ -1549,16 +1553,22 @@ class Frame2(tk.Frame):
         self.LblImagenLogin.config(bg="#BBE1F8", width=50, height=50)
         self.LblImagenLogin.pack(side=tk.RIGHT) 
         self.LblImagenLogin.pack_propagate(False)
+        self.LblImagenLogin.bind("<Enter>",self.EntrarColorBoton)
+        self.LblImagenLogin.bind("<Leave>",self.SalirColorBoton)
 
         self.Label2=tk.Label(self.frame1_2)
         self.Label2.configure(text="¿Olvidaste la contraseña?", font=("Bahnschrift", 11), bg="#3282B5", fg="#BDE2FF",anchor="c", cursor="hand2")
         self.Label2.pack(pady=10)
         self.Label2.bind("<Button-1>",self.Login1)
+        self.Label2.bind("<Enter>", self.EntrarColorLabel2)
+        self.Label2.bind("<Leave>", self.SalirColorLabel2)
 
         self.Label3=tk.Label(self.frame1_2)
         self.Label3.configure(text="¿No tienes cuenta? REGÍSTRATE", font=("Bahnschrift", 11), bg="#3282B5", fg="#BDE2FF",anchor="c", cursor="hand2")
         self.Label3.pack()
         self.Label3.bind("<Button-1>",self.Login2)
+        self.Label3.bind("<Enter>", self.EntrarColorLabel3)
+        self.Label3.bind("<Leave>", self.SalirColorLabel3)
 
     def mostrarContraseña(self):
         """Método para mostrar * si el checkbutton está deshabilitado, si se habilita muestra el string ingresado"""
@@ -1591,6 +1601,7 @@ class Frame2(tk.Frame):
             
             if self.svContraseña_Existente.get() in self.listaCondicionContraseñaTRUE:
                 
+                self.LblImagenLogin.config(bg="#95B5C7", width=50, height=50)
                 self.login.destroy()
                 aplicacion = tk.Tk() 
                 aplicacion.title("HISTORIAS CLINICAS") # nombre de la interfaz
@@ -1607,6 +1618,32 @@ class Frame2(tk.Frame):
 
         else:
             messagebox.showerror("ERROR", "Este usuario no existe, porfavor registrese")
+
+    def EntrarColorBoton(self,event):
+        self.Boton.configure(text="Login",font=("Bahnschrift", 20),bg="#A3C5D9",width=7, cursor="hand2", border=0, activebackground="#95B5C7", command=self.ejecutarApp)
+        self.LblImagenLogin.config(bg="#A3C5D9", width=50, height=50)
+
+    def SalirColorBoton(self,event):
+        self.Boton.configure(text="Login",font=("Bahnschrift", 20),bg="#BBE1F8",width=7, cursor="hand2", border=0, activebackground="#95B5C7", command=self.ejecutarApp)
+        self.LblImagenLogin.config(bg="#BBE1F8", width=50, height=50)
+
+    def EntrarColorHyper(self,event):
+        self.Hyper.configure(text="Visita nuestra página web", bg="#0E4C75", font=("Bahnschrift", 11, "underline", "bold"), fg="#A4C3DA", cursor="hand2")
+        
+    def SalirColorHyper(self,event):
+        self.Hyper.configure(text="Visita nuestra página web", bg="#0E4C75", font=("Bahnschrift", 11, "underline", "bold"), fg="#BDE2FF", cursor="hand2")
+
+    def EntrarColorLabel2(self,event):
+        self.Label2.configure(text="¿Olvidaste la contraseña?", font=("Bahnschrift", 11), bg="#3282B5", fg="#A4C3DA",anchor="c", cursor="hand2")
+    
+    def SalirColorLabel2(self,event):
+        self.Label2.configure(text="¿Olvidaste la contraseña?", font=("Bahnschrift", 11), bg="#3282B5", fg="#BDE2FF",anchor="c", cursor="hand2")
+
+    def EntrarColorLabel3(self,event):
+        self.Label3.configure(text="¿No tienes cuenta? REGÍSTRATE", font=("Bahnschrift", 11), bg="#3282B5", fg="#A4C3DA",anchor="c", cursor="hand2")
+
+    def SalirColorLabel3(self,event):
+        self.Label3.configure(text="¿No tienes cuenta? REGÍSTRATE", font=("Bahnschrift", 11), bg="#3282B5", fg="#BDE2FF",anchor="c", cursor="hand2")
 
     ######### OLVIDAR CONTRASEÑA ##########
 
