@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
-from INTERFAZ.GUI import Frame, Frame2, error
+from INTERFAZ.GUI import Frame2, error
 
 def main():
 
