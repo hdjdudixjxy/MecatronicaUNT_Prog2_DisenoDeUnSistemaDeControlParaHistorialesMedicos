@@ -6,7 +6,7 @@ def main():
 
     login = tk.Tk() 
     login.title("LOGIN") 
-    login.resizable(width=True, height=True) 
+    login.resizable(width=False, height=False) 
     login.geometry("900x760+350+20")
     login.iconbitmap("ICONOS/login.ico")
     fondo2 = Frame2(login)
