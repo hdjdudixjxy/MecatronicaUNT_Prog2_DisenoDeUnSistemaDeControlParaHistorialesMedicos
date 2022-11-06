@@ -1700,7 +1700,7 @@ class Frame2(tk.Frame):
 
         self.svclave1=tk.StringVar()
         self.entryClave1=tk.Entry(self.topCorroborar1)
-        self.entryClave1.configure(textvariable=self.svclave1, font=("Bahnschrift", 20))
+        self.entryClave1.configure(textvariable=self.svclave1, font=("Bahnschrift", 20), show="*")
         self.entryClave1.pack()
         self.entryClave1.bind("<Return>",self.LoginVerUsuarios) # Dando ENTER ejecutamos LoginVerUsuarios
 
@@ -1746,7 +1746,7 @@ Te quedan {self.intentos} intentos""")
         self.topCorroborar2.configure(bg="#0E4C75")
 
         self.LabelClave2=tk.Label(self.topCorroborar2)
-        self.LabelClave2.configure(text="Ingresa la clave para ver los usuarios", font=("Bahnschrift", 20), bg="#0E4C75", fg="#BDE2FF")
+        self.LabelClave2.configure(text="Ingresa la clave para ver los usuarios", font=("Bahnschrift", 20), bg="#0E4C75", fg="#BDE2FF",show="*")
         self.LabelClave2.pack(pady=10)
 
         self.svclave2=tk.StringVar()
