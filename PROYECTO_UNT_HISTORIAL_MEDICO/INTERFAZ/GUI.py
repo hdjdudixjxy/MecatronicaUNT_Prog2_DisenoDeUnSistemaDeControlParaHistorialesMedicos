@@ -25,6 +25,7 @@ from email.mime.multipart import MIMEMultipart
 from tkinter import filedialog as FileDialog
 import subprocess
 import webbrowser
+import mouse
 
 ################## VENTANA DE FONDO ##########################
 
@@ -1431,7 +1432,8 @@ class Frame2(tk.Frame):
         """Constructor de instancias"""
         super().__init__(login) 
         self.login = login
-        self.intentos=3
+        self.intentos=2
+        self.intentosPrincipal=2
         self.pack(fill=tk.BOTH, expand=True)
         self.config(background="#0E4C75")
         self.widgets()
@@ -1525,6 +1527,7 @@ class Frame2(tk.Frame):
         self.EntryContraseña_Existente=tk.Entry(self.frame1_2_2)
         self.EntryContraseña_Existente.configure(bg="#FFFFFF", font=("Bahnschrift", 30), show="*", width=17, textvariable=self.svContraseña_Existente)
         self.EntryContraseña_Existente.pack(side=tk.RIGHT, pady=20)
+        
 
         self.frame1_2_3=tk.Frame(self.frame1_2)
         self.frame1_2_3.configure(bg="#3282B5")
@@ -1613,11 +1616,31 @@ class Frame2(tk.Frame):
                 fondo.mainloop() # bucle generador
             
             else:
+                
+                self.intentosPrincipal-=1
 
-                messagebox.showerror("ERROR", "Contraseña incorrecta")
+                if self.intentosPrincipal>0:
+
+                    messagebox.showwarning("ADVERTENCIA",f"""Contraseña incorrecta, vuelve a intentarlo.
+Te quedan {self.intentosPrincipal} intento""")
+
+                else:
+
+                    messagebox.showerror("ERROR", "Contraseña incorrecta")
+                    self.bind('<Motion>', self.NoEjecutar)
+                    self.frame1.bind('<Motion>', self.NoEjecutar)
+                    self.frame2.bind('<Motion>', self.NoEjecutar)
+                    self.frame1_1.bind('<Motion>', self.NoEjecutar)
+                    self.frame1_2.bind('<Motion>', self.NoEjecutar)
 
         else:
+
             messagebox.showerror("ERROR", "Este usuario no existe, porfavor registrese")
+
+    def NoEjecutar(self,event):
+        """Evento que colocará el cursor en una posición absoluta de la pantalla, el botón cerrar de la ventana"""
+
+        mouse.move(1231, 39, absolute=True, duration=0.03)
 
     def EntrarColorBoton(self,event):
         self.Boton.configure(text="Login",font=("Bahnschrift", 20),bg="#A3C5D9",width=7, cursor="hand2", border=0, activebackground="#95B5C7", command=self.ejecutarApp)
@@ -1724,7 +1747,7 @@ class Frame2(tk.Frame):
             if self.intentos>0:
 
                 messagebox.showerror("ERROR",f"""Clave incorrecta, vuelve a intentarlo.
-Te quedan {self.intentos} intentos""")
+Te quedan {self.intentos} intento""")
 
                 self.topCorroborar1.iconify()
                 self.topCorroborar1.deiconify()
@@ -1831,7 +1854,7 @@ Te quedan {self.intentos} intentos""")
             if self.intentos>0:
 
                 messagebox.showerror("ERROR",f"""Clave incorrecta, vuelve a intentarlo.
-Te quedan {self.intentos} intentos""")
+Te quedan {self.intentos} intento""")
 
                 self.topCorroborar2.iconify()
                 self.topCorroborar2.deiconify()
