@@ -21,13 +21,15 @@ def recursivo():
             main()
 
     except:
+
         error()
 
         resultado=messagebox.askretrycancel("ERROR", "Reintente abrir la aplicación")
 
         if resultado == True:
             
-            recursivo() 
+            recursivo()
+             
 
         elif resultado == False:
             print("Programa ejecutado sin éxito")

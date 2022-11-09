@@ -1432,7 +1432,8 @@ class Frame2(tk.Frame):
         """Constructor de instancias"""
         super().__init__(login) 
         self.login = login
-        self.intentos=2
+        self.intentosRegistrar=2
+        self.intentosOlvidar=2
         self.intentosPrincipal=2
         self.pack(fill=tk.BOTH, expand=True)
         self.config(background="#0E4C75")
@@ -1710,22 +1711,28 @@ Te quedan {self.intentosPrincipal} intento""")
     def Login1(self, event):
         """Evento para generar el Top Level donde se ingresará la clave al darle olvide mi contraseña"""
 
-        self.topCorroborar1=Toplevel()
-        self.topCorroborar1.title("CLAVE SECRETA")
-        self.topCorroborar1.geometry("630x120+160+260")
-        self.topCorroborar1.resizable(width=False, height=False)
-        self.topCorroborar1.iconbitmap("ICONOS/incognito2.ico")
-        self.topCorroborar1.configure(bg="#0E4C75")
+        if self.intentosOlvidar>0:
 
-        self.LabelClave1=tk.Label(self.topCorroborar1)
-        self.LabelClave1.configure(text="Ingresa la clave para ver los usuarios", font=("Bahnschrift", 20), bg="#0E4C75", fg="#BDE2FF")
-        self.LabelClave1.pack(pady=10)
+            self.topCorroborar1=Toplevel()
+            self.topCorroborar1.title("CLAVE SECRETA")
+            self.topCorroborar1.geometry("630x120+160+260")
+            self.topCorroborar1.resizable(width=False, height=False)
+            self.topCorroborar1.iconbitmap("ICONOS/incognito2.ico")
+            self.topCorroborar1.configure(bg="#0E4C75")
 
-        self.svclave1=tk.StringVar()
-        self.entryClave1=tk.Entry(self.topCorroborar1)
-        self.entryClave1.configure(textvariable=self.svclave1, font=("Bahnschrift", 20), show="*")
-        self.entryClave1.pack()
-        self.entryClave1.bind("<Return>",self.LoginVerUsuarios) # Dando ENTER ejecutamos LoginVerUsuarios
+            self.LabelClave1=tk.Label(self.topCorroborar1)
+            self.LabelClave1.configure(text="Ingresa la clave para ver los usuarios", font=("Bahnschrift", 20), bg="#0E4C75", fg="#BDE2FF")
+            self.LabelClave1.pack(pady=10)
+
+            self.svclave1=tk.StringVar()
+            self.entryClave1=tk.Entry(self.topCorroborar1)
+            self.entryClave1.configure(textvariable=self.svclave1, font=("Bahnschrift", 20), show="*")
+            self.entryClave1.pack()
+            self.entryClave1.bind("<Return>",self.LoginVerUsuarios) # Dando ENTER ejecutamos LoginVerUsuarios
+
+        else:
+            self.topCorroborar1.destroy()
+            messagebox.showwarning("ADVERTENCIA","No vuelva a intentarlo o será despedido!")
 
     def LoginVerUsuarios(self,event):
         """Evento que muestra el top que contiene la tabla de usuarios si se cumple el if de la clave"""
@@ -1742,12 +1749,12 @@ Te quedan {self.intentosPrincipal} intento""")
             self.TablaLogin() 
         
         else:
-            self.intentos-=1
+            self.intentosOlvidar-=1
 
-            if self.intentos>0:
+            if self.intentosOlvidar>0:
 
                 messagebox.showerror("ERROR",f"""Clave incorrecta, vuelve a intentarlo.
-Te quedan {self.intentos} intento""")
+Te quedan {self.intentosOlvidar} intento""")
 
                 self.topCorroborar1.iconify()
                 self.topCorroborar1.deiconify()
@@ -1761,22 +1768,29 @@ Te quedan {self.intentos} intento""")
     def Login2(self, event):
         """Evento para generar el Top Level donde se ingresará la clave al darle Registrate"""
 
-        self.topCorroborar2=Toplevel()
-        self.topCorroborar2.title("CLAVE SECRETA")
-        self.topCorroborar2.geometry("630x120+160+260")
-        self.topCorroborar2.resizable(width=False, height=False)
-        self.topCorroborar2.iconbitmap("ICONOS/incognito2.ico")
-        self.topCorroborar2.configure(bg="#0E4C75")
+        if self.intentosRegistrar>0:
 
-        self.LabelClave2=tk.Label(self.topCorroborar2)
-        self.LabelClave2.configure(text="Ingresa la clave para ver los usuarios", font=("Bahnschrift", 20), bg="#0E4C75", fg="#BDE2FF",show="*")
-        self.LabelClave2.pack(pady=10)
+            self.topCorroborar2=Toplevel()
+            self.topCorroborar2.title("CLAVE SECRETA")
+            self.topCorroborar2.geometry("630x120+160+260")
+            self.topCorroborar2.resizable(width=False, height=False)
+            self.topCorroborar2.iconbitmap("ICONOS/incognito2.ico")
+            self.topCorroborar2.configure(bg="#0E4C75")
 
-        self.svclave2=tk.StringVar()
-        self.entryClave2=tk.Entry(self.topCorroborar2)
-        self.entryClave2.configure(textvariable=self.svclave2, font=("Bahnschrift", 20))
-        self.entryClave2.pack()
-        self.entryClave2.bind("<Return>",self.LoginRegistrate) # Dando ENTER ejecutamos LoginVerUsuarios
+            self.LabelClave2=tk.Label(self.topCorroborar2)
+            self.LabelClave2.configure(text="Ingresa la clave para ver los usuarios", font=("Bahnschrift", 20), bg="#0E4C75", fg="#BDE2FF")
+            self.LabelClave2.pack(pady=10)
+
+            self.svclave2=tk.StringVar()
+            self.entryClave2=tk.Entry(self.topCorroborar2)
+            self.entryClave2.configure(textvariable=self.svclave2, font=("Bahnschrift", 20),show="*")
+            self.entryClave2.pack()
+            self.entryClave2.bind("<Return>",self.LoginRegistrate) # Dando ENTER ejecutamos LoginVerUsuarios
+
+        else:
+
+            self.topCorroborar2.destroy()
+            messagebox.showwarning("ADVERTENCIA","Para evitar problemas legales, porfavor no vuelva a intentarlo")
 
     def LoginRegistrate(self,event):
         """Evento que muestra el top para agregar un usuario si es correcta la clave"""
@@ -1843,18 +1857,18 @@ Te quedan {self.intentos} intento""")
             self.LabelContraseña.pack(side=tk.LEFT, padx=2)
 
             ######## CLASE BUTTON #############
-      
+    
             self.Boton2=tk.Button(self.ventana4)
             self.Boton2.configure(text="AGREGAR", bg="#BBE1F8",font=("Bahnschrift", 12), width=8, cursor="hand2", border=0, activebackground="#A3C5D9", command=self.Registrar)
             self.Boton2.pack()
 
         else:
-            self.intentos-=1
+            self.intentosRegistrar-=1
 
-            if self.intentos>0:
+            if self.intentosRegistrar>0:
 
                 messagebox.showerror("ERROR",f"""Clave incorrecta, vuelve a intentarlo.
-Te quedan {self.intentos} intento""")
+Te quedan {self.intentosRegistrar} intento""")
 
                 self.topCorroborar2.iconify()
                 self.topCorroborar2.deiconify()
@@ -1863,7 +1877,7 @@ Te quedan {self.intentos} intento""")
 
                 self.topCorroborar2.destroy()
                 messagebox.showwarning("ADVERTENCIA","Pónganse en contacto con el administrador, no reintente registrarse otra vez")
-
+        
     def Registrar(self):
         """Método que guarda en la clase Login"""
 
@@ -1899,7 +1913,7 @@ def error():
     AppError.configure(background="steelblue1")
 
 ###################################################
-
+    
     LbError = tk.Label(AppError,
         text="HA OCURRIDO UN ERROR",
         font=("Arial", 18, "bold"),
@@ -1921,5 +1935,5 @@ def error():
     LbError2.place(x=74, y=97)
 
 ###############################################################
-
+    AppError.deiconify()
     AppError.mainloop()
