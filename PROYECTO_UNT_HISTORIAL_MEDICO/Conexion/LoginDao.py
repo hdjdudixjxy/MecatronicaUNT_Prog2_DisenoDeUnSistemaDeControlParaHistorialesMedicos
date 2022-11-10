@@ -25,7 +25,7 @@ def guardarLogin(Trabajador, Usuario, Contrasena):
 
     conexion = ConexionDB()
     sql = f"""INSERT INTO Login (Trabajador, Usuario, Contrasena) VALUES
-            ("{Trabajador}","{Usuario}",{Contrasena})"""
+            ("{Trabajador}","{Usuario}","{Contrasena}")"""
 
     try:
         conexion.cursor.execute(sql)
