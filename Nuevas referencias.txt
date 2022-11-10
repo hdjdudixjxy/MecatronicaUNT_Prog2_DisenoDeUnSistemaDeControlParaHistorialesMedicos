@@ -1,0 +1,5 @@
+https://recursospython.com/guias-y-manuales/lista-listbox-en-tkinter/
+https://stackoverflow.com/questions/47954758/how-to-get-a-horizontal-scrollbar-in-tkinter
+https://docs.hektorprofe.net/python/interfaces-graficas-con-tkinter/dialogs-dialogos/
+https://docs.python.org/3/library/webbrowser.html
+https://www.thepythoncode.com/article/control-mouse-python
