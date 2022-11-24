@@ -1,5 +1,5 @@
 # Página: https://hdjdudixjxy.github.io./
-from ast import Pass
+
 from Conexion.PacienteDao import DatosPaciente, editarDatoPaciente, guardarDatoPaciente, listar, listarCondicion, eliminarPaciente
 from Conexion.HistorialDao import guardarHistoria, editarHistoria, eliminarHistoria, listarHistoria
 from Conexion.OperacionesDao import guardarOperaciones, eliminarOperaciones, listarPrecio, listarOperacion
