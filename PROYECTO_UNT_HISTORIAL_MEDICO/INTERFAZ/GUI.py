@@ -450,9 +450,18 @@ class Frame(tk.Frame):
         persona = DatosPaciente(self.svNombre.get(), self.svApellidos.get(), self.svDni.get(), self.svFecNacimiento.get(), self.svEdad.get(),self.svTelefono.get(), self.svCorreo.get())
         # el metodo get lee lo que se inserta en los entrys
 
-        if self.idPersona == None: # si el id no tiene valor, entonces guarda el dato, sino solo lo vamos a editar
+        if int(self.svEdad.get()) <= 0: 
+            
+            titulo = "ERROR"
+            mensaje = "Coloque una edad mayor a 0"
+            messagebox.showerror(titulo, mensaje)
+            
+        elif self.idPersona == None:# si el id no tiene valor, entonces guarda el dato, sino solo lo vamos a editar
+            
             guardarDatoPaciente(persona)
+            
         else:
+            
             editarDatoPaciente(persona, self.idPersona)
         
         self.deshabilitar() # una vez presionado el boton duardar, se va a borrar todos los datos de los entrys
