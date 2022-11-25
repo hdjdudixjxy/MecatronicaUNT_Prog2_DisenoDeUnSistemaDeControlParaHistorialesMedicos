@@ -628,7 +628,7 @@ class Frame(tk.Frame):
         self.pdf.text(x=230,y=10, txt = "Generado el: "+ str(datetime.date.today()))
         self.pdf.text(x=130, y=200, txt = "Trujillo-PERÚ")
 
-        self.pdf.image("ICONOS/medico.png", x=245, y=20, w=45, h=45)
+        self.pdf.image("ICONOS/medico1.png", x=245, y=20, w=45, h=45)
         self.pdf.image("ICONOS/vigo.png", x=45, y=138, w=40, h=20)
         self.pdf.image("ICONOS/jonathan.png", x=130, y=138, w=40, h=20)
         self.pdf.image("ICONOS/victor.png", x=215, y=138, w=40, h=20)
