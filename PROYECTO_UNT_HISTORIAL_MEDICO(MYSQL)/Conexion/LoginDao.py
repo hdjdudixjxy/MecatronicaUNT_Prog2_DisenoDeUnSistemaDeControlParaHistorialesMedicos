@@ -78,7 +78,7 @@ def listarCondicionLogin():
     return listaCondicionLogin
 
 def listarCondicionLogin2():
-    """Función que crea una lista y hace que se genere una lista que contenga las contraseñas"""
+    """Función que crea una lista y hace que se genere una lista que contenga los usuarios"""
 
     conexion = ConexionDB()
     listaCondicionLogin2 = []
