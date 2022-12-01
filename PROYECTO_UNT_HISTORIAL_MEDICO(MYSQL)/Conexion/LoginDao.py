@@ -4,28 +4,28 @@ from tkinter import messagebox
 class Login:
     """Clase de la tabla Login"""
 
-    def __init__(self, Trabajador, Usuario, Contrasena):
+    def __init__(self, Medico, Usuario, Contrasena):
         """Constructor cuyos parámetros son los nombres de las columnas de la Tabla Operaciones"""
 
-        self.Trabajador = Trabajador
+        self.Medico = Medico
         self.Usuario = Usuario
         self.Contrasena = Contrasena
     
     def __str__(self):
         """Método que muestra los objetos"""
 
-        return f"Login[{self.Trabajador},{self.Usuario},{self.Contrasena}]"
+        return f"Login[{self.Medico},{self.Usuario},{self.Contrasena}]"
 
-##################### FUNCIONES QUE VINCULAN A SQLITE ########################################
+##################### FUNCIONES QUE VINCULAN A MYSQL ########################################
 
-#:::::::::::::::::::::::::::::: GUARDAR HISTORIA ::::::::::::::::::::::::::::::::::::
+#:::::::::::::::::::::::::::::: GUARDAR LOGIN ::::::::::::::::::::::::::::::::::::
 
-def guardarLogin(Trabajador, Usuario, Contrasena):
+def guardarLogin(Medico, Usuario, Contrasena):
     """Función que guarda los datos en la clase Login"""
 
     conexion = ConexionDB()
-    sql = f"""INSERT INTO Login (Trabajador, Usuario, Contrasena) VALUES
-            ("{Trabajador}","{Usuario}","{Contrasena}")"""
+    sql = f"""INSERT INTO Login (Medico, Usuario, Contrasena) VALUES
+            ("{Medico}","{Usuario}","{Contrasena}")"""
 
     try:
         conexion.cursor.execute(sql)
@@ -38,6 +38,26 @@ def guardarLogin(Trabajador, Usuario, Contrasena):
         titulo = "Registro Operación"
         mensaje = "Error al registrar operación"
         messagebox.showerror(titulo, mensaje)
+
+def seleccionarMedico(Usuario):
+    """Función que selecciona un idLogin que toma el mismo valor que idMedico de la tabla Medicos para aplicarlo a la función activarLinea() 
+    o desactivarLinea() de MedicosDao.py"""
+    
+    conexion = ConexionDB()
+    idLogin = []
+    sql = f"""SELECT idLogin FROM Login WHERE Usuario = '{Usuario}'"""
+
+    try:
+        conexion.cursor.execute(sql)
+        idLogin = list(conexion.cursor.fetchall())
+        conexion.cerrarConexion()
+
+    except:
+        titulo = "ERROR"
+        mensaje = "Error al seleccionar id del médico activo"
+        messagebox.showinfo(titulo, mensaje)    
+
+    return idLogin
 
 #::::::::::::::::::::::::: TREEVIEW EN LA GUI LOGIN :::::::::::::::::::::::::::::::::::::
 

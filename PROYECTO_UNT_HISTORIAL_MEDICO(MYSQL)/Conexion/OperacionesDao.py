@@ -1,7 +1,7 @@
 from Conexion.conexion import ConexionDB
 from tkinter import messagebox
 
-################### CLASE HistoriaMedica ################################
+################### CLASE Operaciones ################################
 
 class Operaciones:
     """Clase de la tabla Operaciones"""
@@ -17,9 +17,9 @@ class Operaciones:
 
         return f"Operaciones[{self.Tipo},{self.Precio}]"
 
-##################### FUNCIONES QUE VINCULAN A SQLITE ########################################
+##################### FUNCIONES QUE VINCULAN A MYSQL ########################################
 
-#:::::::::::::::::::::::::::::: GUARDAR HISTORIA ::::::::::::::::::::::::::::::::::::
+#:::::::::::::::::::::::::::::: GUARDAR OPERACION ::::::::::::::::::::::::::::::::::::
 
 def guardarOperaciones(Tipo, Precio):
     """Función que guarda los datos en la clase Operaciones"""
@@ -40,7 +40,7 @@ def guardarOperaciones(Tipo, Precio):
         mensaje = "Error al registrar operación"
         messagebox.showerror(titulo, mensaje)
 
-#::::::::::::::::::::::::::: ELIMINAR HISTORIA ::::::::::::::::::::::::::::::::::::
+#::::::::::::::::::::::::::: ELIMINAR OPERACION ::::::::::::::::::::::::::::::::::::
 
 def eliminarOperaciones(idOperacion):
     """Función que elimina permanentemente los datos en la clase Operaciones"""
@@ -58,6 +58,24 @@ def eliminarOperaciones(idOperacion):
         titulo = "Eliminar operación"
         mensaje = "Error al eliminar operación"
         messagebox.showerror(titulo, mensaje)
+
+def seleccionarIDOperacion(Tipo):
+
+    conexion = ConexionDB()
+    operacionID = []
+    
+    sql = f"SELECT idOperacion FROM Operaciones WHERE Tipo = '{Tipo}'"
+    
+    try:
+        conexion.cursor.execute(sql)
+        operacionID = list(conexion.cursor.fetchall())
+        conexion.cerrarConexion()  
+    except:
+        titulo = "LISTAR"
+        mensaje = "Error al listar MedicoActivo"
+        messagebox.showerror(titulo, mensaje) 
+           
+    return operacionID
 
 #::::::::::::::::::::::::: LISTBOX EN LA GUI :::::::::::::::::::::::::::::::::::::
 

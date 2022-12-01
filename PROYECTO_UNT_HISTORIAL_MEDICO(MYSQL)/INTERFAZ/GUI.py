@@ -2,25 +2,17 @@
 
 from Conexion.PacienteDao import DatosPaciente, editarDatoPaciente, guardarDatoPaciente, listar, listarCondicion, eliminarPaciente
 from Conexion.HistorialDao import guardarHistoria, editarHistoria, eliminarHistoria, listarHistoria
-from Conexion.OperacionesDao import guardarOperaciones, eliminarOperaciones, listarPrecio, listarOperacion
-from Conexion.LoginDao import listarLogin, guardarLogin, listarCondicionLogin, listarCondicionLogin2
+from Conexion.OperacionesDao import guardarOperaciones, eliminarOperaciones, listarPrecio, listarOperacion, seleccionarIDOperacion
+from Conexion.LoginDao import listarLogin, guardarLogin, listarCondicionLogin, listarCondicionLogin2, seleccionarMedico
+from Conexion.MedicosDao import seleccionarActivo, seleccionarInactivo, activarLinea, desactivarLinea, seleccionarIDActivo
 
 import tkinter as tk
-from tkinter import W, Menu, ttk, messagebox, Toplevel
+from tkinter import W, ttk, messagebox, Toplevel
 
 import tkcalendar as tc
 import datetime
 from PIL import Image, ImageTk
 import fpdf
-
-from email import message
-import smtpd, ssl
-import smtplib
-import email
-from email import encoders
-from email.mime.base import MIMEBase
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 
 from tkinter import filedialog as FileDialog
 import subprocess
@@ -67,6 +59,42 @@ class Frame(tk.Frame):
         self.menu_archivo.configure(bg="#B2B4AC", activebackground="#D1D2CD", activeforeground="black")
 
         self.barra_menus.add_cascade(menu=self.menu_archivo, label="Temas")
+        ###################################
+        
+        self.MedicoActivo = seleccionarActivo()
+        
+        self.conectadoimg=Image.open("ICONOS/Conectado.png")
+        self.conectadoimg=self.conectadoimg.resize((18,18), Image.ANTIALIAS)
+        self.conectadoimgen=ImageTk.PhotoImage(self.conectadoimg)
+        
+        self.menu_archivo2 = tk.Menu(self.barra_menus, tearoff=False) 
+        
+        self.menu_archivo2.add_radiobutton(label=self.MedicoActivo[0], image=self.conectadoimgen, 
+                                            compound=tk.LEFT, font=("verdana",10))
+        
+        self.menu_archivo2.add_separator()
+        
+        self.MedicoInactivo = seleccionarInactivo()
+        self.MedicoInactivoTRUE=[]            
+        
+        for p in range(len(self.MedicoInactivo)): 
+            self.MedicoInactivo2=self.MedicoInactivo[p]
+            self.MedicoInactivoTRUE.append(self.MedicoInactivo2[0])
+        
+        self.desconectadoimg=Image.open("ICONOS/Desconectado.png")
+        self.desconectadoimg=self.desconectadoimg.resize((18,18), Image.ANTIALIAS)
+        self.desconectadoimgen=ImageTk.PhotoImage(self.desconectadoimg)
+        
+        for p in range(len(self.MedicoInactivoTRUE)):
+            
+            self.menu_archivo2.add_radiobutton(label=self.MedicoInactivoTRUE[p], image=self.desconectadoimgen, 
+                                                compound=tk.LEFT, font=("verdana",10))
+            
+        self.barra_menus.add_cascade(menu=self.menu_archivo2, label="Usuarios") 
+           
+        self.menu_archivo2.configure(bg="#B2B4AC", activebackground="#D1D2CD", activeforeground="black")
+        
+        ########################
         
         self.aplicacion.configure(menu=self.barra_menus)
 
@@ -74,6 +102,7 @@ class Frame(tk.Frame):
         self.idPersonaHistoria=None
         self.idHistoriaMedica=None
         self.idHistoriaMedicaEditar=None
+        self.idMedicoActivo=None
         self.camposPaciente()
         self.tablaPaciente()
         self.deshabilitar()
@@ -434,7 +463,7 @@ class Frame(tk.Frame):
 
     def CalcularEdad(self): 
         """Método que inserta la edad en el entry Edad, restando el año obtenido con el modulo datetime y el ingresado por self.calendar"""
-
+        
         self.fechaActual = datetime.date.today()
         self.date1 = str(self.calendar.get_date())
         
@@ -530,13 +559,13 @@ class Frame(tk.Frame):
                 idPersona = self.idPersona
 
             self.ListaHistoria = listarHistoria(idPersona)
-            self.tabla2 = ttk.Treeview(self.topHistoriaMedica, column=("Paciente", "FechaHistoria", "MotivoDeLaVisita", "Operacion", "Tratamiento", "DetalleAdicional", "Precio"))
+            self.tabla2 = ttk.Treeview(self.topHistoriaMedica, column=("Paciente", "FechaHistoria", "MotivoDeLaVisita", "Saturación de oxígeno", "Operacion", "Precio", "Tratamiento", "DetalleAdicional"))
             self.tabla2.config(height=10)
             self.tabla2.tag_configure("evenrow", background="#D1D2CD")
-            self.tabla2.grid(column=0, row=0, columnspan=8,sticky="nse")
+            self.tabla2.grid(column=0, row=0, columnspan=9,sticky="nse")
 
             self.scroll2=ttk.Scrollbar(self.topHistoriaMedica, orient="vertical", command=self.tabla2.yview)
-            self.scroll2.grid(row=0, column=8, sticky="nse")
+            self.scroll2.grid(row=0, column=9, sticky="nse")
 
             self.tabla2.configure(yscrollcommand=self.scroll2.set)
 
@@ -544,22 +573,24 @@ class Frame(tk.Frame):
             self.tabla2.heading("#1",text="Paciente")
             self.tabla2.heading("#2",text="Fecha y Hora")
             self.tabla2.heading("#3",text="Motivo de la visita")
-            self.tabla2.heading("#4",text="Operacion")
-            self.tabla2.heading("#5",text="Tratamiento")
-            self.tabla2.heading("#6",text="Detalle adicional")
-            self.tabla2.heading("#7",text="Precio")
+            self.tabla2.heading("#4",text="Saturacion")
+            self.tabla2.heading("#5",text="Operacion")
+            self.tabla2.heading("#6",text="Precio")
+            self.tabla2.heading("#7",text="Tratamiento")
+            self.tabla2.heading("#8",text="Detalle adicional")
 
             self.tabla2.column("#0", anchor=W, width=40)
             self.tabla2.column("#1", anchor=W, width=200)
-            self.tabla2.column("#2", anchor=W, width=150)
-            self.tabla2.column("#3", anchor=W, width=200)
-            self.tabla2.column("#4", anchor=W, width=150)
+            self.tabla2.column("#2", anchor=W, width=130)
+            self.tabla2.column("#3", anchor=W, width=280)
+            self.tabla2.column("#4", anchor=W, width=70)
             self.tabla2.column("#5", anchor=W, width=270)
-            self.tabla2.column("#6", anchor=W, width=420)
-            self.tabla2.column("#7", anchor=W, width=65)
+            self.tabla2.column("#6", anchor=W, width=65)
+            self.tabla2.column("#7", anchor=W, width=150)
+            self.tabla2.column("#8", anchor=W, width=320)
 
             for p in self.ListaHistoria:
-                self.tabla2.insert("",0,text=p[0], values=(p[1],p[2],p[3],p[4],p[5],p[6],p[7]), tags=("evenrow",))
+                self.tabla2.insert("",0,text=p[0], values=(p[1],p[2],p[3],p[4],p[5],p[6],p[7],p[8]), tags=("evenrow",))
 
         except:
             
@@ -600,10 +631,10 @@ class Frame(tk.Frame):
                                     background="#B2B4AC", activebackground="#D1D2CD", cursor="hand2")
         self.btnPDF.grid(column=3, row=1,padx=10,pady=10)
 
-        self.btnEnviarEmail=tk.Button(self.topHistoriaMedica, text="Enviar Historial",command=self.enviarEmail)
-        self.btnEnviarEmail.config(width=18,font=("Verdana", 12, "bold"), foreground="gray2",
+        self.btnMedir=tk.Button(self.topHistoriaMedica, text="Medir") #,command=self.enviarEmail
+        self.btnMedir.config(width=18,font=("Verdana", 12, "bold"), foreground="gray2",
                                     background="#B2B4AC", activebackground="#D1D2CD", cursor="hand2")
-        self.btnEnviarEmail.grid(column=4, row=1,padx=10,pady=10)
+        self.btnMedir.grid(column=4, row=1,padx=10,pady=10)
 
         self.btnVerPDF=tk.Button(self.topHistoriaMedica, text="Ver Historial",command=self.verPDF)
         self.btnVerPDF.config(width=18,font=("Verdana", 12, "bold"), foreground="gray2",
@@ -1270,25 +1301,28 @@ class Frame(tk.Frame):
         self.btnSalirAgregarHistoria.config(width=20, font=("Verdana", 12,"bold"), background="#B2B4AC", cursor="hand2", activebackground="#D1D2CD")
         self.btnSalirAgregarHistoria.grid(row=2, column=3, padx=10, pady=5)
 
+        self.svSaturacion="aaaaa" # AQUI SE RECIBE DATOS DE ARDUINO
+
         self.idPersona = None
 
     def agregaHistorialMedico(self):
         """Método que agrega los historiales"""
 
-        try:
-            if self.idHistoriaMedica == None:
-                guardarHistoria(self.idPersonaHistoria, self.svFechaHistoria.get(),self.svMotivo.get(), self.svOperacion.get(), self.svTratamiento.get(),self.svDetalle.get(),self.svPrecio.get())
-            self.topAHistoria.destroy()
-            self.topHistoriaMedica.destroy()
-            self.root.destroy()
+        
+        if self.idHistoriaMedica == None:
+            self.idMedicoActivo=seleccionarIDActivo()
+            self.idOperacion=seleccionarIDOperacion(self.svOperacion.get())
             
-            self.historiaMedica()
-            self.idPersona = None
+            guardarHistoria(self.idPersonaHistoria,self.idOperacion[0][0],self.idMedicoActivo[0][0],self.svFechaHistoria.get(),self.svMotivo.get(), self.svSaturacion, self.svOperacion.get(),self.svPrecio.get(), self.svTratamiento.get(),self.svDetalle.get())
+        
+        self.topAHistoria.destroy()
+        self.topHistoriaMedica.destroy()
+        self.root.destroy()
+        
+        self.historiaMedica()
+        self.idPersona = None
+        self.idOperacion = None
 
-        except:
-            titulo = "Agregar Historia"
-            mensaje = "Error al agregar historia Medica"
-            messagebox.showerror(titulo, mensaje)
 
     def eliminarHistorialMedico(self):
         """Método que elimina los historiales, de forma definitiva"""
@@ -1425,6 +1459,7 @@ class Frame(tk.Frame):
             editarHistoria(self.svFechaHistoriaEditar.get(), self.svMotivoEditar.get(), self.svOperacionEditar.get(), self.svTratamientoEditar.get(), self.svDetalleEditar.get(), self.svPrecioEditar.get(), self.idHistoriaMedicaEditar)
             self.idHistoriaMedicaEditar = None
             self.idHistoriaMedica = None
+            self.idMedicoActivo = None
             self.topEditarHistoria.destroy()
             self.topHistoriaMedica.destroy()
             self.root.destroy()
@@ -1448,6 +1483,7 @@ class Frame2(tk.Frame):
         self.intentosRegistrar=2
         self.intentosOlvidar=2
         self.intentosPrincipal=2
+        self.idLoginActivo=None
         self.pack(fill=tk.BOTH, expand=True)
         self.config(background="#0E4C75")
         self.widgets()
@@ -1616,9 +1652,12 @@ class Frame2(tk.Frame):
         
         if self.svUsuario_Existente.get() in self.listaCondicionUsuarioTRUE:
             
+            self.idLoginActivo = seleccionarMedico(self.svUsuario_Existente.get())
+            
+            activarLinea(self.idLoginActivo[0][0])
+            
             if self.svContraseña_Existente.get() in self.listaCondicionContraseñaTRUE:
                 
-                self.LblImagenLogin.config(bg="#95B5C7", width=50, height=50)
                 self.login.destroy()
                 aplicacion = tk.Tk() 
                 aplicacion.title("HISTORIAS CLINICAS") # nombre de la interfaz
@@ -1628,6 +1667,8 @@ class Frame2(tk.Frame):
                 aplicacion.iconbitmap("ICONOS/ICONO.ico")
                 fondo = Frame(aplicacion) # ventana para dar color de fondo
                 fondo.mainloop() # bucle generador
+                
+                desactivarLinea(self.idLoginActivo[0][0])
             
             else:
                 
@@ -1650,10 +1691,12 @@ Te quedan {self.intentosPrincipal} intento""")
         else:
 
             messagebox.showerror("ERROR", "Este usuario no existe, porfavor registrese")
+            self.idLoginActivo=None
 
     def NoEjecutar(self,event):
         """Evento que colocará el cursor en una posición absoluta de la pantalla, el botón cerrar de la ventana"""
-
+        desactivarLinea(self.idLoginActivo)
+        ########################### actualizar ids
         mouse.move(1231, 39, absolute=True, duration=0.03)
 
     def EntrarColorBoton(self,event):

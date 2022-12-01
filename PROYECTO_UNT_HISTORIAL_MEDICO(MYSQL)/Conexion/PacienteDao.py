@@ -23,7 +23,7 @@ class DatosPaciente:
 
         return f"DatosPaciente[{self.NombreCompleto},{self.ApellidosCompletos}, {self.DNI}, {self.FechaNacimiento},{self.Edad},{self.NumeroTelefonico},{self.CorreoElectronico}]"
 
-##################### FUNCIONES QUE VINCULAN A SQLITE ########################################
+##################### FUNCIONES QUE VINCULAN A MYSQL ########################################
 
 #::::::::::::: GUARDAR PACIENTE ::::::::::::::::::::::::::::::::::::
 
