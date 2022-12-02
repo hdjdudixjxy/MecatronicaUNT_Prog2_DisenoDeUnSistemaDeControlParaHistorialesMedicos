@@ -77,7 +77,7 @@ class Frame(tk.Frame):
         
         for p in range(len(self.MedicoActivoTRUE)):
             
-            self.menu_archivo2.add_radiobutton(label=self.MedicoActivo[p], image=self.conectadoimgen, 
+            self.menu_archivo2.add_radiobutton(label=self.MedicoActivoTRUE[p], image=self.conectadoimgen, 
                                             compound=tk.LEFT, font=("verdana",10))
         
         self.menu_archivo2.add_separator()
