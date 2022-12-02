@@ -734,74 +734,23 @@ class Frame(tk.Frame):
 
             subprocess.Popen([f"HISTORIALES_PDF/Historial_{self.id2}_{self.n2}.pdf"], shell=True) # Abre el fichero seleccionado
 
-    def enviarEmail(self):
-        """Método para enviar los historiales a correos hotmail"""
-
-        pass
-        """        servidor = "smtp.gmail.com"
-                                    puerto = 465
-                                    remitente = "t1513600121@unitru.edu.pe"
-                                    password = "74855615"
-                                    ab=self.tabla.item(self.tabla2.selection())["values"][6]
-                                    receptor = str(ab)
-                                    contexto = ssl.create_default_context()
-                                    titulo = "ENVÍO DE HISTORIAL MÉDICO"
-                                    no=self.tabla.item(self.tabla2.selection())["values"][0]
-                                    cuerpo = f"Hola {no}
-                                    Reciba los más cordiales saludos de parte del Centro Médico especializado Sánchez Jimenez.
-                                    El motivo de este mensaje es para comunicarle que le hacemos llegar su ficha médica correspondiente al día de hoy.
-                                    
-                                    Me despido, no sin antes recordarle que me encuentro a su disposición y, ante cualquier consulta adicional, comuníquese al 
-                                    WhatsApp +51 955 216 891 o al correo electrónico registros@gmail.com. 
-                                    Recalco nuestro compromiso asumido para contribuir en el desarrollo de su salud.
-                                    Sin otro particular, le reitero nuestros cordiales saludos.
-                                    Muy atentamente,
-
-                                    Asistente de Coordinación
-                                    Centro Médico especializado Sánchez Jimenez  
-                                    "
-
-                                    message = MIMEMultipart()
-                                    message["subject"] = titulo
-                                    message["From"] = remitente
-                                    message["To"] = receptor
-
-                                    message.attach(MIMEText(cuerpo, "plain"))
-                                    self.id2=self.tabla2.item(self.tabla2.selection())["text"]
-                                    self.nombre2=self.tabla2.item(self.tabla2.selection())["values"][0]
-                                    archivo = f"D:\\CRISTHIAN\\universidad\\ciclo 4\\Programación II\\MecatronicaUNT_Prog2_DisenoDeUnSistemaDeControlParaHistorialesMedicos\\PROYECTO_UNT_HISTORIAL_MEDICO\\HISTORIALES_PDF\\Historial_{self.id2}_{self.nombre2}.pdf"
-
-                                    with open(archivo, "rb") as adjunto:
-                                        part = MIMEBase("Aplication", "octet-stream")
-                                        part.set_payload(adjunto.read())
-
-                                    encoders.encode_base64(part)
-                                    part.add_header("Content-Disposition", f"attachment; filename={archivo}",)
-
-                                    message.attach(part)
-                                    texto = message.as_string()
-
-                                    with smtplib.SMTP_SSL(servidor, puerto, context=contexto) as s:
-                                        s.login(remitente, password)
-                                        s.sendmail(remitente, receptor, texto)"""
-
     def TopLevelOperaciones(self):
         """Método que genera el list box con las operaciones"""
 
-        self.root=tk.Toplevel()
+        self.rootA=tk.Toplevel()
 
-        self.root.title("OPERACIONES MÉDICAS")
-        self.root.geometry("480x790+1030+15") 
-        self.root.resizable(0,0)
-        self.root.iconbitmap("ICONOS/icon.ico")
-        self.root.configure(background="#777067") 
+        self.rootA.title("OPERACIONES MÉDICAS")
+        self.rootA.geometry("480x790+1030+15") 
+        self.rootA.resizable(0,0)
+        self.rootA.iconbitmap("ICONOS/icon.ico")
+        self.rootA.configure(background="#777067") 
 
         ################ CLASES FRAME ###############
 
-        self.ventana1=tk.Frame(self.root)
+        self.ventana1=tk.Frame(self.rootA)
         self.ventana1.configure(bg="#777067",height=150)
 
-        self.ventana2=tk.LabelFrame(self.root)
+        self.ventana2=tk.LabelFrame(self.rootA)
         self.ventana2.configure(text="Eliga la operación", font=("Verdana", 15, "bold"), border=5, bg="#777067")
 
         self.subventana1=tk.Frame(self.ventana2, bg="#777067")
@@ -809,15 +758,15 @@ class Frame(tk.Frame):
 
         ########## CLASES ENTRYS ################
 
-        self.operacion=tk.StringVar()
+        self.svOperacion_Agregar=tk.StringVar()
         
         self.entry=tk.Entry(self.ventana1)
-        self.entry.configure(textvariable=self.operacion, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
+        self.entry.configure(textvariable=self.svOperacion_Agregar, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
 
-        self.precio=tk.IntVar()
+        self.svPrecio_Agregar=tk.IntVar()
 
         self.entry2=tk.Entry(self.ventana1)
-        self.entry2.configure(textvariable=self.precio, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
+        self.entry2.configure(textvariable=self.svPrecio_Agregar, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
 
         ########## CLASES LABELS ############
 
@@ -856,8 +805,8 @@ class Frame(tk.Frame):
         def agregar_datos():
             """Función para agregar las operaciones y el precio tanto a la lista como a el list box y a la base de datos"""
 
-            Operacion=self.operacion.get()
-            Precio=self.precio.get()
+            Operacion=self.svOperacion_Agregar.get()
+            Precio=self.svPrecio_Agregar.get()
             
             try:
                 if Operacion in self.ListaOperacionTRUE:
@@ -867,7 +816,7 @@ class Frame(tk.Frame):
                     messagebox.showinfo(titulo, mensaje)
                     self.topAHistoria.destroy()
                     self.topHistoriaMedica.destroy()
-                    self.root.destroy()
+                    self.rootA.destroy()
                     self.historiaMedica()
                     self.topAgregarHistoria()   # No es necesario colocar el self.TopLevelOperaciones() ya que en este método ya referenciamos esa función
                 
@@ -877,11 +826,11 @@ class Frame(tk.Frame):
                     messagebox.showinfo(titulo, mensaje)
                     self.topAHistoria.destroy()
                     self.topHistoriaMedica.destroy()
-                    self.root.destroy()
+                    self.rootA.destroy()
                     self.historiaMedica()
                     self.topAgregarHistoria()
                     
-                elif isinstance(Precio,int):
+                elif  Operacion not in self.ListaOperacionTRUE and isinstance(Precio,int):
 
                     self.ListaOperacionTRUE.append(Operacion)
                     ultimaOperacion=self.ListaOperacionTRUE[-1]
@@ -890,7 +839,7 @@ class Frame(tk.Frame):
                     self.ListaPrecioTRUE.append(Precio)
                     ultimoPrecio=self.ListaPrecioTRUE[-1]
                     guardarOperaciones(ultimaOperacion, ultimoPrecio)
-
+                    self.rootA.destroy()
                     self.topAHistoria.destroy()
                     self.topHistoriaMedica.destroy()
                     
@@ -908,7 +857,7 @@ class Frame(tk.Frame):
                 messagebox.showerror(titulo, mensaje)
                 self.topAHistoria.destroy()
                 self.topHistoriaMedica.destroy()
-                self.root.destroy()
+                self.rootA.destroy()
                 self.historiaMedica()
                 self.topAgregarHistoria()
                 
@@ -921,13 +870,13 @@ class Frame(tk.Frame):
             try:
                 self.lista.delete(numeroParaLista)              # Lo borramos del ListBox
                 self.ListaOperacionTRUE.pop(numeroParaLista)    # Lo eliminamos de la lista
-                self.ListaPrecio.pop(numeroParaLista) 
+                self.ListaPrecioTRUE.pop(numeroParaLista) 
                 eliminarOperaciones(numeroParaLista+1)          # Sumamos 1 porque SQL toma valores del ID desde 1 y python desde 0 y para borrar el 
                                                                 # elemento correcto, sumamos 1
                 
                 self.topAHistoria.destroy()
                 self.topHistoriaMedica.destroy()
-                self.root.destroy()
+                self.rootA.destroy()
                 self.historiaMedica()
                 self.topAgregarHistoria()
 
@@ -938,7 +887,7 @@ class Frame(tk.Frame):
                 messagebox.showerror(titulo, mensaje)
                 self.topAHistoria.destroy()
                 self.topHistoriaMedica.destroy()
-                self.root.destroy()
+                self.rootA.destroy()
                 self.historiaMedica()
                 self.topAgregarHistoria()
                 
@@ -949,12 +898,12 @@ class Frame(tk.Frame):
             numeroParaLista=(tupla[0])
 
             try:
-                self.root.destroy()
+                self.rootA.destroy()
                 self.topAHistoria.destroy()
                 self.topHistoriaMedica.destroy()
                 self.historiaMedica()
                 self.topAgregarHistoria()
-                self.root.destroy()                 # Damos doble destroy porque este se ejecuta cuando se ejecuta el método topAgregarHistoria
+                self.rootA.destroy()                
                 self.svOperacion.set(str(self.ListaOperacionTRUE[numeroParaLista]))
                 self.svPrecio.set(int(self.ListaPrecioTRUE[numeroParaLista]))
 
@@ -963,6 +912,7 @@ class Frame(tk.Frame):
                 titulo = "Insertar operación"
                 mensaje = "Error al insertar la operación"
                 messagebox.showerror(titulo, mensaje)
+                self.rootA.destroy()
                 self.topAHistoria.destroy()
                 self.topHistoriaMedica.destroy()
                 self.historiaMedica()
@@ -976,7 +926,7 @@ class Frame(tk.Frame):
         self.boton2=tk.Button(self.ventana1)
         self.boton2.configure(text="ELIMINAR", bg="#B2B4AC", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="#D1D2CD", command=eliminar_datos)
 
-        self.boton3=tk.Button(self.root)
+        self.boton3=tk.Button(self.rootA)
         self.boton3.configure(text="INSERTAR", bg="#B2B4AC", cursor="hand2", font=("Verdana", 13, "bold"), activebackground="#D1D2CD", width=28, command=insertar_datos)
 
         self.scrollbar1 = tk.Scrollbar(self.subventana2) 
@@ -1006,20 +956,20 @@ class Frame(tk.Frame):
     def TopLevelOperacionesEditar(self):
         """Método que genera el list box con las operaciones, pero para editar"""
 
-        self.root=tk.Toplevel()
+        self.rootE=tk.Toplevel()
 
-        self.root.title("OPERACIONES MÉDICAS")
-        self.root.geometry("480x790+1030+15") 
-        self.root.resizable(0,0)
-        self.root.iconbitmap("ICONOS/icon.ico")
-        self.root.configure(background="#777067") 
+        self.rootE.title("OPERACIONES MÉDICAS")
+        self.rootE.geometry("480x790+1030+15") 
+        self.rootE.resizable(0,0)
+        self.rootE.iconbitmap("ICONOS/icon.ico")
+        self.rootE.configure(background="#777067") 
 
         ################ CLASES FRAME ###############
 
-        self.ventana1=tk.Frame(self.root)
+        self.ventana1=tk.Frame(self.rootE)
         self.ventana1.configure(bg="#777067",height=150)
 
-        self.ventana2=tk.LabelFrame(self.root)
+        self.ventana2=tk.LabelFrame(self.rootE)
         self.ventana2.configure(text="Eliga la operación", font=("Verdana", 15, "bold"), border=5, bg="#777067")
 
         self.subventana1=tk.Frame(self.ventana2, bg="#777067")
@@ -1027,15 +977,15 @@ class Frame(tk.Frame):
 
         ########## CLASES ENTRYS ################
 
-        self.operacion=tk.StringVar()
+        self.svOperacion_Editar=tk.StringVar()
         
         self.entry=tk.Entry(self.ventana1)
-        self.entry.configure(textvariable=self.operacion, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
+        self.entry.configure(textvariable=self.svOperacion_Editar, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
 
-        self.precio=tk.IntVar()
+        self.svPrecio_Editar=tk.IntVar()
 
         self.entry2=tk.Entry(self.ventana1)
-        self.entry2.configure(textvariable=self.precio, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
+        self.entry2.configure(textvariable=self.svPrecio_Editar, font=("Verdana", 15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
 
         ########## CLASES LABELS ############
 
@@ -1071,8 +1021,8 @@ class Frame(tk.Frame):
         def agregar_datos_editar():
             """Función para agregar las operaciones y el precio tanto al diccionario como a el list box"""
 
-            Operacion=self.operacion.get()
-            Precio=self.precio.get()
+            Operacion=self.svOperacion_Editar.get()
+            Precio=self.svPrecio_Editar.get()
             
             try:
                 if Operacion in self.ListaOperacionTRUE:
@@ -1082,7 +1032,7 @@ class Frame(tk.Frame):
                     messagebox.showinfo(titulo, mensaje)
                     self.topEditarHistoria.destroy()
                     self.topHistoriaMedica.destroy()
-                    self.root.destroy()
+                    self.rootE.destroy()
                     self.historiaMedica()
                     self.topEditarHistorialMedico()  
                 
@@ -1092,11 +1042,11 @@ class Frame(tk.Frame):
                     messagebox.showinfo(titulo, mensaje)
                     self.topEditarHistoria.destroy()
                     self.topHistoriaMedica.destroy()
-                    self.root.destroy()
+                    self.rootE.destroy()
                     self.historiaMedica()
                     self.topEditarHistorialMedico()
                     
-                elif isinstance(Precio,int):
+                elif Operacion not in self.ListaOperacionTRUE and isinstance(Precio,int):
 
                     self.ListaOperacionTRUE.append(Operacion)
                     ultimaOperacion=self.ListaOperacionTRUE[-1]
@@ -1105,7 +1055,7 @@ class Frame(tk.Frame):
                     self.ListaPrecioTRUE.append(Precio)
                     ultimoPrecio=self.ListaPrecioTRUE[-1]
                     guardarOperaciones(ultimaOperacion, ultimoPrecio)
-
+                    self.rootE.destroy()
                     self.topEditarHistoria.destroy()
                     self.topHistoriaMedica.destroy()
                     
@@ -1122,7 +1072,7 @@ class Frame(tk.Frame):
                 messagebox.showerror(titulo, mensaje)
                 self.topEditarHistoria.destroy()
                 self.topHistoriaMedica.destroy()
-                self.root.destroy()
+                self.rootE.destroy()
                 self.historiaMedica()
                 self.topEditarHistorialMedico()
                 
@@ -1136,12 +1086,12 @@ class Frame(tk.Frame):
 
                 self.lista.delete(numeroParaLista)              
                 self.ListaOperacionTRUE.pop(numeroParaLista)    
-                self.ListaPrecio.pop(numeroParaLista) 
+                self.ListaPrecioTRUE.pop(numeroParaLista) 
                 eliminarOperaciones(numeroParaLista+1)          
 
                 self.topEditarHistoria.destroy()
                 self.topHistoriaMedica.destroy()
-                self.root.destroy()
+                self.rootE.destroy()
                 self.historiaMedica()
                 self.topEditarHistorialMedico()
                 
@@ -1152,7 +1102,7 @@ class Frame(tk.Frame):
                 messagebox.showerror(titulo, mensaje)
                 self.topEditarHistoria.destroy()
                 self.topHistoriaMedica.destroy()
-                self.root.destroy()
+                self.rootE.destroy()
                 self.historiaMedica()
                 self.topEditarHistorialMedico()
                 
@@ -1164,15 +1114,21 @@ class Frame(tk.Frame):
 
             try:
              
+                self.rootE.destroy()
+                self.topEditarHistoria.destroy()
+                self.topHistoriaMedica.destroy()
+                self.historiaMedica()
+                self.topEditarHistorialMedico()
+                self.rootE.destroy()                
                 self.svOperacionEditar.set(str(self.ListaOperacionTRUE[numeroParaLista]))
                 self.svPrecioEditar.set(int(self.ListaPrecioTRUE[numeroParaLista]))
-                self.root.destroy() 
 
             except IndexError:
                 
                 titulo = "Insertar operación"
                 mensaje = "Error al insertar la operación"
                 messagebox.showerror(titulo, mensaje)
+                self.rootE.destroy()
                 self.topEditarHistoria.destroy()
                 self.topHistoriaMedica.destroy()
                 self.historiaMedica()
@@ -1186,7 +1142,7 @@ class Frame(tk.Frame):
         self.boton2=tk.Button(self.ventana1)
         self.boton2.configure(text="ELIMINAR", bg="#B2B4AC", cursor="hand2", font=("Verdana", 12, "bold"), activebackground="#D1D2CD", command=eliminar_datos_editar)
 
-        self.boton3=tk.Button(self.root)
+        self.boton3=tk.Button(self.rootE)
         self.boton3.configure(text="INSERTAR", bg="#B2B4AC", cursor="hand2", font=("Verdana", 13, "bold"), activebackground="#D1D2CD", width=28, command=insertar_datos_editar)
 
         self.scrollbar1 = tk.Scrollbar(self.subventana2) 
@@ -1325,12 +1281,11 @@ class Frame(tk.Frame):
         
         self.topAHistoria.destroy()
         self.topHistoriaMedica.destroy()
-        self.root.destroy()
+        self.rootA.destroy()
         
         self.historiaMedica()
         self.idPersona = None
         self.idOperacion = None
-
 
     def eliminarHistorialMedico(self):
         """Método que elimina los historiales, de forma definitiva"""
@@ -1464,13 +1419,13 @@ class Frame(tk.Frame):
         """Método que edita los historiales"""
 
         try:
-            editarHistoria(self.svFechaHistoriaEditar.get(), self.svMotivoEditar.get(), self.svOperacionEditar.get(), self.svTratamientoEditar.get(), self.svDetalleEditar.get(), self.svPrecioEditar.get(), self.idHistoriaMedicaEditar)
+            editarHistoria(self.svFechaHistoriaEditar.get(), self.svMotivoEditar.get(), self.svSaturacion, self.svOperacionEditar.get(), self.svPrecioEditar.get(), self.svTratamientoEditar.get(), self.svDetalleEditar.get(), self.idHistoriaMedicaEditar)
             self.idHistoriaMedicaEditar = None
             self.idHistoriaMedica = None
             self.idMedicoActivo = None
             self.topEditarHistoria.destroy()
             self.topHistoriaMedica.destroy()
-            self.root.destroy()
+            self.rootE.destroy()
             self.historiaMedica()
             
         except:

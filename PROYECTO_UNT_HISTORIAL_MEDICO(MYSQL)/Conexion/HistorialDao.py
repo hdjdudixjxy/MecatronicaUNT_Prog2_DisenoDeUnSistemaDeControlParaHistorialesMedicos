@@ -70,11 +70,11 @@ def eliminarHistoria(idHistorial):
 
 #:::::::::::::::::::::::::::: EDITAR HISTORIA ::::::::::::::::::::::::::::::::::::
 
-def editarHistoria(fechaHistoria, MotivoDeLaVisita, Operacion, Tratamiento, DetalleAdicional, Precio, idHistorial):
+def editarHistoria(fechaHistoria, MotivoDeLaVisita, Saturacion, Operacion, Precio, Tratamiento, DetalleAdicional, idHistorial):
     """Función que edita los historiales en la clase HistoriaMedica"""
 
     conexion = ConexionDB()
-    sql = f"""UPDATE HistoriaMedica SET fechaHistoria = "{fechaHistoria}", MotivoDeLaVisita = "{MotivoDeLaVisita}", Operacion = "{Operacion}", Tratamiento = "{Tratamiento}", DetalleAdicional = "{DetalleAdicional}", Precio = "{Precio}" WHERE idHistorial = {idHistorial}"""
+    sql = f"""UPDATE HistoriaMedica SET fechaHistoria = "{fechaHistoria}", MotivoDeLaVisita = "{MotivoDeLaVisita}", Saturacion = "{Saturacion}", Operacion = "{Operacion}", Precio = "{Precio}", Tratamiento = "{Tratamiento}", DetalleAdicional = "{DetalleAdicional}" WHERE idHistorial = {idHistorial}"""
     try:
         conexion.cursor.execute(sql)
         conexion.cerrarConexion()
