@@ -42,7 +42,7 @@ def seleccionarActivo():
     
     try:
         conexion.cursor.execute(sql)
-        MedicoActivo = list(conexion.cursor.fetchone())
+        MedicoActivo = list(conexion.cursor.fetchall())
         conexion.cerrarConexion()  
     except:
         titulo = "LISTAR"
