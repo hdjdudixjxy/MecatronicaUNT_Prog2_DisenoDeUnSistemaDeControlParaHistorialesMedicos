@@ -62,6 +62,11 @@ class Frame(tk.Frame):
         ###################################
         
         self.MedicoActivo = seleccionarActivo()
+        self.MedicoActivoTRUE=[]            
+        
+        for p in range(len(self.MedicoActivo)): 
+            self.MedicoActivo2=self.MedicoActivo[p]
+            self.MedicoActivoTRUE.append(self.MedicoActivo2[0])
         
         self.conectadoimg=Image.open("ICONOS/Conectado.png")
         self.conectadoimg=self.conectadoimg.resize((18,18), Image.ANTIALIAS)
@@ -69,7 +74,9 @@ class Frame(tk.Frame):
         
         self.menu_archivo2 = tk.Menu(self.barra_menus, tearoff=False) 
         
-        self.menu_archivo2.add_radiobutton(label=self.MedicoActivo[0], image=self.conectadoimgen, 
+        for p in range(len(self.MedicoActivoTRUE)):
+            
+            self.menu_archivo2.add_radiobutton(label=self.MedicoActivo[0], image=self.conectadoimgen, 
                                             compound=tk.LEFT, font=("verdana",10))
         
         self.menu_archivo2.add_separator()
