@@ -13,7 +13,6 @@ from tkinter import W, ttk, messagebox, Toplevel
 import tkcalendar as tc
 import datetime
 from PIL import Image, ImageTk
-import fpdf
 
 from tkinter import filedialog as FileDialog
 import subprocess
@@ -151,7 +150,7 @@ class Frame(tk.Frame):
             ############## CAMBIOS DE COLOR ##################
 
             self.config(background="#B2B4AC", relief=tk.GROOVE, border=5)
-
+            self.ventanaAuxiliar.config(bg="#B2B4AC")
             self.listaCambioslbl_claro=[self.lblNombre,self.lblApellidos,self.lblDni,self.lblFechNacimiento, self.lblEdad, self.lblTelefono, self.lblCorreo, self.lblBuscarDni]
 
             for i in self.listaCambioslbl_claro:
@@ -183,7 +182,7 @@ class Frame(tk.Frame):
             ############## CAMBIOS DE COLOR ##################
 
             self.config(background="#777067", relief=tk.GROOVE, border=5)
-
+            self.ventanaAuxiliar.config(bg="#777067")
             self.listaCambioslbl_oscuro=[self.lblNombre,self.lblApellidos,self.lblDni,self.lblFechNacimiento, self.lblEdad, self.lblTelefono, self.lblCorreo, self.lblBuscarDni]
 
             for i in self.listaCambioslbl_oscuro:
@@ -272,10 +271,14 @@ class Frame(tk.Frame):
         self.entryDni.config(width=50, font=("verdana",15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
         self.entryDni.grid(column=1, row=2, padx=10, pady=5, columnspan=2)
 
+        self.ventanaAuxiliar = tk.Frame(self)
+        self.ventanaAuxiliar.config(bg="#777067")
+        self.ventanaAuxiliar.grid(column=1, row=3, padx=10, pady=5, columnspan=2)
+        
         self.svFecNacimiento = tk.StringVar()
-        self.entryFecNacimiento = tk.Entry(self, textvariable=self.svFecNacimiento)
-        self.entryFecNacimiento.config(width=50, font=("verdana",15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
-        self.entryFecNacimiento.grid(column=1, row=3, padx=10, pady=5, columnspan=2)
+        self.entryFecNacimiento = tk.Entry(self.ventanaAuxiliar, textvariable=self.svFecNacimiento)
+        self.entryFecNacimiento.config(width=37, font=("verdana",15), bg="#B2B4AC", selectbackground="#D1D2CD", selectforeground="black")
+        self.entryFecNacimiento.pack(side = "left")
 
         self.svEdad = tk.StringVar()
         self.entryEdad = tk.Entry(self, textvariable=self.svEdad)
@@ -309,10 +312,10 @@ class Frame(tk.Frame):
                                 background="#B2B4AC", cursor="hand2",activebackground="#D1D2CD", command=self.deshabilitar)
         self.btnCancelar.grid(column=2,row=7, padx=10, pady=5)
 
-        self.btnCalendario = tk.Button(self, text="BUSCAR")
+        self.btnCalendario = tk.Button(self.ventanaAuxiliar, text="BUSCAR")
         self.btnCalendario.config(width=13, font=("verdana",12,"bold"), command=self.MostrarCalendario,
                                 background="#B2B4AC", cursor="hand2",activebackground="#D1D2CD")
-        self.btnCalendario.grid(column=3,row=3,padx=10,pady=5)
+        self.btnCalendario.pack(side = "right", padx=10)
 
         #################### WDGETS DEL BUSCADOR ########################
         
