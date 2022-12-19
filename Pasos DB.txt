@@ -1,0 +1,7 @@
+1. cd C:\xampp\mysql\bin
+2. mysql -h bj6rut9nh6zecwktf8pe-mysql.services.clever-cloud.com -P 3306 -u updoyj6wjsteofrk -p bj6rut9nh6zecwktf8pe
+3. zIu4diili79hRYm7dsU5
+4. EJECUTAR LOS CÓDIGOS SQL
+5. SHOW TABLES; muestra todas las tablas
+6. DESCRIBE TABLA1; muestra los campos de una tabla y los tipos de datos
+
