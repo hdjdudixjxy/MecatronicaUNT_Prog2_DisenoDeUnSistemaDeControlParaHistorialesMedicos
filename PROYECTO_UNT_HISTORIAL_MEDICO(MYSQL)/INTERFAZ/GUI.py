@@ -1797,7 +1797,7 @@ Te quedan {self.intentosPrincipal} intento""")
 
     def NoEjecutar(self,event):
         """Evento que colocará el cursor en una posición absoluta de la pantalla, el botón cerrar de la ventana"""
-        desactivarLinea(self.idLoginActivo)
+        
         ########################### actualizar ids
         mouse.move(1231, 39, absolute=True, duration=0.03)
 
