@@ -140,10 +140,11 @@ def seleccionarIDMedicoResponsable(idHistorial, idPersonaHistorial):
     try:
         conexion.cursor.execute(sql)
         listaIDMedicoResponsable = list(conexion.cursor.fetchall())
+        
         conexion.cerrarConexion()
     except:
         titulo = "Error"
-        mensaje = "Nose ha encontrado el id del médico responsable"
+        mensaje = "No se ha encontrado el id del médico responsable"
         messagebox.showerror(titulo, mensaje)
 
     return listaIDMedicoResponsable

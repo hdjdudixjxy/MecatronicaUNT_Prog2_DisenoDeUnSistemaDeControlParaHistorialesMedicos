@@ -21,6 +21,7 @@ import mouse
 
 import pygame
 import time
+import serial
 
 ################## VENTANA DE FONDO ##########################
 
@@ -610,7 +611,7 @@ class Frame(tk.Frame):
             self.tabla2.heading("#1",text="Paciente")
             self.tabla2.heading("#2",text="Fecha y Hora")
             self.tabla2.heading("#3",text="Motivo de la visita")
-            self.tabla2.heading("#4",text="Saturacion")
+            self.tabla2.heading("#4",text="Ritmo cardiaco")
             self.tabla2.heading("#5",text="Operacion")
             self.tabla2.heading("#6",text="Precio")
             self.tabla2.heading("#7",text="Tratamiento")
@@ -645,7 +646,7 @@ class Frame(tk.Frame):
         self.topHistoriaMedica.resizable(width=False, height=False)
         self.topHistoriaMedica.iconbitmap("ICONOS/Historial.ico")
         self.topHistoriaMedica.config(background="#777067")
-        
+        self.IDHistorial_PDF = self.tabla.item(self.tabla.selection())["text"] 
         self.tablaHistoria() 
 
         self.btnGuardarHistoria=tk.Button(self.topHistoriaMedica, text="Agregar Historia", command=self.topAgregarHistoria)
@@ -668,7 +669,7 @@ class Frame(tk.Frame):
                                     background="#B2B4AC", activebackground="#D1D2CD", cursor="hand2")
         self.btnPDF.grid(column=3, row=1,padx=10,pady=10)
 
-        self.btnMedir=tk.Button(self.topHistoriaMedica, text="Medir") #,command=self.enviarEmail
+        self.btnMedir=tk.Button(self.topHistoriaMedica, text="Medir", command=self.enviarSaturacion)
         self.btnMedir.config(width=18,font=("Verdana", 12, "bold"), foreground="gray2",
                                     background="#B2B4AC", activebackground="#D1D2CD", cursor="hand2")
         self.btnMedir.grid(column=4, row=1,padx=10,pady=10)
@@ -680,6 +681,20 @@ class Frame(tk.Frame):
 
         self.idPersona = None
         
+    def enviarSaturacion(self):
+        """Método para obtener la saturación del paciente"""
+        """
+           self.serialArduino = serial.Serial('COM3', 115200)
+           self.val=[]
+           while True:
+               self.val.append(self.serialArduino.readline().decode('ascii'))
+               if len(self.val) == 150:
+                    break
+            
+           self.svSaturacion=sum(self.val)//len(self.val)
+        """
+        self.svSaturacion = 98
+        
     def crearPDF(self):
         """Método para crear el historial de cada paciente"""
         
@@ -688,7 +703,7 @@ class Frame(tk.Frame):
         self.pdf.add_page()              # agrega una página
 
         self.idPacienteHistorial_PDF    = self.tabla2.item(self.tabla2.selection())["text"]                    # id pacienteHistorial
-        self.IDHistorial_PDF            = self.tabla.item(self.tabla.selection())["text"]                      # id Historial 
+        # self.IDHistorial_PDF            = self.tabla.item(self.tabla.selection())["text"]                       id Historial 
         self.nombrePaciente_PDF         = self.tabla2.item(self.tabla2.selection())["values"][0]               # nombre paciente-historial
         self.fechaHistorial_PDF         = str(self.tabla2.item(self.tabla2.selection())["values"][1])          # fecha-historial
         self.motivoHistorial_PDF        = self.tabla2.item(self.tabla2.selection())["values"][2]               # motivo-historial
@@ -710,7 +725,7 @@ class Frame(tk.Frame):
         lista_datos = [
         ("Motivo de la Visita", self.motivoHistorial_PDF),
         ("Fecha de la Visita", self.fechaHistorial_PDF),
-        ("Saturación", self.saturacionHistorial_PDF),
+        ("Ritmo cardiaco", self.saturacionHistorial_PDF),
         ("Operación realiazda", self.operacionHistorial_PDF),
         ("Monto a pagar", self.precioHistorial_PDF),
         ("Tratamiento a seguir", self.tratamientoHistorial_PDF),
@@ -814,12 +829,13 @@ class Frame(tk.Frame):
             else:self.pdf.set_fill_color(r= 255, g = 255, b= 255)
 
             self.pdf.cell(w = 60, h = 10, txt = str(i[0]), border = 'TBL', ln=0, align = 'C', fill = 1)
-            self.pdf.cell(w = 0, h = 10, txt = i[1], border = 'TB', ln=1, align = 'C', fill = 1)
+            self.pdf.cell(w = 0, h = 10, txt = str(i[1]), border = 'TB', ln=1, align = 'C', fill = 1)
 
         
-        self.idMedicoResponsable=seleccionarIDMedicoResponsable(int(self.IDHistorial_PDF), int(self.idPacienteHistorial_PDF))
-
+        self.idMedicoResponsable = seleccionarIDMedicoResponsable(self.idPacienteHistorial_PDF, self.IDHistorial_PDF)
+        
         self.MedicoResponsable_PDF = seleccionarMedicoResponsable(self.idMedicoResponsable[0][0])
+        
         self.DNIMedicoResponsable_PDF = seleccionarDNIMedicoResponsable(self.idMedicoResponsable[0][0])
         
         self.pdf.set_draw_color(r= 0, g = 0, b= 0)
@@ -853,6 +869,8 @@ class Frame(tk.Frame):
 
         self.pdf.output(f"HISTORIALES_PDF/Historial_{self.idPacienteHistorial_PDF}_{self.nombrePaciente_PDF}.pdf")
         self.idMedicoResponsable=None
+        self.MedicoResponsable_PDF=None
+        self.DNIMedicoResponsable_PDF=None
       
     def verPDF(self):
         """Método para visualizar un historial"""
@@ -971,7 +989,7 @@ class Frame(tk.Frame):
 
                     self.ListaOperacionTRUE.append(Operacion)
                     ultimaOperacion=self.ListaOperacionTRUE[-1]
-                    self.lista.insert(tk.END,ultimaOperacion) 
+                    self.lista_A.insert(tk.END,ultimaOperacion) 
 
                     self.ListaPrecioTRUE.append(Precio)
                     ultimoPrecio=self.ListaPrecioTRUE[-1]
@@ -1001,11 +1019,11 @@ class Frame(tk.Frame):
         def eliminar_datos():
             """Función para eliminar datos tanto de la lista como del list box y de la base de datos"""
 
-            tupla=(self.lista.curselection())
+            tupla=(self.lista_A.curselection())
             numeroParaLista=(tupla[0])
 
             try:
-                self.lista.delete(numeroParaLista)              # Lo borramos del ListBox
+                self.lista_A.delete(numeroParaLista)              # Lo borramos del ListBox
                 self.ListaOperacionTRUE.pop(numeroParaLista)    # Lo eliminamos de la lista
                 self.ListaPrecioTRUE.pop(numeroParaLista) 
                 eliminarOperaciones(numeroParaLista+1)          # Sumamos 1 porque SQL toma valores del ID desde 1 y python desde 0 y para borrar el 
@@ -1031,7 +1049,7 @@ class Frame(tk.Frame):
         def insertar_datos():
             """Función para insertar las operaciones y el precio en el TopLevel"""
 
-            tupla=(self.lista.curselection())
+            tupla=(self.lista_A.curselection())
             numeroParaLista=(tupla[0])
 
             try:
@@ -1187,7 +1205,7 @@ class Frame(tk.Frame):
 
                     self.ListaOperacionTRUE.append(Operacion)
                     ultimaOperacion=self.ListaOperacionTRUE[-1]
-                    self.lista.insert(tk.END,ultimaOperacion) 
+                    self.lista_E.insert(tk.END,ultimaOperacion) 
 
                     self.ListaPrecioTRUE.append(Precio)
                     ultimoPrecio=self.ListaPrecioTRUE[-1]
@@ -1216,12 +1234,12 @@ class Frame(tk.Frame):
         def eliminar_datos_editar():
             """Función para eliminar datos del diccionario operaciones"""
 
-            tupla=(self.lista.curselection())
+            tupla=(self.lista_E.curselection())
             numeroParaLista=(tupla[0])
 
             try:
 
-                self.lista.delete(numeroParaLista)              
+                self.lista_E.delete(numeroParaLista)              
                 self.ListaOperacionTRUE.pop(numeroParaLista)    
                 self.ListaPrecioTRUE.pop(numeroParaLista) 
                 eliminarOperaciones(numeroParaLista+1)          
@@ -1246,7 +1264,7 @@ class Frame(tk.Frame):
         def insertar_datos_editar():
             """Función para insertar las operaciones y el precio, pero esta vez en el top level editar historial paciente"""
 
-            tupla=(self.lista.curselection())
+            tupla=(self.lista_E.curselection())
             numeroParaLista=(tupla[0])
 
             try:
@@ -1401,8 +1419,6 @@ class Frame(tk.Frame):
         self.btnSalirAgregarHistoria = tk.Button(self.frameFechaHistoria, text="Salir",command=self.topAHistoria.destroy)
         self.btnSalirAgregarHistoria.config(width=20, font=("Verdana", 12,"bold"), background="#B2B4AC", cursor="hand2", activebackground="#D1D2CD")
         self.btnSalirAgregarHistoria.grid(row=2, column=3, padx=10, pady=5)
-
-        self.svSaturacion="aaaaa" # AQUI SE RECIBE DATOS DE ARDUINO
 
         self.idPersona = None
 
