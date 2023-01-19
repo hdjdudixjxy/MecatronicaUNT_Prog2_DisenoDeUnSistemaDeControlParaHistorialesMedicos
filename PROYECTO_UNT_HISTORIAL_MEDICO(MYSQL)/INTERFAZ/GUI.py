@@ -683,18 +683,17 @@ class Frame(tk.Frame):
         
     def enviarSaturacion(self):
         """Método para obtener la saturación del paciente"""
-        """
-           self.serialArduino = serial.Serial('COM3', 115200)
-           self.val=[]
-           while True:
-               self.val.append(self.serialArduino.readline().decode('ascii'))
-               if len(self.val) == 150:
-                    break
-            
-           self.svSaturacion=sum(self.val)//len(self.val)
-        """
-        self.svSaturacion = 98
         
+        self.serialArduino = serial.Serial('COM3', 115200)
+        self.val=[]
+        while True:
+            self.val.append(self.serialArduino.readline().decode('ascii'))
+            if len(self.val) == 150:
+                break
+        
+        self.svSaturacion=sum(self.val)//len(self.val)
+    
+           
     def crearPDF(self):
         """Método para crear el historial de cada paciente"""
         
