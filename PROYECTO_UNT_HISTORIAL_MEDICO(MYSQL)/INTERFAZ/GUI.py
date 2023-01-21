@@ -687,13 +687,14 @@ class Frame(tk.Frame):
         self.serialArduino = serial.Serial('COM3', 115200)
         self.val=[]
         while True:
-            self.val.append(self.serialArduino.readline().decode('ascii'))
-            if len(self.val) == 150:
-                break
+            self.temporal=self.serialArduino.readline().decode('ascii')
+            if self.temporal != 0:
+                self.val.append(int(self.temporal))
+                if len(self.val) == 1200:
+                    break
         
-        self.svSaturacion=sum(self.val)//len(self.val)
+        self.svSaturacion=int(sum(self.val))//int(len(self.val))
     
-           
     def crearPDF(self):
         """Método para crear el historial de cada paciente"""
         
